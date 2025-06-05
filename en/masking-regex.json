@@ -1,0 +1,357 @@
+{
+  "masks": [
+    {
+      "id": 1,
+      "mask": "<day_of_week>",
+      "keywords": [
+        "sunday",
+        "sun",
+        "monday",
+        "mon",
+        "tuesday",
+        "tue",
+        "wednesday",
+        "wed",
+        "thursday",
+        "thu",
+        "friday",
+        "fri",
+        "saturday",
+        "sat"
+      ]
+    },
+    {
+      "id": 2,
+      "mask": "<month>",
+      "keywords": [
+        "january",
+        "jan",
+        "february",
+        "feb",
+        "march",
+        "mar",
+        "april",
+        "apr",
+        "may",
+        "june",
+        "jun",
+        "july",
+        "jul",
+        "august",
+        "aug",
+        "september",
+        "sep",
+        "sept",
+        "october",
+        "oct",
+        "november",
+        "nov",
+        "december",
+        "dec"
+      ]
+    },
+    {
+      "id": 4,
+      "mask": "<special_day>",
+      "keywords": [
+        "thanks(\\s*|-)givings?",
+        "independence",
+        "lab(ours?|ors?)",
+        "new\\s*years?",
+        "xmas",
+        "christmas"
+      ]
+    },
+    {
+      "id": 5,
+      "mask": "<time_format>",
+      "keywords": [
+        "a\\.?\\s*m\\.?",
+        "p\\.?\\s*m\\.?"
+      ]
+    },
+    {
+      "id": 6,
+      "mask": "<relative_time_format>",
+      "keywords": [
+        "dinner",
+        "lunch",
+        "dawn",
+        "dusk",
+        "evening",
+        "morning",
+        "afternoon",
+        "at night",
+        "night at",
+        "in (the )?night",
+        "late night",
+        "early morning",
+        "late afternoon",
+        "early evening",
+        "late evening",
+        "sunrise",
+        "sunset",
+        "twilight",
+        "daybreak"
+      ]
+    },
+    {
+      "id": 7,
+      "mask": "<time_h>",
+      "keywords": [
+        "hours?",
+        "hrs?"
+      ]
+    },
+    {
+      "id": 8,
+      "mask": "<time_m>",
+      "keywords": [
+        "min(ts.?|utes?|.?)"
+      ]
+    },
+    {
+      "id": 9,
+      "mask": "<time_s>",
+      "keywords": [
+        "seconds?",
+        "sec\\.?"
+      ]
+    },
+    {
+      "id": 10,
+      "mask": "<special_time_relative>",
+      "keywords": [
+        "half\\s*an\\s*hour",
+        "a minute",
+        "an\\s*hour"
+      ]
+    },
+    {
+      "id": 10,
+      "mask": "<special_time>",
+      "keywords": [
+        "mid(?:\\s*|-)night",
+        "noon",
+        "mid(?:\\s*|-)day",
+        "(?:right\\s*)?now",
+        "now\\s*onwards",
+        "this\\s*moment",
+        "same\\s*time"
+      ]
+    },
+    {
+      "id": 11,
+      "mask": "<num_word>",
+      "keywords": [
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven",
+        "eight",
+        "nine",
+        "ten",
+        "eleven",
+        "twelve",
+        "thirteen",
+        "fourteen",
+        "fifteen",
+        "sixteen",
+        "seventeen",
+        "eighteen",
+        "nineteen",
+        "twenty",
+        "thirty",
+        "forty",
+        "fifty"
+      ]
+    },
+    {
+      "id": 11,
+      "mask": "<special_num>",
+      "keywords": [
+        "half",
+        "quarter",
+        "a half"
+      ]
+    },
+    {
+      "id": 10,
+      "mask": "<cyclic_keyword>",
+      "keywords": [
+        "every",
+        "each",
+        "yearly",
+        "monthly",
+        "weekly",
+        "daily",
+        "hourly",
+        "annually"
+      ]
+    },
+    {
+      "id": 11,
+      "mask": "<temporal_adjective>",
+      "keywords": [
+      ]
+    },
+    {
+      "id": 12,
+      "mask": "<time_period>",
+      "keywords": [
+        "day",
+        "week",
+        "month",
+        "year",
+        "fortnight",
+        "decade",
+        "century",
+        "weekday",
+        "weekend",
+        "days",
+        "weeks",
+        "months",
+        "years",
+        "fortnights",
+        "decades",
+        "centuries",
+        "weekdays",
+        "weekends"
+      ]
+    },
+    {
+      "id": 13,
+      "mask": "<relative_day>",
+      "keywords": [
+        "today",
+        "tomorrow",
+        "yesterday",
+        "tmrw"
+      ]
+    },
+    {
+      "id": 16,
+      "mask": "<num_suffix>",
+      "keywords": [
+        "\\d{1,4}(st|rd|nd|th)",
+        "first",
+        "second",
+        "third",
+        "fifth",
+        "twelfth",
+        "hundred",
+        "thousand",
+        "first",
+        "second",
+        "third",
+        "fourth",
+        "fifth",
+        "sixth",
+        "seventh",
+        "eighth",
+        "ninth",
+        "tenth",
+        "eleventh",
+        "twelfth"
+      ]
+    },
+    {
+      "id": 17,
+      "mask": "<num>",
+      "keywords": [
+        "\\d{1,4}"
+      ]
+    },
+    {
+      "id": 18,
+      "mask": "<range_relative_connector>",
+      "keywords": [
+        "to"
+      ]
+    },
+    {
+      "mask": "<before_reference>",
+      "keywords": [
+        "before",
+        "earlier by",
+        "earlier",
+        "ago",
+        "prior to",
+        "previous",
+        "since"
+      ]
+    },
+    {
+      "mask": "<current_reference>",
+      "keywords": [
+        "this"
+      ]
+    },
+    {
+      "id" : 15,
+      "mask" : "<last_reference>",
+      "keywords" : [
+        "last",
+        "end",
+        "ending"
+      ]
+    },
+    {
+      "id": 14,
+      "mask": "<after_reference>",
+      "keywords": [
+        "past",
+        "after",
+        "by",
+        "within",
+        "later",
+        "next",
+        "following",
+        "coming",
+        "soon",
+        "upcoming",
+        "hence",
+        "from"
+      ]
+    },
+    {
+      "id" : 16,
+      "mask" : "<recurring_event>",
+      "keywords" : [
+        "daily",
+        "monthly",
+        "yearly",
+        "quarterly",
+        "weekly",
+        "fort[-|\\s*]night[ly]?",
+        "bi[-|\\s*]weekly",
+        "annually",
+        "everyday"
+      ]
+    },
+    {
+      "id" : 17,
+      "mask" : "<recurring_keyword>",
+      "keywords" : [
+        "every",
+        "each"
+      ]
+    },
+    {
+      "id" : 17,
+      "mask" : "<day_of_week_recurring>",
+      "keywords": [
+        "sundays",
+        "mondays",
+        "tuesdays",
+        "wednesdays",
+        "thursdays",
+        "fridays",
+        "saturdays"
+      ]
+    }
+  ]
+}
