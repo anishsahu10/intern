@@ -1,0 +1,77 @@
+[
+  {
+    "id": 1,
+    "type": "YEAR_MONTH_DAY_ALL_NUM",
+    "patternString": "(<num>)\\s*[\\/\\.\\-,]?\\s*(<num>)\\s*[\\/\\.\\-,]?\\s*(<num>)",
+    "comment": "2024/06/10 or 2024-06-10 or 2024-06-10"
+  },
+  {
+    "id": 2,
+    "type": "YEAR_MONTH_DAY_KO_NUM",
+    "patternString": "(<num_suffix>)\\s*(<month>)\\s*(<num_suffix>)",
+    "comment": "2024년 6월 10일"
+  },
+  {
+    "id": 3,
+    "type": "MONTH_DAY_KO_NUM",
+    "patternString": "(<month>)\\s*(<num_suffix>)",
+    "comment": "6월 10일"
+  },
+  {
+    "id": 4,
+    "type": "DAY_MONTH_KO_NUM",
+    "patternString": "(<num_suffix>)\\s*(<month>)",
+    "comment": "10일 6월"
+  },
+  {
+    "id": 5,
+    "type": "YEAR_MONTH_DAY_DAY_OF_WEEK",
+    "patternString": "(<num_suffix>)\\s*(<month>)\\s*\\s*(<month>)\\s*\\(?<day_of_week>\\)?",
+    "comment": "2024년 6월 10일 (월요일)"
+  },
+  {
+    "id": 6,
+    "type": "RELATIVE_DAY_OF_WEEK",
+    "patternString": "(<current_reference>|<last_reference>|<before_reference>)\\s*(<day_of_week)",
+    "comment": "지난 금요일 or 다음 금요일 or 이번 금요일"
+  },
+  {
+    "id": 7,
+    "type": "YEAR_MONTH_DAY_NUM_DAY_OF_WEEK",
+    "patternString": "(<num_suffix>)\\s*(<month>)\\s*(<num_suffix>)\\s*\\(?<day_of_week>\\)?",
+    "comment": "2000년 4월 14일 금요일"
+  },
+  {
+    "id": 8,
+    "type": "DAY_WORD_MONTH_OR_YEAR",
+    "patternString": "(<num_suffix>)\\s*(?:의)?\\s*(<num_suffix>)\\s*(<time_period>)",
+    "comment": "12월의 첫 번째 날"
+  },
+  {
+    "id": 9,
+    "type": "DAY_WORD_DATE_OF_WEEK_MONTH_OR_YEAR",
+    "patternString": "(<num_suffix>)\\s*(?:의)?\\s*(<month>|<num_suffix>)\\s*(<day_of_week>)",
+    "comment": "5월의 첫 번째 월요일"
+  },
+  {
+    "id": 10,
+    "type": "END_DAY_REFERENCE",
+    "patternString": "(<num_suffix>|<month>)\\s*(<num_suffix>|<month>)?\\s*(?:의)?\\s*(<last_reference>)\\s*(<time_period>)",
+    "comment": "2020년 3월 마지막 날 or 3월의 마지막 날 or 2020년 3월 마지막 주 or 2020년의 마지막 달"
+  },
+  {
+    "id": 11,
+    "type": "END_OF_REFERENCE",
+    "patternString": "(<num_suffix>|<month>)\\s*(<num_suffix>|<month>)?\\s*(?:의)?\\s*(<last_reference>)\\s*(?:까지)?",
+    "comment": "2020년 3월 말까지"
+  },
+  {
+    "id": 12,
+    "type": "RELATIVE_DAY",
+    "patternString": "(<relative_day>)",
+    "comment": "today, tomorrow, yesterday"
+  },
+  {
+    "id": 13
+  }
+]
