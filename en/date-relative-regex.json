@@ -1,0 +1,25 @@
+[
+  {
+    "id": 1,
+    "type": "NUM_TIME_AFTER_REFERENCE",
+    "comment": "2 days from now, a week after, after a week, past 2 days, before 3 days, etc.",
+    "patternString": "(?:of|in)?\\s*(?:a)?\\s*((<num>)?(?:a)?\\s*(<time_period>))\\s*(?:and)?\\s*(?:a)?\\s*((<num>)?\\s*(<time_period>))?\\s*(?:and)?\\s*(?:a)?\\s*((<num>)?\\s*(<time_period>))?\\s*(<after_reference>|<before_reference>)\\s*(?:of|in)?",
+    "isRelative": true,
+    "isPrefix": true
+  },
+  {
+    "id": 2,
+    "type": "AFTER_REFERENCE_NUM_TIME",
+    "comment": "after a week, before 2 months",
+    "patternString": "(?:of|in)?\\s*(<after_reference>|<before_reference>|<last_reference>|<current_reference>)\\s*(?:a|an)?\\s*((<num>)?\\s*(<time_period>))\\s*(?:and)?\\s*(?:a|an)?\\s*((<num>)?\\s*(<time_period>))?\\s*(?:and)?\\s*(?:a|an)?\\s*((<num>)?\\s*(<time_period>))?\\s*(?:of|in)?",
+    "isRelative": true,
+    "isPrefix" : true
+  },
+  {
+    "id" : 5,
+    "type" : "RELATIVE_DAY_OF_WEEK",
+    "patternString" : "(<after_reference>|<before_reference>|<current_reference>|<last_reference>)\\s*(<day_of_week>)",
+    "comment" : "last sunday, next sunday",
+    "isRelative": true
+  }
+]
