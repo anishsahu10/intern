@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "type": "RECURRING_KEYWORD",
+    "patternString": "<recurring_event>",
+    "comment": "매일, 매주, 매월, 매년 등 반복 이벤트",
+    "isPrefix": false,
+    "isCyclic": true
+  },
+  {
+    "id": 2,
+    "type": "RECURRING_KEYWORD_WITH_TIME_PERIOD",
+    "patternString": "(<period_word>)?\\s*(<recurring_keyword>)\\s*(<num_suffix>)?\\s*(<time_period>)?\\s*(<day_of_week>)?\\s*(주말)?",
+    "comment": "6월 한달동안 매주 토요일, 2년마다, 3개월마다, 매주 금요일 등",
+    "isCyclic": true
+  },
+  {
+    "id": 3,
+    "type": "RECURRING_DAY_OF_WEEKS",
+    "patternString": "(<recurring_keyword>)?\\s*(<day_of_week>)\\s*마다?",
+    "comment": "월요일마다, 토요일마다 등",
+    "isCyclic": true
+  },
+  {
+    "id": 4,
+    "type": "RECURRING_TIME_PERIOD",
+    "patternString": "(<recurring_keyword>)\\s*(<time_period>)",
+    "comment": "매월, 매년, 매주, 매일 등 (id:2에서 이미 커버되지만 prefix용)",
+    "isPrefix": true,
+    "isCyclic": false
+  }
+]
