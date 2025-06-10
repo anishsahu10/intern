@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "type": "NUM_TIME_AFTER_REFERENCE",
+    "comment": "3일 후, 2주 뒤, 5개월 전, 1년 전, 3일간, 2주 동안 등",
+    "patternString": "(?:<num>|<num_word>)?\\s*(<time_period>|<week_word>|<month_word>|<year_word>|<day_word>)\\s*(간|동안)?\\s*(<after_reference>|<before_reference>)",
+    "isRelative": true,
+    "isPrefix": true
+  },
+  {
+    "id": 2,
+    "type": "AFTER_REFERENCE_NUM_TIME",
+    "comment": "이후 3일, 지난 2주, 다음 5개월 등",
+    "patternString": "(<after_reference>|<before_reference>|<last_reference>|<current_reference>)\\s*(<num>|<num_word>)?\\s*(<time_period>|<week_word>|<month_word>|<year_word>|<day_word>)\\s*(간|동안)?",
+    "isRelative": true,
+    "isPrefix": true
+  },
+  {
+    "id": 3,
+    "type": "RELATIVE_DAY_OF_WEEK",
+    "comment": "지난 토요일, 다음 월요일, 이번 일요일 등",
+    "patternString": "(<after_reference>|<before_reference>|<current_reference>|<last_reference>)\\s*(<day_of_week>)",
+    "isRelative": true
+  },
+  {
+    "id": 4,
+    "type": "RELATIVE_DAY",
+    "comment": "오늘, 내일, 어제 등",
+    "patternString": "(<relative_day>)",
+    "isRelative": true
+  },
+  {
+    "id": 5,
+    "type": "RECURRING_RELATIVE",
+    "comment": "매일, 매주, 매달, 매년 등 반복 표현",
+    "patternString": "(<recurring_keyword>)\\s*(<time_period>|<recurring_event>)",
+    "isRelative": true
+  },
+  {
+    "id": 6,
+    "type": "RANGE_RELATIVE",
+    "comment": "3월말까지, 내년까지, 다음달까지 등",
+    "patternString": "(<current_reference>|<after_reference>|<before_reference>|<last_reference>)?\\s*(<num>|<num_word>)?\\s*(<month>|<month_word>|<year_word>|<week_word>|<day_word>)?\\s*(말)?\\s*까지",
+    "isRelative": true
+  }
+]
