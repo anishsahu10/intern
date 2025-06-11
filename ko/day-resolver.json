@@ -1,0 +1,70 @@
+[
+  {
+    "id" : 1,
+    "patternString" : "(?:\\s|^|\\.|,)(<num_suffix>)\\s*(<day_of_week>)(?:\\s|$|\\.|,)",
+    "mapping" : [
+      {
+        "weekDayCount" : 1,
+        "dayOfWeek" : 2
+      }
+    ],
+    "comment" : "1번째수요일: 1st wednesday"
+  },
+  {
+    "id" : 2,
+    "patternString" : "(?:\\s|^|\\.|,)(<num>)\\s*(<time_period>)\\s*(차)?(?:\\s|$|\\.|,)",
+    "mapping" : [
+      {
+        "dayCount" : 1
+      }
+    ],
+    "shouldContainKeyword" : ["일", "날"],
+    "comment" : "2일: 2nd day"
+  },
+  {
+    "id": 3,
+    "patternString": "(?:\\s|^|\\.|,)(<day_of_week>)(?:\\s|$|\\.|,)",
+    "mapping": [
+      {
+        "dayOfWeek": 1
+      }
+    ],
+    "comment" : "수요일: wednesday"
+  },
+  {
+    "id": 4,
+    "patternString": "(?:\\s|^|\\.|,)(<num>)\\s*(<time_period>)\\s*(차)?(?:\\s|$|\\.|,)",
+    "mapping": [
+      {
+        "weekCount": 1
+      }
+    ],
+    "shouldContainKeyword": "주",
+    "comment" : "2주차: 2nd week"
+  },
+  {
+    "id" : 5,
+    "patternString": "(?:\\s|^|\\.|,|\\-|\\?)(<relative_day>)(?:\\s|$|\\.|,|\\-|\\?)",
+    "isRelative" : true,
+    "comment" : "오늘, 내일, 어제"
+  },
+  {
+    "id" : 6,
+    "patternString" : "(?:\\s|^|\\.|,)(<last_reference>)\\s*(<day_of_week>)(?:\\s|$|\\.|,)",
+    "mapping" : [
+      {
+        "weekDayCount" : 1
+      }
+    ]
+  },
+  {
+    "id" : 7,
+    "patternString" : "(?:\\s|^|\\.|,)(<last_reference>)\\s*(<time_period>)(?:\\s|$|\\.|,)",
+    "mapping" : [
+      {
+        "dayCount" : 1
+      }
+    ],
+    "shouldContainKeyword" : ["일", "날"]
+  }
+]
