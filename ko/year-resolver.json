@@ -1,0 +1,48 @@
+[
+  {
+    "id": 1,
+    "type": "YEAR_WITH_YEAR_KEYWORD_AS_SUFFIX_OR_PREFIX",
+    "patternString": "(?:\\s|^|\\.|,)(<time_period>)?\\s*(<num>|<num_suffix>)(?:\\s|$|\\.|,)",
+    "comment": "연도 2002 or 2002연도",
+    "mapping": [
+      {
+        "timePeriod": 1,
+        "year": 2
+      }
+    ],
+    "shouldContainKeyword": ["년", "연도", "년도"]
+  },
+  {
+    "id": 2,
+    "type": "YEAR_WITH_YEAR_SUFFIX",
+    "patternString": "(?:\\s|^|\\.|,)(<num>|<num_suffix>)\\s*년(?:\\s|$|\\.|,)",
+    "comment": "2002년 or 24년",
+    "mapping": [
+      {
+        "year": 1
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "type": "YEAR_WITH_YEAR_SUFFIX_VARIANT",
+    "patternString": "(?:\\s|^|\\.|,)(<num>|<num_suffix>)\\s*연도(?:\\s|$|\\.|,)",
+    "comment": "2002연도",
+    "mapping": [
+      {
+        "year": 1
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "type": "YEAR_WITH_YEAR_SUFFIX_VARIANT",
+    "patternString": "(?:\\s|^|\\.|,)(<num>|<num_suffix>)\\s*년도(?:\\s|$|\\.|,)",
+    "comment": "2002년도",
+    "mapping": [
+      {
+        "year": 1
+      }
+    ]
+  }
+]
