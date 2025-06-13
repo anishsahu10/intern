@@ -70,8 +70,5 @@
     "type": "RELATIVE_DAY",
     "patternString": "(<relative_day>)",
     "comment": "today, tomorrow, yesterday"
-  },
-  {
-    "id": 13
   }
 ]
