@@ -10,7 +10,7 @@
   {
     "id": 2,
     "type": "RECURRING_KEYWORD_WITH_TIME_PERIOD",
-    "patternString": "(<num>)\s*(<time_period>)\s*(<period_word>)?\s*(<recurring_keyword>)\s*(<num_suffix>)?\s*(<time_period>)?\s*(<day_of_week>)?\s*(<time_period>)?",
+    "patternString": "(<num>)\\s*(<time_period>)\\s*(<period_word>)?\\s*(<recurring_keyword>)\\s*(<num_suffix>)?\\s*(<time_period>)?\\s*(<day_of_week>)?\\s*(<time_period>)?",
     "comment": "6월 한달동안 매주 토요일, 2년마다, 3개월마다, 매주 금요일 등",
     "isCyclic": true
   },
