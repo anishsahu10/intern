@@ -1,0 +1,174 @@
+[
+  {
+    "id": 1,
+    "type": "KOREAN_YEAR_MONTH_DAY",
+    "patternString": "(?:\\s|^|\\.|,)(<num>|<num_suffix>)\\s*년\\s*(<num>|<month>)\\s*(<num>|<num_suffix>)\\s*일?(?:\\s|$|\\.|,)",
+    "comment": "2021년 3월 15일 | 21년 03월 01일",
+    "mapping": [
+      {
+        "year": 1,
+        "month": 2,
+        "day": 3
+      }
+    ],
+    "isMonthNum": false
+  },
+  {
+    "id": 2,
+    "type": "KOREAN_MONTH_DAY",
+    "patternString": "(?:\\s|^|\\.|,)(<num>|<month>)\\s*(<num>|<num_suffix>)\\s*일?(?:\\s|$|\\.|,)",
+    "comment": "3월 15일 | 6월 10일",
+    "mapping": [
+      {
+        "month": 1,
+        "day": 2
+      }
+    ],
+    "isMonthNum": false
+  },
+  {
+    "id": 3,
+    "type": "KOREAN_YEAR_MONTH",
+    "patternString": "(?:\\s|^|\\.|,)(<num>|<num_suffix>)\\s*년\\s*(<num>|<month>)(?:\\s|$|\\.|,)",
+    "comment": "2021년 3월 | 21년 03월",
+    "mapping": [
+      {
+        "year": 1,
+        "month": 2
+      }
+    ],
+    "isMonthNum": false
+  },
+  {
+    "id": 4,
+    "type": "CHINESE_YEAR_MONTH_DAY",
+    "patternString": "(?:\\s|^|\\.|,)(<num>)\\s*年\\s*(<num>)\\s*月\\s*(<num>)\\s*日?(?:\\s|$|\\.|,)",
+    "comment": "2021年 3月 15日",
+    "mapping": [
+      {
+        "year": 1,
+        "month": 2,
+        "day": 3
+      }
+    ],
+    "isMonthNum": true
+  },
+  {
+    "id": 5,
+    "type": "NUMERIC_SLASH_DOT_DATE",
+    "patternString": "(?:\\s|^|\\.|,)(<num>)\\s*[\\/\\.\\-]\\s*(<num>)\\s*[\\/\\.\\-]\\s*(<num>)(?:\\s|$|\\.|,)",
+    "comment": "2021/03/15 | 21.04.02 | 2021-03-15",
+    "mapping": [
+      {
+        "year": 1,
+        "month": 2,
+        "day": 3
+      }
+    ],
+    "isMonthNum": true
+  },
+  {
+    "id": 6,
+    "type": "NUMERIC_MONTH_DAY",
+    "patternString": "(?:\\s|^|\\.|,)(<num>)\\s*[\\/\\.]\\s*(<num>)(?:\\s|$|\\.|,)",
+    "comment": "10/01 | 11/20",
+    "mapping": [
+      {
+        "month": 1,
+        "day": 2
+      }
+    ],
+    "isMonthNum": true
+  },
+  {
+    "id": 7,
+    "type": "KOREAN_RECURRING_YEARLY_MONTH_DAY",
+    "patternString": "(?:\\s|^|\\.|,)(<recurring_keyword>|<recurring_event>)\\s*(<num>|<month>)\\s*(<num>|<num_suffix>)\\s*일?(?:\\s|$|\\.|,)",
+    "comment": "매년 3월17일 | 매년 5월5일",
+    "mapping": [
+      {
+        "month": 2,
+        "day": 3
+      }
+    ],
+    "isMonthNum": false,
+    "shouldContainKeyword": "매년"
+  },
+  {
+    "id": 8,
+    "type": "KOREAN_RECURRING_MONTHLY_DAY",
+    "patternString": "(?:\\s|^|\\.|,)(<recurring_keyword>|<recurring_event>)\\s*(<time_period>)\\s*(<num>|<num_suffix>)\\s*일?(?:\\s|$|\\.|,)",
+    "comment": "매월 5일 | 매월 17일",
+    "mapping": [
+      {
+        "day": 3
+      }
+    ],
+    "isMonthNum": true,
+    "shouldContainKeyword": "매월"
+  },
+  {
+    "id": 9,
+    "type": "KOREAN_MONTH_DURATION_RECURRING",
+    "patternString": "(?:\\s|^|\\.|,)(<num>|<month>)\\s*(<period_word>)\\s*(<recurring_keyword>|<recurring_event>)\\s*(<time_period>)?\\s*(<day_of_week>)?(?:\\s|$|\\.|,)",
+    "comment": "6월 한달동안 매주 토요일 | 6월 한달간 매일",
+    "mapping": [
+      {
+        "month": 1
+      }
+    ],
+    "isMonthNum": false,
+    "shouldContainKeyword": "한달"
+  },
+  {
+    "id": 10,
+    "type": "KOREAN_MONTH_END_REFERENCE",
+    "patternString": "(?:\\s|^|\\.|,)(<num>|<month>)\\s*(<last_reference>)(?:\\s|$|\\.|,)",
+    "comment": "3월말 | 3월말까지",
+    "mapping": [
+      {
+        "month": 1
+      }
+    ],
+    "isMonthNum": false,
+    "shouldContainKeyword": "말"
+  },
+  {
+    "id": 11,
+    "type": "KOREAN_MONTH_ONLY",
+    "patternString": "(?:\\s|^|\\.|,)(<month>)(?:\\s|$|\\.|,)",
+    "comment": "4월 | 6월",
+    "mapping": [
+      {
+        "month": 1
+      }
+    ],
+    "isMonthNum": false
+  },
+  {
+    "id": 12,
+    "type": "KOREAN_RECURRING_MONTH_ONLY",
+    "patternString": "(?:\\s|^|\\.|,)(<recurring_keyword>|<recurring_event>)\\s*(<month>)(?:\\s|$|\\.|,)",
+    "comment": "매년 4월 | 매 3월",
+    "mapping": [
+      {
+        "month": 2
+      }
+    ],
+    "isMonthNum": false,
+    "shouldContainKeyword": "매"
+  },
+  {
+    "id": 13,
+    "type": "KOREAN_ORDINAL_MONTH",
+    "patternString": "(?:\\s|^|\\.|,)(<num_suffix>)\\s*(<time_period>)(?:\\s|$|\\.|,)",
+    "comment": "첫 번째 월 | 두 번째 달",
+    "mapping": [
+      {
+        "month": 1
+      }
+    ],
+    "isMonthNum": true,
+    "shouldContainKeyword": "월"
+  }
+]
