@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <queue>
+#include <climits>
+
+using namespace std;
+
+// Global variables
+int N;
+vector<vector<pair<int, int>>> graph; // adjacency list: graph[from] = {(to, cost), ...}
+unordered_map<int, tuple<int, int, int>> roads; // mld -> (sCity, eCity, cost)
+
+void init(int N_param, int K, int mld[], int sCity[], int eCity[], int mCost[]) {
+    N = N_param;
+    graph.assign(N, vector<pair<int, int>>());
+    roads.clear();
+    
+    for (int i = 0; i < K; i++) {
+        roads[mld[i]] = make_tuple(sCity[i], eCity[i], mCost[i]);
+        graph[sCity[i]].push_back({eCity[i], mCost[i]});
+    }
+}
+
+void add(int mld, int sCity, int eCity, int mCost) {
+    roads[mld] = make_tuple(sCity, eCity, mCost);
+    graph[sCity].push_back({eCity, mCost});
+}
+
+void remove(int mld) {
+    if (roads.find(mld) != roads.end()) {
+        roads.erase(mld);
+        
+        // Rebuild graph from remaining roads
+        for (int i = 0; i < N; i++) {
+            graph[i].clear();
+        }
+        
+        for (const auto& road : roads) {
+            int s = get<0>(road.second);
+            int e = get<1>(road.second);
+            int c = get<2>(road.second);
+            graph[s].push_back({e, c});
+        }
+    }
+}
+
+int cost(int sCity, int eCity) {
+    if (sCity == eCity) return 0;
+    
+    vector<int> dist(N, INT_MAX);
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    
+    dist[sCity] = 0;
+    pq.push({0, sCity});
+    
+    while (!pq.empty()) {
+        int currDist = pq.top().first;
+        int curr = pq.top().second;
+        pq.pop();
+        
+        if (curr == eCity) return currDist;
+        if (currDist > dist[curr]) continue;
+        
+        for (const auto& edge : graph[curr]) {
+            int to = edge.first;
+            int edgeCost = edge.second;
+            int newDist = currDist + edgeCost;
+            
+            if (newDist < dist[to]) {
+                dist[to] = newDist;
+                pq.push({newDist, to});
+            }
+        }
+    }
+    
+    return -1; // No path found
+}
