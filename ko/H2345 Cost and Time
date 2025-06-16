@@ -1,0 +1,60 @@
+struct edge {
+
+int time, cost, node;
+vector<edge> adjList[maxN];
+
+void init(int N, int K, int sCity[ ], int eCity[ ], int mCost[ ], int mTime [ ])
+
+for(int i = 0;i < N; i++)
+
+adjList[i]. clear();
+
+for(int i = 0; i < K;i++)
+
+adjList[sCity[i]].push_back({mTime[i], mCost[i], eCity[i]] );
+
+return;
+
+void add(int sCity, int eCity, int mCost, int mTime)
+
+adjList[sCity].push_back({mTime,mCost,eCity});
+
+return;
+
+struct tup {
+int time, cost, node;
+struct comp [
+
+bool operator ( ) (tup& a, tup& b) const {
+
+return a.time > b.time;
+
+int cost(int M, int sCity, int eCity)
+
+priority_queuestup, vectorstup>, comp> pq;
+
+pq.push({0,0,sCity});
+
+while (!pq. empty ()) {
+
+tup curr - pq. top( );
+
+pq-pop( ) ;
+
+int node - curr.node;
+
+int cost - curr. cost;
+
+int time = curr. time;
+Screenshot copie
+if (node == eCity)
+return time;
+
+for (edge &ngb : adjList[node]) {
+
+int ncost = ngb. cost;
+
+if (ncost + cost <= M) { / valid cost check
+
+pq.push({ ngb.time + time,ncost + cost,ngb.node ]);
+return -1;
