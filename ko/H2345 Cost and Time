@@ -156,4 +156,61 @@ if (ncost + cost <= M) { / valid cost check
 pq.push({ ngb.time + time,ncost + cost,ngb.node ]);
 return -1;
 
+---------------------------
+
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <limits.h>
+using namespace std;
+
+struct Edge {
+    int to, cost, time;
+    Edge(int t, int c, int ti) : to(t), cost(c), time(ti) {}
+};
+
+const int MAX_N = 100;
+const int MAX_M = 1000;
+
+vector<Edge> graph[MAX_N];
+int N; // Number of cities
+
+void init(int n, int K, int sCity[], int eCity[], int mCost[], int mTime[]) {
+    N = n;
+    for (int i = 0; i < N; ++i) graph[i].clear();
+    for (int i = 0; i < K; ++i) {
+        graph[sCity[i]].emplace_back(eCity[i], mCost[i], mTime[i]);
+    }
+}
+
+void add(int sCity, int eCity, int mCost, int mTime) {
+    graph[sCity].emplace_back(eCity, mCost, mTime);
+}
+
+int cost(int M, int sCity, int eCity) {
+    // dp[city][cost] = minimum time to reach city with cost
+    vector<vector<int>> dp(N, vector<int>(M+1, INT_MAX));
+    priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, greater<>> pq;
+    // pq: (time, city, cost)
+    dp[sCity][0] = 0;
+    pq.emplace(0, sCity, 0);
+
+    while (!pq.empty()) {
+        auto [curTime, curCity, curCost] = pq.top(); pq.pop();
+        if (curCity == eCity) return curTime;
+        if (dp[curCity][curCost] < curTime) continue; // Already found better
+
+        for (const auto& edge : graph[curCity]) {
+            int nextCity = edge.to;
+            int nextCost = curCost + edge.cost;
+            int nextTime = curTime + edge.time;
+            if (nextCost > M) continue;
+            if (dp[nextCity][nextCost] > nextTime) {
+                dp[nextCity][nextCost] = nextTime;
+                pq.emplace(nextTime, nextCity, nextCost);
+            }
+        }
+    }
+    return -1;
+}
 
