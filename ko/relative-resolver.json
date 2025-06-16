@@ -1,0 +1,61 @@
+[
+  {
+    "id": 1,
+    "type": "NUM_TIME_AFTER_REFERENCE",
+    "patternString": "(<num>)\\s*(<time_period>)\\s*(간|동안)?\\s*(<after_reference>|<before_reference>)?",
+    "mapping": [
+      {
+        "periodAndDurationGroupings": [
+          {
+            "timeDurationGroup": 1,
+            "timePeriodGroup": 2
+          }
+        ]
+      }
+    ],
+    "comment": "3일 후, 2주 뒤, 5개월 전, 1년 전, 3일간, 2주 동안"
+  },
+  {
+    "id": 2,
+    "type": "AFTER_REFERENCE_NUM_TIME",
+    "patternString": "(<after_reference>|<before_reference>|<last_reference>|<current_reference>)\\s*(<num>)\\s*(<time_period>)\\s*(간|동안)?",
+    "mapping": [
+      {
+        "periodAndDurationGroupings": [
+          {
+            "timeDurationGroup": 2,
+            "timePeriodGroup": 3
+          }
+        ]
+      }
+    ],
+    "comment": "부터 5일간, 부터 5일동안"
+  },
+  {
+    "id": 3,
+    "type": "UNTIL_AFTER_REFERENCE_NUM_TIME",
+    "patternString": "(<after_reference>|<before_reference>|<last_reference>|<current_reference>)\\s*(<time_period>)\\s*(<num>)?\\s*(<time_period>)?\\s*(<before_reference>|<last_reference>)",
+    "mapping": [
+      {
+        "periodAndDurationGroupings": [
+          {
+            "timeDurationGroup": 3,
+            "timePeriodGroup": 2
+          },
+          {
+            "timeDurationGroup": 4,
+            "timePeriodGroup": 4
+          }
+        ]
+      }
+    ],
+    "comment": "내년까지, 내년 5월까지, 다음달까지"
+  },
+  {
+    "id": 4,
+    "type": "RELATIVE_DAY_OF_WEEK",
+    "patternString": "(<after_reference>|<before_reference>|<current_reference>|<last_reference>)\\s*(<day_of_week>)",
+    "mapping": [],
+    "comment": "지난 토요일, 다음 월요일, 이번 일요일, 금주 토요일"
+  }
+]
