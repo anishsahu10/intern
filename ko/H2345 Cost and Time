@@ -1,3 +1,100 @@
+[Problem Description]
+
+There are N cities. Each city has an ID value that ranges from 0 to N-1.
+
+There are one-way roads that connect the cities. When you take a road, information on the cost and time required is provided.
+
+Given the maximum cost limit M and the departure and arrival cities, you want to find the minimum time required.
+(If you want to use Dijkstra algorithm, you need to expand the one-dimensional array to a two-dimensional array.)
+
+void init(int N, int K, int sCity[], int eCity[], int mCost[], int mTime[])
+
+This function is called in the beginning of each test case.
+
+N cities are given. Each city has an ID value that ranges from 0 to N-1.
+
+Information on K roads, including departure and arrival cities and the cost and time required for each road is given.
+
+The one-way roads only allow you to travel from the departure city to arrival city.
+
+There can be more than one road with the same direction of traffic flow that connect the same pair of cities.
+
+There is no case in which the departure city and arrival city are the same.
+
+ 
+
+Parameters
+
+  N: Number of cities ( 5 ≤ N ≤ 100 )
+
+  K: Number of roads ( 3 ≤ K ≤ 500 )
+
+ 
+
+  For every i (0 ≤ i ＜ K),
+
+  sCity[i]: Departure city of Road i ( 0 ≤ sCity[i] < N )
+
+  eCity[i]: Arrival city of Road i ( 0 ≤ eCity[i] < N )
+
+  mCost[i]: Cost required for Road i ( 1 ≤ mCost[i] ≤ 100 )
+
+  mTime[i]: Time required for Road i ( 1 ≤ mTime[i] ≤ 100 )
+
+void add(int sCity, int eCity, int mCost, int mTime)
+
+This function adds a road that connects sCity to eCity, costs mCost, and requires mTime to travel.
+
+Only the cities that are already given by init() are given.
+
+There can be pre-existing roads that connect sCity to eCity.
+
+ 
+
+Parameters
+
+  sCity: Departure city of the road ( 0 ≤ sCity < N )
+
+  eCity: Arrival City of the road ( 0 ≤ eCity < N )
+
+  mCost: Cost required for the road ( 1 ≤ mCost ≤ 100 )
+
+  mTime: Time required for the road ( 1 ≤ mTime ≤ 100 )
+
+int cost(int M, int sCity, int eCity)
+
+If the maximum cost limit is set to M, this function returns the minimum time required to travel from sCity to eCity.
+
+There is no case in which the departure city and arrival city are the same.
+
+ 
+
+Parameters
+
+  M: Maximum cost limit ( 1 ≤ M ≤ 1,000 )
+
+  sCity: Departure city ( 0 ≤ sCity < N )
+
+  eCity: Arrival city ( 0 ≤ eCity < N )
+
+ 
+
+Returns
+
+  If it is possible to travel from sCity to eCity within the cost of M, return the minimum time required.
+
+  If impossible, return -1.
+
+[Constraints]
+
+1. init() is called in the beginning of each test case.
+
+2. For each test case, add() is called up to 1,000 times.
+
+3. For each test case, cost() is called up to 100 times
+
+
+
 struct edge {
 
 int time, cost, node;
@@ -58,3 +155,5 @@ if (ncost + cost <= M) { / valid cost check
 
 pq.push({ ngb.time + time,ncost + cost,ngb.node ]);
 return -1;
+
+
