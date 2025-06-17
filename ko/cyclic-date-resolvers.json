@@ -1,0 +1,118 @@
+[
+  {
+    "id": 1,
+    "type": "RECURRING_KEYWORD",
+    "patternString": "(?:\\s|^|\\.|,)(<recurring_event>)(?:\\s|$|\\.|,)",
+    "comment": "매일, 분기별, 주간, 월간, 연간, 매주, 매월, 매년"
+  },
+  {
+    "id": 2,
+    "type": "RECURRING_KEYWORD_WITH_TIME_PERIOD",
+    "patternString": "(?:\\s|^|\\.|,)(<num>)\\s*(<time_period>)\\s*(<recurring_keyword>)\\s*(<day_of_week>)?\\s*(<num_suffix>)?(?:\\s|$|\\.|,)",
+    "comment": "2년마다, 3개월마다 10일",
+    "mapping": [
+      {
+        "count": 1,
+        "timePeriod": 2,
+        "recurringKeyword": 3,
+        "dayOfWeek": 4,
+        "numSuffix": 5
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "type": "RECURRING_KEYWORD_WITH_MONTH",
+    "patternString": "(?:\\s|^|\\.|,)(<month>)\\s*(<num>)\\s*(<time_period>)\\s*(간|동안)\\s*(<recurring_keyword>)\\s*(<time_period>)\\s*(<day_of_week>)?(?:\\s|$|\\.|,)",
+    "comment": "6월 한달동안 매주 토요일, 6월 한달동안 매일",
+    "mapping": [
+      {
+        "month": 1,
+        "count": 2,
+        "timePeriod": 3,
+        "recurringKeyword": 5,
+        "subTimePeriod": 6,
+        "dayOfWeek": 7
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "type": "RECURRING_PRIOR_YEARLY_MONTH_DAY",
+    "patternString": "(?:\\s|^|\\.|,)(<recurring_keyword>)\\s*(<time_period>)\\s*(<month>)\\s*(<num_suffix>)(?:\\s|$|\\.|,)",
+    "comment": "매년 3월17일, 매년 5월5일",
+    "mapping": [
+      {
+        "recurringKeyword": 1,
+        "timePeriod": 2,
+        "month": 3,
+        "numSuffix": 4
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "type": "RECURRING_PRIOR_NUM_SUFFIX",
+    "patternString": "(?:\\s|^|\\.|,)(<recurring_keyword>)\\s*(<time_period>)\\s*(<num_suffix>)(?:\\s|$|\\.|,)",
+    "comment": "매월 5일, 매월 17일",
+    "mapping": [
+      {
+        "recurringKeyword": 1,
+        "timePeriod": 2,
+        "numSuffix": 3
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "type": "RECURRING_PRIOR_DAY_OF_WEEK",
+    "patternString": "(?:\\s|^|\\.|,)(<recurring_keyword>)\\s*(<time_period>)\\s*(<day_of_week>)(?:\\s|$|\\.|,)",
+    "comment": "매주토요일",
+    "mapping": [
+      {
+        "recurringKeyword": 1,
+        "timePeriod": 2,
+        "dayOfWeek": 3
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "type": "RECURRING_POST_DAY_OF_WEEK",
+    "patternString": "(?:\\s|^|\\.|,)(<time_period>)?\\s*(<day_of_week>)\\s*(<recurring_keyword>)(?:\\s|$|\\.|,)",
+    "comment": "월요일마다, 토요일마다",
+    "mapping": [
+      {
+        "timePeriod": 1,
+        "dayOfWeek": 2,
+        "recurringKeyword": 3
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "type": "RECURRING_TIME_PERIOD",
+    "patternString": "(?:\\s|^|\\.|,)(<recurring_keyword>)\\s*(<time_period>)\\s*(<time_period>)?(?:\\s|$|\\.|,)",
+    "comment": "매월, 매년, 매주, 매일, 매주 주말",
+    "mapping": [
+      {
+        "recurringKeyword": 1,
+        "timePeriod": 2,
+        "subTimePeriod": 3
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "type": "RECURRING_MONTH_ONLY",
+    "patternString": "(?:\\s|^|\\.|,)(<recurring_keyword>)\\s*(<time_period>)?\\s*(<month>)(?:\\s|$|\\.|,)",
+    "comment": "매년 4월, 매 3월",
+    "mapping": [
+      {
+        "recurringKeyword": 1,
+        "timePeriod": 2,
+        "month": 3
+      }
+    ]
+  }
+]
