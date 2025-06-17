@@ -1,0 +1,120 @@
+[Problem Description]
+
+A department store plans to play music to improve employee satisfaction.
+
+To maximize its impact, the store wants to select a time slot when the most employees can listen to the music.
+
+To this end, they are checking how many employees can listen to the music during an arbitrary time slot.
+
+ 
+
+[Fig. 1] is the start and end times of the employees’ shifts.
+
+
+
+If the music begins at 1275 and finishes at 1530, five employees listen to the entire piece of music.
+
+ 
+
+Given the start and end times of the employees’ shifts, write a program that counts how many employees listen to the music at an arbitrary time.
+
+ 
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+ 
+
+The following is the description of API to be written in the User Code.
+
+ 
+
+void init(int musicTime)
+
+This function is called at the beginning of each test case.
+
+ 
+
+The total time for the music is musicTime.
+
+ 
+
+No start or end times for shifts have been added.
+
+ 
+
+ 
+
+Parameters
+
+  musicTime: Total time for the music ( 100 ≤ musicTime ≤ 500 )
+
+void add(int mID, int mStart, int mEnd)
+
+This function adds mStart and mEnd of Employee mID.
+
+ 
+
+mEnd - mStart of Employee mID is between 1,000 and 1,000,000.
+
+ 
+
+If the ID already exists, change the existing mStart and mEnd instead of adding a new one.
+
+The removed employee could be added again.
+
+ 
+
+ 
+
+Parameters
+
+  mID: Employee ID ( 1 ≤ mID ≤ 1,000,000,000 )
+
+  mStart: Shift start time ( 0 < mStart < 1,700,000 )
+
+  mEnd: Shift end time ( mStart < mEnd < 2,000,000 )
+
+void remove(int mID)
+
+This function removes mStart and mEnd of Employee mID.
+
+Employee ID that has already been removed could be given.
+
+ 
+
+Parameters
+
+mID: Employee ID ( 1 ≤ mID ≤ 1,000,000,000 )
+
+int getCnt(int mBSTime)
+
+This function returns the number of employees who listen to the entire piece of music when it begins at mBSTime.
+
+(The total time for the music is musicTime.)
+
+ 
+
+Ensure that employees starting or ending their shifts while the music is playing are excluded.
+
+(However, employees who start their shifts when the music begins and those who end their shifts when the music finishes are included.)
+
+
+For example, if musicTime is 250 and mBSTime is 1,000, employees who start their shifts at 1,000 or those who end at 1,250 are included.
+
+However, employees who start their shifts at 1,001 or those who end at 1,249 are excluded.
+
+ 
+
+ 
+
+Parameters
+
+  mBSTime: Start time of the music ( 0 < mBSTime < 1,990,000 )
+
+ 
+
+Returns
+
+ Number of employees who listen to the entire piece of music when it begins at mBSTime
