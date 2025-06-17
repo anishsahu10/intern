@@ -118,3 +118,15 @@ Parameters
 Returns
 
  Number of employees who listen to the entire piece of music when it begins at mBSTime
+
+[Constraints]
+
+1. init() is called at the beginning of each test case.
+
+2. For each test case, it is guaranteed that start and end times of employees’ shifts are assigned randomly.
+
+3. For each test case, add() is called up to 5,000 times.
+
+4. For each test case, remove() is called up to 500 times.
+
+5. For each test case, getCnt() is called up to 30,000 times.
