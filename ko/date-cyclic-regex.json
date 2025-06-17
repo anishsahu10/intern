@@ -17,36 +17,51 @@
   {
     "id": 3,
     "type": "RECURRING_KEYWORD_WITH_MONTH",
-    "patternString": "(<month>)\\s*(<period_word>)\\s*(<recurring_keyword>)\\s*(<time_period>)\\s*(<day_of_week>)?",
+    "patternString": "(<month>)\\s*(<num>)\\s*(<time_period>)\\s*(간|동안)\\s*(<recurring_keyword>)\\s*(<time_period>)\\s*(<day_of_week>)?",
     "comment": "6월 한달동안 매주 토요일, 6월 한달동안 매일",
     "isCyclic": true
   },
   {
     "id": 4,
-    "type": "RECURRING_PRIOR_DAY_OF_WEEK",
+    "type": "RECURRING_PRIOR_YEARLY_MONTH_DAY",
+    "patternString": "(<recurring_keyword>)\\s*(<time_period>)\\s*(<month>)\\s*(<num_suffix>)",
+    "comment": "매년 3월17일, 매년 5월5일",
+    "isCyclic": true
+  },
+  {
+    "id": 5,
+    "type": "RECURRING_PRIOR_NUM_SUFFIX",
     "patternString": "(<recurring_keyword>)\\s*(<time_period>)\\s*(<num_suffix>)",
     "comment": "매월 5일, 매월 17일",
     "isCyclic": true
   },
   {
-    "id": 4,
+    "id": 6,
     "type": "RECURRING_PRIOR_DAY_OF_WEEK",
     "patternString": "(<recurring_keyword>)\\s*(<time_period>)\\s*(<day_of_week>)",
     "comment": "매주토요일",
     "isCyclic": true
   },
   {
-    "id": 5,
+    "id": 7,
     "type": "RECURRING_POST_DAY_OF_WEEK",
     "patternString": "(<time_period>)?\\s*(<day_of_week>)\\s*(<recurring_keyword>)",
     "comment": "월요일마다, 토요일마다",
     "isCyclic": true
   },
   {
-    "id": 6,
+    "id": 8,
     "type": "RECURRING_TIME_PERIOD",
     "patternString": "(<recurring_keyword>)\\s*(<time_period>)\\s*(<time_period>)?",
     "comment": "매월, 매년, 매주, 매일, 매주 주말, two time periods for 매주 주말 which means every weekend",
+    "isPrefix": true,
+    "isCyclic": false
+  },
+  {
+    "id": 9,
+    "type": "RECURRING_MONTH_ONLY",
+    "patternString": "(<recurring_keyword>)\\s*(<time_period>)?\\s*(<month>)",
+    "comment": "매년 4월, 매 3월",
     "isPrefix": true,
     "isCyclic": false
   }
