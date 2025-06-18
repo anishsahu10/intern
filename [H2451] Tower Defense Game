@@ -1,0 +1,446 @@
+[Problem Description]
+
+Implement an API for simulating a tower defense game.
+
+ 
+
+The game consists of escapees who escape a map and towers which attack them to interfere with escaping.
+
+A tower attacks an escapee within its attack range in its turn to attack.
+
+Escapees aim to escape the map by moving from the starting point to the ending point.
+
+ 
+
+[Fig. 1] shows the state of a 6 x 6 map.
+
+S is the starting point, and E is the ending point.
+
+Orange cells form a route which connects between the starting point and the ending point.
+
+Escapees follow the route to escape.
+
+It is guaranteed that the given map has only one route from the starting point to the ending point.
+
+
+
+
+
+ 
+
+In the game, an API which adds towers is called.
+
+[Fig. 2] shows the state where towers are added at (1, 4) and (3, 1) of the map in [Fig. 1].
+
+Coordinates are represented as (Row, Column). The top-left corner is (0, 0).
+
+
+
+
+
+
+
+Each tower has reload time.
+
+After an attack, a tower can attack again only after its reload time passes.
+
+For instance, if a tower whose reload time is 4 attacks at T=3, it can attack again at T=7.
+
+ 
+
+The attack range of all towers is 3.
+
+Towers can attack one of the escapees within 3 cells away from them.
+
+[Fig. 3] shows the attack range of the tower located at (3, 1).
+
+The green cells are the locations where the tower can attack.
+
+
+
+
+
+ 
+
+The following explains the movement pattern of escapees.
+
+There are up to 300 escapees, and they have activation periods.
+
+The value of an activation period ranges from 1 to 5.
+
+Starting from the first escapee, an escapee appears at the starting point in order in each activation period, moves by 1 cell towards the ending point, and immediately disappears after arrival.
+
+[Fig. 4-1] - [Fig. 4-8] show in order how three escapees whose activation period is 3 escape a map.
+
+Numbers written in cells show the order in which the escapees appear on the map.
+
+
+
+
+
+ 
+
+How a tower selects an object to attack
+
+1. A tower which is not ready to attack does not seek for an object.
+
+2. A tower which is ready to attack seek for an object.
+
+It is ready to attack when its reload time has passed since the last attack.
+
+2-a. If the object of the last attack is alive and within the attack range, the object to attack is maintained.
+
+(Note : If the object of the last attack is currently within the attack range even though it was not within the attack range when the tower was not ready to attack, it is selected as the object of the current attack.)
+
+2-b. If not, the tower seeks for a new object.
+
+2-c. A new object is selected based on the following priority rules.
+
+Priority 1. An object within the attack range
+
+Priority 2. (If two or more escapees meet Priority 1) The object with the least remaining HP among them.
+
+Priority 3. (If two or more escapees meet Priority 2) The object who appeared first on the map among them
+
+3. A tower which failed to select an object seeks for one again in the next turn. In this case, the object of the last attack does not exist.
+
+ 
+
+HP of an escapee
+
+An escapee has HP.
+
+All escapees have the same HP at the start.
+
+HP decreases by 1 every time the escapee is attacked by a tower. When it becomes 0, the escapee dies and immediately disappears from the map.
+
+ 
+
+[Fig. 5-1] is the case where two towers, each of whose reload time is 3, exist on the map in [Fig. 4-1].
+
+The number of escapees is 3. Their HP is 4, and their activation period is 3.
+
+Each image explains important events that occur at specific time.
+
+Numbers written in cells show the HP of escapees.
+
+ 
+
+When T=0, all towers are ready to attack.
+
+When T=3, the first escapee appears at the starting point after the towers finish their actions.
+
+When T=4, a tower attacks. The tower located at (3, 3) does not attack because no escapee exists within its attack range.
+
+
+
+
+
+ 
+
+When T=6, the second escapee appears at the starting point.
+
+When T=10, two towers attack the escapee located at (2, 2).
+
+The two towers simultaneously attack the escapee although the remaining HP of the escapee is only 1. Keep in mind that all towers simultaneously attack in every turn.
+
+
+
+
+
+ 
+
+Check [Fig. 5-10] - [Fig. 5-14] to see what happens next.
+
+
+
+
+
+ 
+
+The following shows what happens in every turn.
+
+1. Towers which are not ready to attack do nothing.
+
+2. Towers which are ready to attack select an object.
+
+3. Towers which failed to select an object do not have the object of the previous attack.
+
+4. All towers which are ready to attack simultaneously attack a selected object.
+Keep in mind that the number of attacks can exceed the HP of the escapee.
+
+5. The HP of escapees decreases as much as the number of attacks.
+
+6. Escapees whose HP has become 0 die and disappear from the map.
+
+7. (If the activation period approaches in the current turn) Escapees move by 1 cell towards the ending point.
+If there are remaining escapees, a new escapee appears at the starting point.
+Escapees who arrive at the ending point disappear from the map.
+
+ 
+
+If all escapees successfully escape or die, the game ends.
+
+ 
+
+Implement each required function by referring to the following API description.
+
+The following is the description of API to be written in the User Code.
+
+ 
+
+void init(int N, int mMap[][])
+
+This function is an initialization function for test cases.
+
+It is called once at the beginning of each test case.
+
+ 
+
+Information on the starting point, the ending point, and the route connecting them is given in an N x N map.
+
+In mMap, 0 is the location where a tower can be installed.
+
+In mMap, 1 is part of the route, 2 is the starting point, and 3 is the ending point.
+
+[Fig. 1] shows the information on the map given in init() of the first test case.
+
+ 
+
+It is guaranteed that there is only one route from the starting point to the ending point in the given map.
+
+ 
+
+Parameters
+
+  N : Size of the map (5 ≤ N ≤ 20)
+
+  mMap : Information on each cell of the map (0 ≤ mMap ≤ 3)
+
+void addTower(int mRow, int mCol, int mInterval)
+
+This function adds a new tower.
+
+(mRow, mCol) is the location where the new tower is added.
+
+mInterval is the reload time of the tower.
+
+After an attack, a tower can attack again only after its reload time passes.
+
+ 
+
+There is no case in which two towers are added to one location.
+
+Towers are not added to the starting point, ending point, and route.
+
+ 
+
+Parameters
+
+  mRow, mCol: Location of the tower (0 ≤ mRow, mCol ≤ N - 1)
+
+  mInterval : Reload time (1 ≤ mInterval ≤ 20)
+
+void runSimulation(int M, int mInterval, int mHP, int mRetTs[], int mRetHP[])
+
+This function simulates the tower defense game and returns its result.
+
+All towers are ready to attack when the game starts.
+
+ 
+
+M is the number of escapees.
+
+mInterval is the activation period of escapees.
+
+mHP is the HP of escapees.
+
+ 
+
+mRetTs and mRetHP are arrays where the values that test-takers must return are stored.
+
+mRetTs stores and returns the turns where M escapees died or escaped.
+
+mRetHP stores and returns the remaining HP of M escapees. If they are dead, 0 is returned.
+
+ 
+
+The index value to store is “the order in which escapees entered the map - 1”.
+
+The 0th index stores the turn where the first escapee who entered the map disappeared from the map and the remaining HP in the turn.
+
+The (M-1)th index stores the turn where the Mth escapee who entered the map disappeared from the map and the remaining HP in the turn.
+
+ 
+
+For [Fig. 5-1] - [Fig. 5-14], mRetTs stores {10, 18, 21}, and mRetHP stores {0, 1, 2}.
+
+ 
+
+Parameters
+
+  M : Number of escapees (1 ≤ M ≤ 300)
+
+  mInterval : Activation period (1 ≤ mInterval ≤ 5)
+
+  mHP : HP of escapees (1 ≤ mHP ≤ 200)
+
+  mRetTs : Array to store the turn where M escapees died or escaped
+
+  mRetHP : Array to store the remaining HP of M escapees
+
+[Constraints]
+
+1. init() is called once at the beginning of each test case.
+
+2. The maximum size of the map is 20 x 20.
+
+3. For each test case, addTower() is called up to N x N times.
+
+4. For each test case, runSimulation() is called up to 10 times.
+
+-----------------------------------------------------------------------------------------------------------------------
+
+#include <utility>
+#include <cstdlib>
+ 
+#define MAX_EMPLOYEE 300
+ 
+using namespace std;
+ 
+const int MAXN = 20;
+ 
+struct employee {
+    int hp;
+    int attrack;
+    int position;
+};
+struct employee Employee[MAX_EMPLOYEE];
+int maxN;
+ 
+struct tower {
+    int mRow, mCol;
+    int mInterval; //
+    int remaining_time; //reload倒计时
+    int preObject;
+};
+ 
+struct tower Tower[MAXN*MAXN];
+int tower_cnt;
+ 
+int direct[4][2] = { {-1,0},{1,0},{0,-1},{0,1} };
+pair<int, int> path[MAXN*MAXN];
+int pathNum;
+ 
+void init(int N, int mMap[MAXN][MAXN]) {
+    maxN = N;
+    tower_cnt = 0;
+    pathNum = 0;
+    pair<int, int> start, end;
+    for (int i = 0; i < MAXN; ++i) {
+        for (int j = 0; j < MAXN; ++j) {
+            if (mMap[i][j] == 2) {
+                start = {i,j};
+            }
+            if (mMap[i][j] == 3) {
+                end = { i,j };
+            }
+        }
+    }
+    path[pathNum] = start;
+    pair<int, int> current = start;
+    pair<int, int> next;
+    while (current != end) {
+        pathNum++;
+        for (int i = 0; i < 4; ++i) {
+            next.first = current.first + direct[i][0];
+            next.second = current.second + direct[i][1];
+            if (next.first >=0 && next.first < maxN && next.second>=0 &&
+                next.second < maxN) {
+                if (mMap[next.first][next.second] == 1 || mMap[next.first][next.second] == 3) {
+                    path[pathNum] = { next.first , next.second };
+                    mMap[next.first][next.second] = -1;
+                    current = path[pathNum];
+                    break;
+                }
+            }
+        }
+    }
+    return;
+}
+ 
+void addTower(int mRow, int mCol, int mInterval) {
+    Tower[tower_cnt++] = { mRow ,mCol , mInterval, 0, -1 };
+    return;
+}
+ 
+void runSimulation(int M, int mInterval, int mHP, int mRetTs[], int mRetHP[]) {
+    int time = 1;
+    int enterGame = 0; //记录进入游戏的employee数量
+    int exitCount = 0; //记录完成游戏的employee数量
+ 
+    for (int i = 0; i < tower_cnt; ++i) {
+        Tower[i].preObject = -1;
+        Tower[i].remaining_time = 0;
+    }
+ 
+    for (int i = 0; i < M; ++i) {
+        mRetTs[i] = 0;
+    }
+ 
+    while (exitCount < M) {
+        for (int i = 0; i < tower_cnt; ++i) {
+            Tower[i].remaining_time--;
+            if (Tower[i].remaining_time > 0) continue;
+ 
+            int target = -1;
+            for (int j = 0; j < enterGame; ++j) {
+                int pos = Employee[j].position;
+                int row = path[pos].first;
+                int col = path[pos].second;
+                int dis = abs(Tower[i].mRow - row) + abs(Tower[i].mCol - col);
+ 
+                if (mRetTs[j] != 0 || dis > 3) continue;
+                if (Tower[i].preObject == j) {
+                    target = j;
+                    break;
+                }
+                if (target == -1 || Employee[target].hp > Employee[j].hp) {
+                    target = j;
+                }
+            }
+            Tower[i].preObject = target;
+            if (target != -1) {
+                Employee[target].attrack++;
+                Tower[i].remaining_time = Tower[i].mInterval;
+            }           
+        }
+ 
+        if (time%mInterval == 0) {
+            for (int i = 0; i < enterGame; ++i) {
+                //if (Employee[i].hp > 0 && Employee[i].position < pathNum) {
+                if (mRetTs[i] == 0){
+                    Employee[i].position++;
+                }
+            }
+            if (enterGame < M) { //
+                Employee[enterGame++] = { mHP , 0, 0}; //position从0开始
+            }
+        }
+ 
+        for (int i = 0; i < enterGame; ++i) {
+            if (mRetTs[i] != 0) continue;
+            if (Employee[i].attrack > 0) {
+                Employee[i].hp -= Employee[i].attrack;
+                Employee[i].attrack = 0;
+            }           
+            if (Employee[i].hp <= 0 || Employee[i].position == pathNum) {
+                mRetTs[i] = time;
+                mRetHP[i] = Employee[i].hp > 0? Employee[i].hp:0;
+                exitCount++;
+            }
+        }
+        time++;
+    }
+    return;
+}
