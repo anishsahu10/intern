@@ -1,0 +1,199 @@
+[Problem Description]
+
+N cities are given. Each city has an ID ranging from 0 to N-1.
+
+When a two-way road that connects cities is added, the maximum weight for the road is given.
+
+Given a departure city, an arrival city, and stopovers, you want to find the maximum weight of freight that can be transported.
+
+Up to three stopovers are given, and you can visit them regardless of order.
+You can visit the same stopover multiple times and pass through the departure city or arrival city to visit stopovers.
+
+[Fig. 1] is an example of five cities.
+
+
+
+                              [Fig. 1]
+
+When City 1 and City 3 are stopovers, the maximum weight of freight that can be transported from City 0 to City 4 is 60.
+(0 --(limit:80)--> 2 --(limit:70)--> 1 --(limit:60)--> 3 --(limit:60)--> 1 --(limit:90)--> 4)
+
+ 
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+ 
+
+The following is the description of API to be written in the User Code.
+
+
+
+void init(int N, int K, int sCity[], int eCity[], int mLimit[])
+
+This function is called at the beginning of each test case.
+
+N cities are given. Each city has an ID ranging from 0 to N-1.
+
+Information on K two-way roads—two cities connected to each road and the maximum weight for each road—is given.
+
+Two cities are connected by only one road.
+
+Two cities connected to a road are always different from each other.
+
+ 
+
+Parameters
+
+  N: Number of cities ( 5 ≤ N ≤ 1,000 )
+
+  K: Number of roads ( 2 ≤ K ≤ 2,000 )
+
+  
+
+ For every i (0 ≤ i ＜ K),
+
+  sCity[i]: City connected to Road i ( 0 ≤ sCity[i] < N )
+
+  eCity[i]: City connected to Road i ( 0 ≤ eCity[i] < N )
+
+  mLimit[i]: Maximum weight for Road i ( 1 ≤ mLimit[i] ≤ 30,000 )
+
+void add(int sCity, int eCity, int mLimit)
+
+This function adds a two-way road that connects sCity and eCity.
+
+The maximum weight for the road is mLimit.
+
+A new city that did not exist in init() is not given.
+
+There is no existing road that connects sCity and eCity.
+
+sCity and eCity are always different from each other.
+
+ 
+
+Parameters
+
+  sCity: City connected to the road ( 0 ≤ sCity < N )
+
+  eCity: City connected to the road ( 0 ≤ eCity < N )
+
+  mLimit: Maximum weight for the road ( 1 ≤ mLimit ≤ 30,000 )
+
+ 
+
+int calculate(int sCity, int eCity, int M, int mStopover[])
+
+M stopovers are given as mStopover array.
+
+The maximum weight of freight that can be transported from sCity to eCity by passing through M stopovers is returned.
+
+sCity and eCity are always different from each other.
+
+M stopovers are always different from each other.
+
+Stopovers are always different from sCity and eCity.
+
+ 
+
+Parameters
+
+  sCity: Departure city ( 0 ≤ sCity < N )
+
+  eCity: Arrival city ( 0 ≤ eCity < N )
+
+  M: Number of stopovers ( 1 ≤ M ≤ 3)
+
+ 
+
+  For every i (0 ≤ i ＜ M),
+
+  mStopover[i]: Stopover cities ( 0 ≤ mStopover[i] < N )
+
+ 
+
+Returns
+
+  If it is possible to travel from sCity to eCity by passing through M stopovers, the maximum weight of freight that can be transported is returned.
+
+  If it is impossible, -1 is returned.
+
+[Constraints]
+
+1. init() is called at the beginning of each test case.
+
+2. For each test case, add() is called up to 1,400 times.
+
+3. For each test case, calculate() is called up to 100 times.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+#define maxN 1001
+using namespace std;
+vector<pair<int,int>>adj[maxN]; // u -> {v,t}
+ 
+void init(int N, int K, int sCity[], int eCity[], int mLimit[]) {
+    for(int i=0;i<N;i++){
+        adj[i].clear();
+    }
+    for(int i=0;i<K;i++){
+        adj[sCity[i]].push_back({eCity[i],mLimit[i]});
+        adj[eCity[i]].push_back({sCity[i],mLimit[i]});
+    }
+}
+ 
+void add(int sCity, int eCity, int mLimit) {
+    adj[sCity].push_back({eCity,mLimit});
+    adj[eCity].push_back({sCity,mLimit});
+}
+int dijkstra(int sCity,int eCity,int N){
+    vector<int>dist(N,-1);
+    priority_queue<pair<int,int>>pq; // t,node
+    dist[sCity]=1e9+1;
+    pq.push({dist[sCity],sCity});
+    while(!pq.empty()){
+        auto [cost,node]=pq.top();
+        pq.pop();
+        if(node==eCity) return cost;
+        for(auto it:adj[node]){
+            int dis=min(cost,it.second);
+            if(dis>dist[it.first]){
+                dist[it.first]=dis;
+                pq.push({dist[it.first],it.first});
+            }
+        }
+    }
+    return -1;
+}
+int calculate(int sCity, int eCity, int M, int mStopover[]) {
+    vector<int>stopovers(mStopover,mStopover+M);
+    int N=maxN;
+    int maxi=-1;
+    sort(stopovers.begin(),stopovers.end());
+    do{
+        int curr=1e9+1;
+        int prev=sCity;
+        bool valid=true;
+        for(int i=0;i<M;i++){
+            int cost=dijkstra(prev,stopovers[i],N);
+            if(cost==-1){
+                valid=false;
+                break;
+            }
+            curr=min(curr,cost);
+            prev=stopovers[i];
+        }
+        if(!valid) continue;
+        int last=dijkstra(prev,eCity,N);
+        if(last==-1) continue;
+        curr=min(curr,last);
+        maxi=max(maxi,curr);
+    }while(next_permutation(stopovers.begin(),stopovers.end()));
+    return maxi;
+}
