@@ -1,0 +1,98 @@
+[Problem Description]
+
+N cities are given. Each city has an ID ranging from 0 to N-1.
+
+When a one-way road that connects cities is added, the ID and cost of the road are given.
+
+When you travel from the departure city to the arrival city,
+you want to minimize the difference between the maximum cost and the minimum cost required along the route.
+
+[Fig. 1] is an example of five cities.
+
+
+
+[Fig. 1]
+
+If you travel from City 0 to City 4 using the following route,
+the difference between the maximum cost and the minimum cost is 40. (70 - 30 = 40).
+(0 --(cost:30)--> 1 --(cost:70)--> 3 --(cost:40)--> 4)
+
+If you travel from City 0 to City 4 using the following route,
+the difference between the maximum cost and the minimum cost is 30, which is the minimum difference. (70 - 40 = 30)
+(0 --(cost:40)--> 2 --(cost:60)--> 1 --(cost:70)--> 3 --(cost:40)--> 4)
+
+ 
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+ 
+
+The following is the description of API to be written in the User Code.
+
+void init(int N, int K, int mId[], int sCity[], int eCity[], int mCost[])
+
+This function is called at the beginning of each test case.
+N cities are given. Each city has an ID ranging from 0 to N-1.
+Information on K roads is given. It includes the ID, departure city, arrival city, and cost of each road.
+All roads are one-way roads, which allow you to travel only from the departure city to the arrival city.
+All roads have different pairs of departure city and arrival city from each other.
+For all roads, the departure city and the arrival city are different from each other.
+All roads have different IDs from each other.
+
+Parameters
+  N: Number of cities ( 5 ≤ N ≤ 300 )
+  K: Number of roads ( 6 ≤ K ≤ 1,000 )
+
+  For every i (0 ≤ i ＜ K),
+  mId[i]: ID of Road i ( 1 ≤ mId[i] ≤ 1,000,000,000 )
+  sCity[i]: Departure city of Road i ( 0 ≤ sCity[i] < N )
+  eCity[i]: Arrival city of Road i ( 0 ≤ eCity[i] < N )
+  mCost[i]: Cost of Road i ( 1 ≤ mCost[i] ≤ 500 )
+
+void add(int mId, int sCity, int eCity, int mCost)
+
+This functions adds Road mId whose departure city is sCity, arrival city is eCity, and cost is mCost.
+Road mId is a one-way road, which allows you to travel only from the departure city to the arrival city.
+A new city that was not given in init() is not given.
+There is no existing road that connects sCity to eCity.
+sCity and eCity are not the same.
+mId is not the ID of an existing road.
+
+Parameters
+  mId: ID of the road ( 1 ≤ mId ≤ 1,000,000,000 )
+  sCity: Departure city of the road ( 0 ≤ sCity < N )
+  eCity: Arrival city of the road ( 0 ≤ eCity < N )
+  mCost: Cost of the road ( 1 ≤ mCost ≤ 500 )
+
+void remove(int mId)
+
+This function removes Road mId.
+mId is not the ID of a road that doesn’t exist.
+
+Parameters
+  mId: ID of the road ( 1 ≤ mId ≤ 1,000,000,000 )
+
+int cost(int sCity, int eCity)
+
+This function returns the minimum difference between the maximum cost and the minimum cost required along the route from sCity to eCity.
+sCity and eCity are not the same.
+
+Parameters
+  sCity: Departure city ( 0 ≤ sCity < N )
+  eCity: Arrival city ( 0 ≤ eCity < N )
+
+Returns
+  If it is possible to travel from sCity to eCity, the minimum difference between the maximum cost and the minimum cost is returned.
+  If it is impossible, -1 is returned.
+
+[Constraints]
+
+1. init() is called at the beginning of each test case.
+
+2. For each test case, add() is called up to 700 times.
+
+3. For each test case, remove() is called up to 300 times.
+
+4. For each test case, cost() is called up to 30 times.
