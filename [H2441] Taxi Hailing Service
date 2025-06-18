@@ -1,0 +1,336 @@
+[Problem Description]
+
+You want to create a system which provides taxi hailing service.
+
+ 
+
+A city is in the shape of an N x N square. N is a multiple of 10.
+
+M taxis exist in the city. Each taxi is given an ID ranging from 1 to M.
+
+ 
+
+[Fig. 1] is an example where N = 10 and M = 100. Numbers in each cell are the IDs of taxis in the cell.
+
+
+
+ 
+
+Initially, taxis do not travel.
+
+ 
+
+A passenger sends a ride request with a starting point and a destination.
+
+A starting point is the location of a passenger. A destination is the location where a passenger wants to get to.
+
+ 
+
+When a passenger sends a ride request, the system assigns it to the nearest taxi among taxis L units or less away from the starting point.
+
+If there are multiple taxis in the nearest distance, the ride request is assigned to the taxi with the smallest ID among them.
+
+If there is no taxi L units or less away from the starting point, the ride request fails.
+
+ 
+
+L, the maximum distance a taxi can be away from the starting point to be assigned a ride request, is always N / 10. In [Fig. 1], L = 1.
+
+ 
+
+If (X, Y) is the cell whose horizontal location (x-axis) is X and the vertical location (y-axis) is Y,
+
+the distance between (X1, Y1) and (X2, Y2) is |X1 – X2| + |Y1 – Y2|.
+
+ 
+
+The assigned taxi travels to the location of the passenger and takes the passenger to the destination.
+
+After taking the passenger to the destination, the taxi stays there until it is assigned a ride request by another passenger.
+
+ 
+
+If the location of the assigned taxi is (Xt, Yt) and the starting point and destination of the passenger who sent a ride request are (Xs, Ys) and (Xe, Ye),
+
+the distance driven is |Xt – Xs| + |Yt – Ys| + |Xs – Xe| + |Ys – Ye|, and the distance driven with a passenger aboard is |Xs – Xe| + |Ys – Ye|.
+
+ 
+
+Let’s say that a passenger whose starting point is (3, 1) and destination is (4, 6) sent a ride request in [Fig. 1].
+
+The taxis in the nearest distance from the starting point are Taxi 31 and Taxi 76. The taxi with the smallest ID among them is Taxi 31. Taxi 31 is assigned the ride request, travels to the starting point (3, 1), and takes the passenger to the destination (4, 6). (Refer to [Fig. 2])
+
+
+
+In this case, the distance driven is 7 units, and the distance driven with a passenger aboard is 6 units.
+
+If a passenger whose starting point is (3, 0) sends a ride request afterwards, it fails because there is no taxi 1 unit or less away from the starting point.
+
+ 
+
+You can initialize the driving state of taxis in the system.
+
+If the driving state of a taxi is initialized, the total distance driven and the total distance driven with a passenger aboard turn to 0.
+
+ 
+
+The total distance driven is the accumulated sum of the distance driven since the start or initialization.
+
+The total distance driven with a passenger aboard is the accumulated sum of the distance driven with a passenger aboard since the start or initialization.
+
+ 
+
+The system displays top 5 taxis with the greatest total distance driven with a passenger aboard arranged in order from greatest to smallest.
+
+If multiple taxis have the same total distance driven with a passenger aboard, the smaller the ID, the higher the priority.
+
+ 
+
+Initial locations of taxis and the starting points and destinations of passengers are generated randomly. Analyze the Main for details.
+
+ 
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+The following is the description of API to be written in the User Code.
+
+void init(int N, int M, int L, int mXs[], int mYs[])
+
+This function is the initialization function for test cases.
+
+ 
+
+N is the length of an edge of the city. It is a multiple of 10.
+
+M is the number of taxis in the city. It is an integer equal to or greater than 100.
+
+L is the maximum distance a taxi can be away from the starting point to be assigned a ride request. It is always N / 10.
+
+ 
+
+The location of Taxi i is (mXs[i – 1], mYs[i – 1]). (1 ≤ i ≤ M)
+
+ 
+
+Initially, for all taxis, the total distance driven and the total distance driven with a passenger aboard are 0.
+
+ 
+
+Parameters
+  N : Length of an edge of the city (10 ≤ N ≤ 10,000)
+  M : Number of taxis (100 ≤ M ≤ 2,000)
+  L : Maximum distance a taxi can be away from the starting point to be assigned a ride request (L = N / 10)
+  mXs : Horizontal location (x-axis) of taxis (0 ≤ mXs[] ≤ N – 1)
+  mYs : Vertical location (y-axis) of taxis (0 ≤ mYs[] ≤ N – 1)
+
+int pickup(int mSX, int mSY, int mEX, int mEY)
+
+A passenger whose starting point is (mSX, mSY) and destination is (mEX, mEY) sends a ride request. The ID of the assigned taxi is returned.
+
+ 
+
+Refer to [Problem Description] for the process of calling a taxi.
+
+ 
+
+If the ride request fails, -1 is returned. It fails if there is no taxi L units or less away from the starting point.
+
+ 
+
+Parameters
+  mSX : Horizontal location (x-axis) of the starting point of the passenger (0 ≤ mSX ≤ N – 1)
+  mSY : Vertical location (y-axis) of the starting point of the passenger (0 ≤ mSY ≤ N – 1)
+  mEX : Horizontal location (x-axis) of the destination of the passenger (0 ≤ mEX ≤ N – 1)
+  mEY : Vertical location (y-axis) of the destination of the passenger (0 ≤ mEY ≤ N – 1)
+
+Return
+  ID of the assigned taxi. If the ride request fails, -1 is returned.
+
+Result reset(int mNo)
+
+This function initializes the driving state of Taxi mNo. The driving state before initialization is stored in the Result structure and returned.
+
+ 
+
+The current horizontal location (x-axis) of the taxi is stored in Result.mX.
+
+The current vertical location (y-axis) of the taxi is stored in Result.mY.
+
+The taxi’s total distance driven before initialization is stored in Result.mMoveDistance.
+
+The taxi’s total distance driven with a passenger aboard before initialization is stored in Result.mRideDistance.
+
+ 
+
+After initialization, the taxi’s total distance driven and total distance driven with a passenger aboard turn to 0.
+
+ 
+
+Parameter
+  mNo : ID of the taxi whose driving state is to be initialized (1 ≤ mNo ≤ M)
+
+Return
+  Driving state of the taxi before initialization
+
+void getBest(int mNos[])
+
+This function displays top 5 taxis with the greatest total distance driven with a passenger aboard arranged in order from greatest to smallest.
+
+ 
+
+ID of the ith taxi is stored in mNos[i – 1]. (1 ≤ i ≤ 5)
+
+ 
+
+Refer to [Problem Description] for priority.
+
+ 
+
+Parameter
+  mNos : Array where the IDs of top 5 taxis with the greatest total distance driven with a passenger aboard are to be stored
+
+ [Constraints]
+
+1. init() is called once at the beginning of each test case.
+
+2. For each test case, pickup() is called up to 30,000 times.
+
+3. For each test case, reset() is called up to 5,000 times.
+
+4. For each test case, getBest() is called up to 10,000 times.
+
+5. It is guaranteed that the locations, starting points, and destinations of taxis are generated randomly.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+ 
+#include <stdio.h>
+#include <bits/stdc++.h>
+ 
+using namespace std;
+ 
+struct Result
+{
+    int mX, mY;
+    int mMoveDistance;
+    int mRideDistance;
+};
+ 
+int l, MM;
+Result res[2001];
+ 
+// Comparator for sorting in multiset: descending rideDistance, ascending taxiId
+// Store (-rideDistance, taxiId) so largest rideDistance comes first in ascending order
+struct TaxiComp {
+    bool operator()(const pair<int,int>& a, const pair<int,int>& b) const {
+        if (a.first != b.first) return a.first < b.first; // -rideDistance ascending => rideDistance descending
+        return a.second < b.second; // taxiId ascending
+    }
+};
+ 
+multiset<pair<int,int>, TaxiComp> taxiSet; // (-rideDistance, taxiId)
+ 
+void insertOrUpdateTaxi(int taxiId, int rideDistance)
+{
+    // Remove old entry
+    auto it = taxiSet.find({-res[taxiId].mRideDistance, taxiId});
+    if(it != taxiSet.end()){
+        taxiSet.erase(it);
+    }
+    // Update ride distance
+    res[taxiId].mRideDistance = rideDistance;
+ 
+    // Insert new entry
+    taxiSet.insert({-rideDistance, taxiId});
+}
+ 
+void init(int N, int M, int L, int mXs[], int mYs[])
+{
+    l = L;
+    MM = M;
+    taxiSet.clear();
+ 
+    for(int i = 1; i <= M; i++){
+        res[i].mX = mXs[i - 1];
+        res[i].mY = mYs[i - 1];
+        res[i].mMoveDistance = 0;
+        res[i].mRideDistance = 0;
+        taxiSet.insert({0, i}); // -0 = 0
+    }
+}
+ 
+int pickup(int mSX, int mSY, int mEX, int mEY)
+{
+    int taxi = -1;
+    int D = INT_MAX;
+ 
+    for(int i = 1; i <= MM; i++){
+        int dist = abs(mSX - res[i].mX) + abs(mSY - res[i].mY);
+        if(dist <= l) {
+            if(dist < D){
+                D = dist;
+                taxi = i;
+            }
+            else if(dist == D && i < taxi){
+                taxi = i;
+            }
+        }
+    }
+ 
+    if(taxi == -1) return -1;
+ 
+    int dist_to_start = abs(mSX - res[taxi].mX) + abs(mSY - res[taxi].mY);
+    int dist_ride = abs(mSX - mEX) + abs(mSY - mEY);
+    int total_dist = dist_to_start + dist_ride;
+ 
+    res[taxi].mX = mEX;
+    res[taxi].mY = mEY;
+    res[taxi].mMoveDistance += total_dist;
+ 
+    // Update ride distance in multiset:
+    // Remove old and insert new pair accordingly
+    auto it = taxiSet.find({-res[taxi].mRideDistance, taxi});
+    if(it != taxiSet.end()) {
+        taxiSet.erase(it);
+    }
+    res[taxi].mRideDistance += dist_ride;
+    taxiSet.insert({-res[taxi].mRideDistance, taxi});
+ 
+    return taxi;
+}
+ 
+Result reset(int mNo)
+{
+    Result ret;
+    ret.mX = res[mNo].mX;
+    ret.mY = res[mNo].mY;
+    ret.mMoveDistance = res[mNo].mMoveDistance;
+    ret.mRideDistance = res[mNo].mRideDistance;
+ 
+    // Remove old record from multiset
+    auto it = taxiSet.find({-res[mNo].mRideDistance, mNo});
+    if(it != taxiSet.end()) {
+        taxiSet.erase(it);
+    }
+ 
+    res[mNo].mMoveDistance = 0;
+    res[mNo].mRideDistance = 0;
+ 
+    // Insert reset rideDistance
+    taxiSet.insert({0, mNo});
+ 
+    return ret;
+}
+ 
+void getBest(int mNos[])
+{
+    int idx = 0;
+    for(auto it = taxiSet.begin(); it != taxiSet.end() && idx < 5; ++it, ++idx){
+        mNos[idx] = it->second;
+    }
+}
