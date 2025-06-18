@@ -1,0 +1,184 @@
+[Problem Description]
+
+N cities are given. Each city has an ID ranging from 0 to N-1.
+
+When a one-way road that connects cities is added, its ID and toll are given.
+
+Given M discount coupons, you want to find out the minimum cost required to travel from the departure city to the arrival city.
+
+You are allowed to use only one discount coupon per road. A discount coupon reduces the toll of a road by 50 percent.
+
+[Fig. 1] is an example with five cities.
+
+
+
+[Fig. 1]
+
+Given one discount coupon, the minimum cost required to travel from City 0 to City 4 is 1050.
+The coupon is used for Road 1000.
+(0 --(toll:200)--> 2 --(toll:300)--> 1 --(toll:350)--> 3 --(toll:200)--> 4)
+
+Given two discount coupons, the minimum cost required to travel from City 0 to City 4 is 850.
+The coupons are used for Road 2000 and Road 1000.
+(0 --(toll:300)--> 1 --(toll:350)--> 3 --(toll:200)--> 4)
+
+ 
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+ 
+
+The following is the description of API to be written in the User Code. 
+
+ 
+
+void init(int N, int K, int mId[], int sCity[], int eCity[], int mToll[])
+
+This function is called at the beginning of each test case.
+N cities are given. Each city has an ID ranging from 0 to N-1.
+Information on K roads is given. It includes the ID, departure city, arrival city, and toll of each road.
+All roads are one-way roads, which allow you to travel only from the departure city to the arrival city.
+All roads have different pairs of departure city and arrival city from each other.
+For all roads, the departure city and the arrival city are different from each other.
+All roads have different IDs from each other.
+A toll is a multiple of 10.
+
+Parameters
+  N: Number of cities ( 5 ≤ N ≤ 300 )
+  K: Number of roads ( 6 ≤ K ≤ 2,000 )
+
+  For every i (0 ≤ i ＜ K),
+  mId[i]: ID of Road i ( 1 ≤ mId[i] ≤ 1,000,000,000 )
+  sCity[i]: Departure city of Road i ( 0 ≤ sCity[i] < N )
+  eCity[i]: Arrival city of Road i ( 0 ≤ eCity[i] < N )
+  mToll[i]: Toll of Road i ( 100 ≤ mToll[i] ≤ 1,000 )
+
+void add(int mId, int sCity, int eCity, int mToll)
+
+This function adds Road mId whose departure city is sCity, arrival city is eCity, and toll is mToll.
+Road mId is a one-way road, which allows you to travel only from the departure city to the arrival city.
+A new city that was not given in init() is not given.
+There is no existing road that connects sCity to eCity.
+sCity and eCity are not the same.
+mId is not the ID of an existing road.
+A toll is a multiple of 10.
+
+Parameters
+  mId: ID of the road ( 1 ≤ mId ≤ 1,000,000,000 )
+  sCity: Departure city of the road ( 0 ≤ sCity < N )
+  eCity: Arrival city of the road ( 0 ≤ eCity < N )
+  mToll: Toll of the road ( 100 ≤ mToll ≤ 1,000 )
+
+void remove(int mId)
+
+This function removes Road mId.
+mId is not the ID of a road that doesn’t exist.
+
+Parameters
+  mId: ID of the road ( 1 ≤ mId ≤ 1,000,000,000 )
+
+int cost(int M, int sCity, int eCity)
+
+Given M discount coupons, this function returns the minimum cost required to travel from sCity to eCity.
+sCity and eCity are not the same.
+You are allowed to use only one discount coupon per road. A discount coupon reduces the toll of a road by 50 percent. 
+
+Parameters
+  M: Number of discount coupons ( 1 ≤ M ≤ 10 )
+  sCity: Departure city ( 0 ≤ sCity < N )
+  eCity: Arrival city ( 0 ≤ eCity < N )
+
+Returns
+  If it is possible to travel from sCity to eCity, the minimum cost required is returned.
+  If it is impossible, -1 is returned.
+
+[Constraints]
+
+1. init() is called at the beginning of each test case.
+
+2. For each test case, add() is called up to 1,400 times.
+
+3. For each test case, remove() is called up to 500 times.
+
+4. For each test case, cost() is called up to 100 times.
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+#include<bits/stdc++.h>
+using namespace std;
+map<int,bool>m;
+map<pair<int,int>,int>m1;
+vector<vector<pair<int,int>>>g;
+ 
+int n;
+void add(int id, int s, int e, int t);
+void init(int N, int K, int id[], int s[], int e[], int t[]) {
+    m1.clear();
+    m.clear();
+    n=N;
+    g.clear();
+    g.resize(N);
+    for(int i=0;i<K;i++){
+         add(id[i],s[i],e[i],t[i]);
+    }
+    return;
+}
+ 
+void add(int id, int s, int e, int t) {
+    m[id]=false;
+    g[s].push_back({e,t});
+    m1[{s,e}]=id;
+    return;
+}
+ 
+void remove(int mId) {
+    m[mId]=true;
+    return;
+}
+ 
+int cost(int m2, int s, int e) {
+    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> pq;
+    vector<vector<int>> dp(n + 1, vector<int>(m2 + 1, INT_MAX));
+ 
+    // Initialize the starting point
+    dp[s][0] = 0; // Only initialize dp[s][0] to 0
+ 
+    pq.push({0, {0, s}}); // dis, coupon, node
+ 
+    while (!pq.empty()) {
+        auto it = pq.top();
+        pq.pop();
+        int currentCost = it.first;
+        int currentCoupons = it.second.first;
+        int currentNode = it.second.second;
+ 
+        // If the current cost is greater than the recorded cost, skip it
+        if(currentNode==e)
+            return dp[e][currentCoupons];
+        for (auto &child : g[currentNode]) {
+            int iid = m1[{currentNode, child.first}];
+            if (!m[iid]) { // If the edge is not removed
+                // Option 1: Use a coupon
+                if (currentCoupons < m2 && currentCost + (child.second / 2) < dp[child.first][currentCoupons + 1]) {
+                    dp[child.first][currentCoupons + 1] = currentCost + (child.second / 2);
+                    pq.push({dp[child.first][currentCoupons + 1], {currentCoupons + 1, child.first}});
+                }
+                // Option 2: Do not use a coupon
+                if (currentCost + child.second < dp[child.first][currentCoupons]) {
+                    dp[child.first][currentCoupons] = currentCost + child.second;
+                    pq.push({dp[child.first][currentCoupons], {currentCoupons, child.first}});
+                }
+            }
+        }
+    }
+ 
+    // Check if we found a valid path to e with any number of coupons
+    return -1;
+    int ans = INT_MAX;
+    for (int i = 0; i <= m2; i++) {
+        ans = min(ans, dp[e][i]);
+    }
+    return ans == INT_MAX ? -1 : ans; // Return -1 if no valid path found
+}
