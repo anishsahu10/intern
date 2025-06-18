@@ -99,163 +99,134 @@ Returns
 
 --------------------------------------------
 
-#include <vector>
-#include <unordered_map>
-#include <queue>
-#include <algorithm>
-#include <climits>
-
+#include <bits/stdc++.h>
 using namespace std;
-
-struct Road {
-int id, from, to, cost;
-};
-
-class Solution {
-private:
-int N;
-unordered_map<int, Road> roads;
-vector<vector<pair<int, int>>> graph; // adjacency list: {destination, cost}
-
-```
-void rebuildGraph() {
-    graph.assign(N, vector<pair<int, int>>());
-    for (const auto& p : roads) {
-        const Road& road = p.second;
-        graph[road.from].push_back({road.to, road.cost});
+ 
+const int N = 301;
+map<int,int> mp;
+int n;
+const int inf = 1e9;
+vector<array<int,3>> adj[N];
+ 
+void init(int N, int K, int mId[], int sCity[], int eCity[], int mCost[]) {
+    for(int i=0;i<N;i++) adj[i].clear();
+    n = N;
+    mp.clear(); 
+ 
+    for(int i=0;i<K;i++) {
+        adj[sCity[i]].push_back({mId[i], eCity[i], mCost[i]});
+        mp[mId[i]]++;
     }
 }
-
-// Check if we can travel from src to dest with max edge cost <= maxCost
-// and return the minimum difference (max - min) along such path
-int canReachWithMaxCost(int src, int dest, int maxCost) {
-    // Use modified Dijkstra where state is (node, minCostSoFar)
-    // We want to minimize (maxCostInPath - minCostInPath)
-    
-    vector<vector<int>> dist(N, vector<int>(501, INT_MAX));
-    priority_queue<tuple<int, int, int, int>, vector<tuple<int, int, int, int>>, greater<tuple<int, int, int, int>>> pq;
-    
-    // {difference, node, minCost, maxCost}
-    pq.push({0, src, 501, 0}); // Start with impossible values that will be updated
-    
-    int result = INT_MAX;
-    
-    while (!pq.empty()) {
-        auto [diff, node, minCost, maxCostInPath] = pq.top();
+ 
+void add(int mId, int sCity, int eCity, int mCost) {
+    adj[sCity].push_back({mId, eCity, mCost});
+    mp[mId]++;
+}
+ 
+void remove(int mId) {
+    mp.erase(mId);
+    return;
+}
+ 
+struct cmp {
+    bool operator()(array<int,3> a, array<int,3> b) const {
+        return a[2] - a[1] > b[2] - b[1];
+    }
+};
+ 
+int cost(int sCity, int eCity) {
+    vector<vector<int>> vis(n+1, vector<int>(501, 0));
+    priority_queue<array<int,3>, vector<array<int,3>>, cmp> pq;
+ 
+    pq.push({sCity, inf, 0}); // node mini maxi
+ 
+    while(pq.size()) {
+        auto [node, m1, m2] = pq.top();
         pq.pop();
-        
-        if (node == dest) {
-            result = min(result, diff);
-            continue;
-        }
-        
-        if (minCost < 501 && dist[node][minCost] <= diff) {
-            continue;
-        }
-        
-        if (minCost < 501) {
-            dist[node][minCost] = diff;
-        }
-        
-        for (auto [nextNode, edgeCost] : graph[node]) {
-            if (edgeCost > maxCost) continue;
-            
-            int newMinCost, newMaxCost;
-            if (minCost == 501) { // First edge
-                newMinCost = newMaxCost = edgeCost;
-            } else {
-                newMinCost = min(minCost, edgeCost);
-                newMaxCost = max(maxCostInPath, edgeCost);
-            }
-            
-            int newDiff = newMaxCost - newMinCost;
-            
-            if (newMinCost < 501 && dist[nextNode][newMinCost] > newDiff) {
-                pq.push({newDiff, nextNode, newMinCost, newMaxCost});
-            }
+        int diff = m2 - m1;
+ 
+        if(node == eCity) return diff;
+ 
+        if(m1 <= 500 && m2 >= 0 && vis[node][m1]) continue;
+        if(m1 <= 500) vis[node][m1] = 1;
+         
+        for(auto &[id, v, w] : adj[node]) {
+            if(mp.find(id) == mp.end()) continue;
+            pq.push({v, min(m1, w), max(m2, w)});
         }
     }
-    
-    return result == INT_MAX ? -1 : result;
-}
-```
-
-public:
-void init(int N, int K, int mId[], int sCity[], int eCity[], int mCost[]) {
-this->N = N;
-roads.clear();
-
-```
-    for (int i = 0; i < K; i++) {
-        roads[mId[i]] = {mId[i], sCity[i], eCity[i], mCost[i]};
-    }
-    
-    rebuildGraph();
+    return -1;
 }
 
-void add(int mId, int sCity, int eCity, int mCost) {
-    roads[mId] = {mId, sCity, eCity, mCost};
-    graph[sCity].push_back({eCity, mCost});
-}
+----------------------------------------------------------------------------------------------
 
-void remove(int mId) {
-    if (roads.find(mId) != roads.end()) {
-        Road& road = roads[mId];
-        // Remove from adjacency list
-        auto& edges = graph[road.from];
-        edges.erase(
-            remove_if(edges.begin(), edges.end(), 
-                [&](const pair<int, int>& edge) {
-                    return edge.first == road.to && edge.second == road.cost;
-                }), 
-            edges.end()
-        );
-        roads.erase(mId);
-    }
-}
-
-int cost(int sCity, int eCity) {
-    if (roads.empty()) return -1;
-    
-    // Get all possible edge costs for binary search bounds
-    vector<int> costs;
-    for (const auto& p : roads) {
-        costs.push_back(p.second.cost);
-    }
-    sort(costs.begin(), costs.end());
-    costs.erase(unique(costs.begin(), costs.end()), costs.end());
-    
-    int result = INT_MAX;
-    
-    // Try each possible maximum cost
-    for (int maxCost : costs) {
-        int pathResult = canReachWithMaxCost(sCity, eCity, maxCost);
-        if (pathResult != -1) {
-            result = min(result, pathResult);
-        }
-    }
-    
-    return result == INT_MAX ? -1 : result;
-}
-```
-
+#include <bits/stdc++.h>
+using namespace std;
+struct Node{
+    int st, end, cost, id;
 };
-
-// Global solution instance
-Solution sol;
-
-void init(int N, int K, int mId[], int sCity[], int eCity[], int mCost[]) {
-sol.init(N, K, mId, sCity, eCity, mCost);
+unordered_map<int, int>mp;
+vector<Node> arr[302];
+int End;
+int vis[301];
+void init(int N, int K, int mId[], int sCity[], int eCity[], int mCost[]){
+    mp.clear();
+    for(int i = 0;i < 302; i++)
+        arr[i].clear();
+    for(int i = 0;i < K;i++){
+        mp[mId[i]] = sCity[i];
+        arr[sCity[i]].push_back({ sCity[i],eCity[i],mCost[i],mId[i] });
+    }
 }
-
-void add(int mId, int sCity, int eCity, int mCost) {
-sol.add(mId, sCity, eCity, mCost);
+void add(int mId, int sCity, int eCity, int mCost){
+    mp[mId] = sCity;
+    arr[sCity].push_back({ sCity,eCity,mCost ,mId});
+} 
+void remove(int mId){
+    int start_city = mp[mId];
+    for(auto it = arr[start_city].begin();it != arr[start_city].end();){
+        if(it->id == mId){
+            arr[start_city].erase(it);
+            break;
+        }
+        it++;
+    }
 }
-
-void remove(int mId) {
-sol.remove(mId);
+bool possible(int start, int min, int max){
+    if(start == End)
+        return true;
+    if(vis[start] == 1)
+        return false;
+    vis[start] = 1;
+    for(auto it : arr[start]){
+        if(it.cost<min || it.cost>max)
+            continue;
+        if(possible(it.end, min, max))
+            return true;
+    }
+    return false;
 }
-
-int cost(int sCity, int eCity) {
-return sol.cost(sCity, eCity);
+int cost(int sCity, int eCity){
+    int low = 0, high = 500;
+    End = eCity;
+    int ans = 10000;
+    while(low <= high){
+        int mid = (low + high) >> 1;
+        bool f = false;
+        for(int i = 1; i <= 500 - mid; i++){
+            memset(vis, 0, sizeof(vis));
+            if(possible(sCity, i, i + mid)){
+                f = true;
+                break;
+            }
+        }
+        if(f){
+            ans = mid;
+            high = mid - 1;
+        }
+        else low = mid + 1;
+    }
+    if(ans == 10000)return -1;
+    return ans;
 }
