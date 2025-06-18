@@ -1,0 +1,228 @@
+[Problem Description]
+
+N train stations exist along a straight railway. Each station has an ID that ranges from 1 to N.
+
+When a shuttle train that runs back and forth on the straight railway is added, its first station, last station, and interval between station stops are given.
+
+You want calculate the minimum number of transfers required to get from the departure station to the arrival station.
+
+[Fig. 1] is an example of 20 stations.
+For Train 700, the first station is Station 2, and the last station is Station 16. The interval between station stops is 7.
+For Train 100, the first station is Station 9, and the last station is Station 18. The interval between station stops is 3.
+For Train 300, the first station is Station 1, and the last station is Station 16. The interval between station stops is 5.
+For Train 200, the first station is Station 4, and the last station is Station 18. The interval between station stops is 7.
+
+
+                                                                    [Fig. 1]
+
+Let’s look at a route from Station 15 to Station 16.
+First, you take Train 100 at Station 15 to get to Station 18. Then, you take Train 200 to get to Station 11.
+Finally, you take Train 300 at Station 11 to get to Station 16. The total number of transfers is 2.
+Let’s look at another route. First, you take Train 100 at Station 15 to get to Station 9. Then, you take Train 700 to get to Station 16.
+The total number of transfers is 1. This is the route with the minimum number of transfers.
+
+ 
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+ 
+
+The following is the description of API to be written in the User Code.
+
+void init(int N, int K, int mId[], int sId[], int eId[], int mInterval[])
+
+This function is called at the beginning of each test case.
+
+N stations are given. Each station has an ID that ranges from 1 to N.
+
+Information on K shuttle trains is given. It includes each train’s ID, first station, last station, and interval between station stops.
+
+The ID of the last station is always the sum of the ID of the first station and a multiple of the interval between station stops.
+
+The first station and the last station are always different.
+
+All trains have different IDs from each other.
+
+ 
+
+Parameters
+
+  N: Number of stations ( 20 ≤ N ≤ 100,000 )
+
+  K: Number of trains ( 3 ≤ K ≤ 50 )
+
+ 
+
+  For every i (0 ≤ i ＜ K),
+
+  mId[i]: ID of Train i ( 1 ≤ mId[i] ≤ 1,000,000,000 )
+
+  sId[i]: First station of Train i ( 1 ≤ sId[i] ≤ N - 3 )
+
+  eId[i]: Last station of Train i ( sId[i] < eId[i] ≤ N )
+
+  mInterval[i]: Interval between station stops ( 3 ≤ mInterval[i] ≤ 50 )
+
+void add(int mId, int sId, int eId, int mInterval)
+
+This function adds Train mId, whose first station is Station sId, last station is Station eId, and interval between station stops is mInterval.
+
+The train runs back and forth between the first station and the last station.
+
+The ID of the last station is always the sum of the ID of the first station and a multiple of the interval between station stops.
+
+The first station and the last station are always different.
+
+A new station that didn’t exist in init() is not given.
+
+The ID of an existing train is never given as mId.
+
+ 
+
+Parameters
+
+  mId: ID of the train ( 1 ≤ mId ≤ 1,000,000,000 )
+
+  sId: First station of the train ( 1 ≤ sId ≤ N - 3 )
+
+  eId: Last station of the train ( sId < eId ≤ N )
+
+  mInterval: Interval between station stops ( 3 ≤ mInterval ≤ 50 )
+
+void remove(int mId)
+
+This function removes Train mId.
+
+The ID of a train that doesn’t exist is never given.
+
+ 
+
+Parameters
+
+  mId: ID of the train ( 1 ≤ mId ≤ 1,000,000,000 )
+
+int calculate(int sId, int eId)
+
+This function returns the minimum number of transfers required to get from Station sId to Station eId.
+
+If no transfer is required, the minimum number of transfers is 0.
+
+If it’s impossible to get from Station sId to Station eId, -1 is returned.
+
+sId and eId are always different.
+
+ 
+
+Parameters
+
+  sId: Departure station ( 1 ≤ sId ≤ N )
+
+  eId: Arrival station ( 1 ≤ eId ≤ N )
+
+ 
+
+Returns
+
+  If it’s possible to get from Station sId to Station eId, the minimum number of transfers is returned.
+
+  If it’s impossible, -1 is returned.
+
+[Constraints]
+
+1. init() is called at the beginning of each test case.
+
+2. For each test case, add() is called up to 150 times.
+
+3. For each test case, remove() is called up to 100 times.
+
+4. For each test case, calculate() is called up to 50 times.
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+using namespace std;
+ 
+#define MAX_TRN 201
+#define MAX_STN 100001
+ 
+int adj[MAX_TRN][MAX_TRN];
+vector<int> stations[MAX_STN];
+queue<pair<int, int>> bfs;
+ 
+int cnt;
+int mid[MAX_TRN];
+ 
+void add(int mId, int sId, int eId, int mInterval) {
+    mid[cnt] = mId;
+    int tid = cnt;
+    cnt++;
+    for (int i = sId; i <= eId; i += mInterval) {
+        for (int k = 0; k < stations[i].size(); k++) {
+            int next_tid = stations[i][k];
+            if (mid[next_tid] == -1) continue;
+            adj[next_tid][tid] = 1;
+            adj[tid][next_tid] = 1;
+        }
+        stations[i].push_back(tid); 
+    }
+    return;
+}
+ 
+void init(int N, int K, int mId[], int sId[], int eId[], int mInterval[])
+{
+    cnt = 0;
+    for (int i = 0; i <= N; i++) stations[i].clear();
+    memset(adj, 0, sizeof(adj));
+    memset(mid, 0, sizeof(mid));
+    for (int i = 0; i < K; i++) {
+        add(mId[i], sId[i], eId[i], mInterval[i]);
+    }
+}
+ 
+void remove(int mId) {
+    for (int i = 0; i < cnt; i++) {
+        if (mid[i] == mId) {
+            mid[i] = -1;
+            return;
+        }
+    }
+}
+ 
+int calculate(int sId, int eId) {
+    int visited[MAX_TRN];
+    for(int i = 0; i < MAX_TRN; i++) visited[i] = 0;
+    while (!bfs.empty()) {
+        bfs.pop();
+    }
+     
+    for (int i = 0; i < stations[sId].size(); i++) {
+        int tid = stations[sId][i];
+        if (mid[tid] == -1) continue;
+        visited[tid] = 1;
+        bfs.push({tid, 0});
+    }
+     
+    while (!bfs.empty()) {
+        pair<int, int> cur = bfs.front();
+        bfs.pop();
+        for (int i = 0; i < stations[eId].size(); i++) {
+            int trid = stations[eId][i];
+            if (cur.first == trid) return cur.second;
+        }
+         
+        for (int nxt = 0; nxt < cnt; nxt++) {
+            if (adj[cur.first][nxt] == 0) continue;
+            if (mid[nxt] == -1) continue;
+            if (visited[nxt] != 1) {
+                visited[nxt] = 1;
+                bfs.push({nxt, cur.second + 1});
+            }
+        }
+    }
+    return -1;
+}
