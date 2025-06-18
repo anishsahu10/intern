@@ -11,38 +11,12 @@
   },
   {
     "id": "3",
-    "pattern": "(<date>)\\s*(에|부터|까지|에서)\\s*(<time>)",
-    "groupings": [[1,3]]
+    "pattern": "(<time>)\\s?(<date>)",
+    "groupings": [[2,1]]
   },
   {
     "id": "4",
-    "pattern": "(<date>)\\s*~\\s*(<date>)\\s*[\\(\\s]*([^\\)]*<time>[^\\)]*)[\\)\\s]*",
-    "groupings": [[1,2,3]]
-  },
-  {
-    "id": "5",
-    "pattern": "(<cycle>|<relative>|<period>)\\s*(<date>)?\\s*(<time>)",
-    "groupings": [[1,3]]
-  },
-  {
-  "id": "6",
-  "pattern": "(<time>)\\s?(<date>)",
-  "groupings": [[2,1]]
-},
-{
-  "id": "7",
-  "pattern": "(<time>)\\s*[,()\\-~]\\s*(<date>)",
-  "groupings": [[2,1]]
-},
-{
-  "id": "8",
-  "pattern": "(<time>)\\s*(에|부터|까지|에서)\\s*(<date>)",
-  "groupings": [[3,1]]
-},
-{
-  "id": "9",
-  "pattern": "(<cycle>|<relative>|<period>)\\s*(<time>)",
-  "groupings": [[1,2]]
-}
-
+    "pattern": "(<time>)\\s*[,()\\-~]\\s*(<date>)",
+    "groupings": [[2,1]]
+  }
 ]
