@@ -96,3 +96,82 @@ Returns
 3. For each test case, remove() is called up to 300 times.
 
 4. For each test case, cost() is called up to 30 times.
+
+--------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MAX_N = 305;
+
+struct Edge {
+    int to, cost;
+    int id;
+};
+
+unordered_map<int, tuple<int, int, int>> edgeMap; // mId -> (s, e, cost)
+vector<Edge> adj[MAX_N];
+int N;
+
+void init(int n, int K, int mId[], int sCity[], int eCity[], int mCost[]) {
+    N = n;
+    edgeMap.clear();
+    for (int i = 0; i < N; ++i)
+        adj[i].clear();
+
+    for (int i = 0; i < K; ++i) {
+        int id = mId[i];
+        int u = sCity[i], v = eCity[i], cost = mCost[i];
+        edgeMap[id] = {u, v, cost};
+        adj[u].push_back({v, cost, id});
+    }
+}
+
+void add(int mId, int sCity, int eCity, int mCost) {
+    edgeMap[mId] = {sCity, eCity, mCost};
+    adj[sCity].push_back({eCity, mCost, mId});
+}
+
+void remove(int mId) {
+    if (!edgeMap.count(mId)) return;
+    auto [u, v, cost] = edgeMap[mId];
+    edgeMap.erase(mId);
+    auto& edges = adj[u];
+    edges.erase(remove_if(edges.begin(), edges.end(), [&](Edge& e) {
+        return e.to == v && e.cost == cost && e.id == mId;
+    }), edges.end());
+}
+
+bool bfs(int s, int t, int low, int high) {
+    vector<bool> visited(N, false);
+    queue<int> q;
+    q.push(s);
+    visited[s] = true;
+
+    while (!q.empty()) {
+        int cur = q.front(); q.pop();
+        if (cur == t) return true;
+
+        for (const Edge& e : adj[cur]) {
+            if (!visited[e.to] && e.cost >= low && e.cost <= high) {
+                visited[e.to] = true;
+                q.push(e.to);
+            }
+        }
+    }
+    return false;
+}
+
+int cost(int sCity, int eCity) {
+    int answer = 1e9;
+    for (int d = 0; d <= 500; ++d) {
+        for (int low = 1; low + d <= 500; ++low) {
+            int high = low + d;
+            if (bfs(sCity, eCity, low, high)) {
+                answer = d;
+                return answer; // Since d is increasing, this is the minimum possible
+            }
+        }
+    }
+    return -1;
+}
