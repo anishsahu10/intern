@@ -105,42 +105,40 @@ using namespace std;
 const int MAX_N = 305;
 
 struct Edge {
-    int to, cost;
+    int from, to, cost;
     int id;
 };
 
-unordered_map<int, tuple<int, int, int>> edgeMap;
-vector<Edge> adj[MAX_N];
+unordered_map<int, Edge> edgeMap;
+set<int> costSet;
+vector<Edge> allEdges;
 int N;
 
-// This will be maintained and updated on every add/remove
-vector<tuple<int, int, int>> allEdges;
+// Adjacency list for current sliding window
+vector<vector<int>> graph;
 
-void rebuildGraph(int minCost, int maxCost, vector<vector<int>>& graph) {
-    graph.assign(N, vector<int>());
-    for (auto& e : allEdges) {
-        int u, v, c;
-        tie(u, v, c) = e;
-        if (c >= minCost && c <= maxCost) {
-            graph[u].push_back(v);
-        }
-    }
+void addEdge(int u, int v) {
+    graph[u].push_back(v);
 }
 
-bool bfs(int s, int t, const vector<vector<int>>& graph) {
+void removeEdge(int u, int v) {
+    auto& vec = graph[u];
+    vec.erase(remove(vec.begin(), vec.end(), v), vec.end());
+}
+
+bool bfs(int s, int t) {
     vector<bool> visited(N, false);
     queue<int> q;
     q.push(s);
     visited[s] = true;
 
     while (!q.empty()) {
-        int cur = q.front(); q.pop();
-        if (cur == t) return true;
-
-        for (int nei : graph[cur]) {
-            if (!visited[nei]) {
-                visited[nei] = true;
-                q.push(nei);
+        int u = q.front(); q.pop();
+        if (u == t) return true;
+        for (int v : graph[u]) {
+            if (!visited[v]) {
+                visited[v] = true;
+                q.push(v);
             }
         }
     }
@@ -150,53 +148,175 @@ bool bfs(int s, int t, const vector<vector<int>>& graph) {
 void init(int n, int K, int mId[], int sCity[], int eCity[], int mCost[]) {
     N = n;
     edgeMap.clear();
+    costSet.clear();
     allEdges.clear();
-    for (int i = 0; i < N; ++i)
-        adj[i].clear();
-
     for (int i = 0; i < K; ++i) {
         int id = mId[i];
         int u = sCity[i], v = eCity[i], cost = mCost[i];
-        edgeMap[id] = {u, v, cost};
-        allEdges.emplace_back(u, v, cost);
+        Edge e = {u, v, cost, id};
+        edgeMap[id] = e;
+        allEdges.push_back(e);
+        costSet.insert(cost);
     }
 }
 
 void add(int mId, int sCity, int eCity, int mCost) {
-    edgeMap[mId] = {sCity, eCity, mCost};
-    allEdges.emplace_back(sCity, eCity, mCost);
+    Edge e = {sCity, eCity, mCost, mId};
+    edgeMap[mId] = e;
+    allEdges.push_back(e);
+    costSet.insert(mCost);
 }
 
 void remove(int mId) {
-    if (!edgeMap.count(mId)) return;
-    auto [u, v, c] = edgeMap[mId];
-    edgeMap.erase(mId);
-    auto it = find(allEdges.begin(), allEdges.end(), make_tuple(u, v, c));
-    if (it != allEdges.end()) allEdges.erase(it);
+    if (edgeMap.count(mId)) {
+        edgeMap.erase(mId);
+    }
 }
 
 int cost(int sCity, int eCity) {
-    // Sort all unique costs
-    set<int> costSet;
-    for (auto& e : allEdges) {
-        costSet.insert(get<2>(e));
+    // Rebuild current valid edge list
+    vector<Edge> edges;
+    for (auto& [id, e] : edgeMap) {
+        edges.push_back(e);
     }
-    vector<int> costs(costSet.begin(), costSet.end());
-    int sz = costs.size();
+
+    // Sort by cost
+    sort(edges.begin(), edges.end(), [](Edge& a, Edge& b) {
+        return a.cost < b.cost;
+    });
+
     int res = INT_MAX;
+    int l = 0, r = 0;
+    int M = edges.size();
 
-    vector<vector<int>> graph;
+    graph.assign(N, vector<int>());
 
-    for (int i = 0, j = 0; i < sz; ++i) {
-        while (j < sz) {
-            rebuildGraph(costs[i], costs[j], graph);
-            if (bfs(sCity, eCity, graph)) {
-                res = min(res, costs[j] - costs[i]);
-                break; // try smaller window by increasing i
-            } else {
-                j++;
+    while (l < M) {
+        graph.assign(N, vector<int>());
+        int minCost = edges[l].cost;
+
+        // Expand right window
+        while (r < M && edges[r].cost - minCost <= res) {
+            addEdge(edges[r].from, edges[r].to);
+            r++;
+        }
+
+        // Check path
+        if (bfs(sCity, eCity)) {
+            res = min(res, edges[r - 1].cost - minCost);
+            l++;
+            if (l == r) {
+                r++; // maintain non-empty window
+            }
+        } else {
+            if (r == M) break;
+            l++;
+        }
+    }
+
+    return res == INT_MAX ? -1 : res;
+}
+
+-------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MAX_N = 305;
+int N;
+
+struct Edge {
+    int from, to, cost, id;
+};
+
+unordered_map<int, Edge> edgeMap;
+vector<Edge> edges;
+set<int> costSet;
+
+void init(int n, int K, int mId[], int sCity[], int eCity[], int mCost[]) {
+    N = n;
+    edgeMap.clear();
+    edges.clear();
+    costSet.clear();
+
+    for (int i = 0; i < K; ++i) {
+        int id = mId[i];
+        int u = sCity[i], v = eCity[i], c = mCost[i];
+        Edge e = {u, v, c, id};
+        edgeMap[id] = e;
+        edges.push_back(e);
+        costSet.insert(c);
+    }
+}
+
+void add(int mId, int sCity, int eCity, int mCost) {
+    Edge e = {sCity, eCity, mCost, mId};
+    edgeMap[mId] = e;
+    edges.push_back(e);
+    costSet.insert(mCost);
+}
+
+void remove(int mId) {
+    if (edgeMap.count(mId)) {
+        edgeMap.erase(mId);
+    }
+}
+
+bool isReachable(int sCity, int eCity, int low, int high) {
+    // Build subgraph with edge costs in [low, high]
+    vector<vector<int>> adj(N);
+    for (auto& [id, e] : edgeMap) {
+        if (e.cost >= low && e.cost <= high) {
+            adj[e.from].push_back(e.to);
+        }
+    }
+
+    // BFS or Dijkstra (simple BFS is enough as costs are not added)
+    vector<bool> visited(N, false);
+    queue<int> q;
+    q.push(sCity);
+    visited[sCity] = true;
+
+    while (!q.empty()) {
+        int u = q.front(); q.pop();
+        if (u == eCity) return true;
+
+        for (int v : adj[u]) {
+            if (!visited[v]) {
+                visited[v] = true;
+                q.push(v);
             }
         }
+    }
+
+    return false;
+}
+
+int cost(int sCity, int eCity) {
+    vector<int> uniqueCosts;
+    for (auto& [id, e] : edgeMap) {
+        uniqueCosts.push_back(e.cost);
+    }
+    sort(uniqueCosts.begin(), uniqueCosts.end());
+    uniqueCosts.erase(unique(uniqueCosts.begin(), uniqueCosts.end()), uniqueCosts.end());
+
+    int res = INT_MAX;
+    int L = 0, R = 0;
+    int m = uniqueCosts.size();
+
+    while (L < m) {
+        while (R < m) {
+            int low = uniqueCosts[L];
+            int high = uniqueCosts[R];
+
+            if (isReachable(sCity, eCity, low, high)) {
+                res = min(res, high - low);
+                break; // Try next L
+            } else {
+                R++;
+            }
+        }
+        L++;
     }
 
     return res == INT_MAX ? -1 : res;
