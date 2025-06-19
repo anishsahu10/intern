@@ -1,0 +1,382 @@
+[Problem Description]
+
+You want to build roads on an N*N grid-shaped land.
+
+ 
+
+[Fig. 1] is a 10*10 land.
+
+
+
+[Fig. 1]
+
+ 
+
+You are given the following values to build a road on the land.
+
+1. Orientation: How the road is placed. (Horizontal: 0, Vertical: 1)
+
+2. Location: (Row, Column) represents the uppermost and leftmost location of the road.
+
+3. Length: Number of cells occupied by the road.
+   ※ The maximum length of a road is given as “L” in each test case.
+
+ 
+
+[Fig. 2](a) shows a road whose orientation is 0, location is (3, 1), and length is 6.
+
+[Fig. 2](b) shows a road whose orientation is 1, location is (0, 2), and length is 8.
+
+
+
+[Fig. 2]
+
+ 
+
+If parts of two roads share at least one cell, the two roads are deemed “connected.”
+
+ 
+
+[Fig. 3] shows examples of how two roads can be connected.
+
+
+
+[Fig. 3]
+
+ 
+
+[Fig. 3] (a) is the case where cells at the end of two roads with different orientation overlap with each other.
+
+[Fig. 3] (b) is the case where cells in the middle of two roads with different orientation overlap with each other.
+
+[Fig. 3] (c) is the case where cells at the end of two roads with the same orientation overlap with each other.
+
+[Fig. 3] (d) is the case where one of two roads with the same orientation is included in the other one.
+
+ 
+
+[Fig. 4] shows examples where two roads are not connected.
+
+
+
+[Fig. 4]
+
+ 
+
+[Fig. 4](a) is the case where two roads share no cell.
+
+[Fig. 4](b) – (d) are cases where two roads share no cell while abutting each other.
+
+ 
+
+A “road group” consists of at least one road. Road groups are formed and combined according to the following conditions.
+
+1. When you build a road, the road itself becomes a road group.
+
+2. When a road in a road group is connected to a road in another road group, the two road groups combine to become one.
+
+ 
+
+[Fig. 5] is an example of how multiple road groups combine to become one.
+
+If a road is added to [Fig. 5](a) as in [Fig. 5](b), it is connected to roads of other road groups, and all road groups combine to become one.
+
+[Fig. 5](a) has two road groups, and [Fig. 5](b) has one road group.
+
+ 
+
+
+
+[Fig. 5]
+
+ 
+
+Given a starting point and a destination, you must be able to know if you can travel by car from the starting point to the destination.
+
+If the starting point and destination are not located on roads, you cannot travel by car.
+
+Even if they are located on roads, you cannot travel by car
+if the road with the starting point and the road with the destination are not connected directly or by other roads.
+
+[Fig. 6] is an example of a land with multiple roads. Circled numbers represent locations.
+
+
+
+[Fig. 6]
+
+ 
+
+If the starting point is ① and the destination is ④, you can travel by car as they are located on the same road.
+
+If the starting point is ① and the destination is ⑤, you can travel by car through connected roads.
+
+If the starting point is ① and the destination is ②, you cannot travel by car as ② is not located on a road.
+
+If the starting point is ② and the destination is ③, you cannot travel by car as ② is not located on a road.
+
+If the starting point is ① and the destination is ③, you cannot travel by car as they are not connected.
+
+If the starting point is ③ and the destination is ⑥, you can travel by car.
+
+If the starting point is ② and the destination is ⑦, you cannot travel by car as both of them are not located on roads.
+
+ 
+
+ 
+
+You are required to write a program that builds roads on the given land, groups them,
+
+and checks if you can travel between two locations by car.
+
+ 
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+ 
+
+The following is the description of API to be written in the User Code.
+
+ 
+
+
+
+void init(int L, int N)
+
+This function is called at the beginning of each test case.
+L is the maximum length of roads to build.
+
+N*N is the size of the land to build roads on.
+
+N, the length of an edge of the land, is smaller than or equal to L * 30.
+
+ 
+
+No road is built on the land.
+
+ 
+
+__Parameters
+
+_____L : Maximum length of roads to build (5 ≤ L ≤ 500)
+
+_____N : Length of an edge of the land (10 ≤ N ≤ L * 30)
+
+int build(int mDir, int mRow, int mCol, int mLength)
+
+You are given information on a road to build on the land.
+
+After building the road, this function returns the number of road groups on the land.
+
+ 
+
+mDir is the orientation of the road. If it is 0, the road is horizontal. If it is 1, the road is vertical.
+
+(mRow, mCol) is the location of the road. mLength is the length of the road.
+
+ 
+
+It is guaranteed that the road is built within the land.
+
+ 
+
+__Parameters
+
+____ mDir : Orientation of the road to build (0 ≤ mDir ≤ 1)
+
+____ mRow : Row number of the road to build (0 ≤ mRow ≤ N-1)
+
+____ mCol : Column number of the road to build (0 ≤ mCol ≤ N-1)
+
+____ mLength : Length of the road to build (2 ≤ mLength ≤ L)
+
+ 
+
+__Returns
+
+_____Number of road groups on the land after the road is built
+
+int checkRoute(int mSRow, int mSCol, int mERow, int mECol)
+
+This function returns whether you can travel from the starting point (mSRow, mSCol) to the destination (mERow, mECol) by car on the land or not.
+
+If the starting point or destination is not located on a road, -1 is returned.
+
+If both the starting point and destination are located on roads,
+
+1 is returned if you can travel by car; 0 is returned if you cannot travel by car.
+
+ 
+
+The starting point and destination are not the same.
+
+ 
+
+__Parameters
+
+____ mSRow : Row number of the starting point (0 ≤ mSRow ≤ N-1)
+
+____ mSCol : Column number of the starting point (0 ≤ mSCol ≤ N-1)
+
+____ mERow : Row number of the destination (0 ≤ mERow ≤ N-1)
+
+____ mECol : Column number of the destination (0 ≤ mECol ≤ N-1)
+
+ 
+
+__Returns
+
+_____Whether you can travel by car or not (-1, 0, 1)
+
+[Constraints]
+
+1. init() is called at the beginning of each test case.
+
+2. For each test case, build() is called up to 15,000 times.
+
+3. For each test case, checkRoute() is called up to 5,000 times.
+
+4. It is guaranteed that the locations of roads are determined randomly
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#include <vector>
+using namespace std;
+struct node {
+    int dir;
+    int sr;
+    int sc;
+    int er;
+    int ec;
+    int l;
+};
+ 
+int nrdgrp, nrd, ml,n;
+ 
+node roads[15003];
+int rankk[15003];
+int par[15003];
+vector<int> rdgrp[31][31];
+ 
+void init(int L, int N)
+{
+    nrdgrp=0;
+    nrd=0;
+    ml=L;
+    n=N;
+    for (register int i=0; i<31; i++) {
+        for (register int j=0; j<31; j++) {
+            rdgrp[i][j].clear();   
+        }
+    }
+}
+ 
+int parent(int x) {
+    if (x == par[x]) return x;
+    return par[x] = parent(par[x]);
+}
+ 
+void uniongrp(int x, int y) {
+    int px = parent(x);
+    int py = parent(y);
+    if (px==py) return;
+    nrdgrp-=1;
+    if (rankk[px] < rankk[py]) {
+        par[py] = px;
+        rankk[px]+=rankk[py];
+    }
+    else {
+        par[px]=py;
+        rankk[py]+=rankk[px];
+    }
+    return;
+}
+ 
+int build(int mDir, int mRow, int mCol, int mLength)
+{
+    nrd += 1;
+    roads[nrd].dir=mDir;
+    roads[nrd].sr=mRow;
+    roads[nrd].sc=mCol;
+    if (mDir==0) {
+        roads[nrd].er=mRow;
+        roads[nrd].ec=mCol+mLength-1;
+    }
+    else {
+        roads[nrd].er=mRow+mLength-1;
+        roads[nrd].ec=mCol;
+    }
+    par[nrd]=nrd;
+    rankk[nrd] =1;
+    nrdgrp+=1;
+    for (register int r=roads[nrd].sr/ml; r<=roads[nrd].er/ml; r++) {
+        if ((r<0) || (r>30)) continue;
+        for (register int c=roads[nrd].sc/ml; c<=roads[nrd].ec/ml; c++) {
+            if ((c<0) || (c>30)) continue;
+            for (auto it:rdgrp[r][c]) {
+                if (roads[it].sr>roads[nrd].er || roads[it].sc>roads[nrd].ec || roads[it].er<roads[nrd].sr || roads[it].ec<roads[nrd].sc) continue;
+                uniongrp(it, nrd);
+            }
+            rdgrp[r][c].push_back({nrd});
+        }
+    }
+    return nrdgrp;
+}
+ 
+bool check(int x, int r, int c) {
+    if (roads[x].dir==0) {
+        if (roads[x].sr!=r) return false;
+        if ((roads[x].sc<=c) && (roads[x].ec>=c)) return true;
+    }
+    else {
+        if (roads[x].sc != c) return false;
+        if ((roads[x].sr<=r) && (roads[x].er>=r)) return true;
+    }
+    return false;
+}
+ 
+int checkRoute(int mSRow, int mSCol, int mERow, int mECol)
+{
+    bool flag=false;
+    int p1;
+    for (register int r=mSRow/ml-1;r<mSRow/ml+1;r++) {
+        if ((r<0) || (r>30)) continue;
+        for (register int c=mSCol/ml-1; c<mSCol/ml+1;c++) {
+            if ((c<0) || (c>30)) continue;
+            for (auto it:rdgrp[r][c]) {
+                if (check(it, mSRow, mSCol)) {
+                    flag=true;
+                    p1=it;
+                    break;
+                }
+            }
+            if (flag) break;
+        }
+        if (flag) break;
+    }
+    if (!flag) return -1;
+    flag=false;
+    int p2;
+    for (register int r=mERow/ml-1;r<mERow/ml+1;r++) {
+        if ((r<0) || (r>30)) continue;
+        for (register int c=mECol/ml-1; c<mECol/ml+1;c++) {
+            if ((c<0) || (c>30)) continue;
+            for (auto it:rdgrp[r][c]) {
+                if (check(it, mERow, mECol)) {
+                    flag=true;
+                    p2=it;
+                    break;
+                }
+            }
+            if (flag) break;
+        }
+        if (flag) break;
+    }
+    if (!flag) return -1;
+     
+    if (parent(p1)==parent(p2)) {
+        return 1;
+    }
+    return 0;
+}
