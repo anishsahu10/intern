@@ -138,3 +138,233 @@ __Returns
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+#include<bits/stdc++.h>
+using namespace std;
+ 
+int Result[1001];
+int num1[30001];
+int num2[30001];
+int head1[2];
+int end1[2];
+int head2[2];
+int end2[2];
+ 
+void count(int a, int b, int c) {
+    int value = a*100 + b*10 + c;
+    Result[value]++;
+}
+ 
+void connect() {
+    count(end1[0],end1[1],head2[0]);
+    count(end1[1],head2[0],head2[1]);
+}
+ 
+void init(int mCnt1, int mDigitList1[30000], int mCnt2, int mDigitList2[30000]) {
+    //reset
+    for(int i = 0; i<30001; i++) {
+        num1[i] = num2[i] = Result[i] = 0;
+    }
+    for(int i = 0; i<2; i++) {
+        head1[i] = head2[i] = end1[i] = end2[i] = 0;
+    }
+    //count
+    for(int i = 0; i<mCnt1; i++) {
+        num1[i] = mDigitList1[i];
+        if(i>=2) {
+            count(num1[i-2], num1[i-1], num1[i]);
+        }
+    }
+    for(int i = 0; i<mCnt2; i++) {
+        num2[i] = mDigitList2[i];
+        if(i>=2) {
+            count(num2[i-2], num2[i-1], num2[i]);
+        }
+    }
+    //set head and end
+    head1[0] = num1[0];
+    head1[1] = num1[1];
+    end1[0] = num1[mCnt1-2];
+    end1[1] = num1[mCnt1-1];
+ 
+    head2[0] = num2[0];
+    head2[1] = num2[1];
+    end2[0] = num2[mCnt2-2];
+    end2[1] = num2[mCnt2-1];
+ 
+    connect();
+}
+ 
+void append(int mDir, int mNum1, int mNum2) {
+    int d1 = end1[0]*100 + end1[1]*10 + head2[0];
+    int d2 = end1[1]*100 + head2[0]*10 + head2[1];
+    Result[d1]--;
+    Result[d2]--;
+ 
+    if(mDir == 0) {
+        //num1
+        if(mNum1 < 10) {
+            count(mNum1, head1[0], head1[1]);
+            head1[1] = head1[0];
+            head1[0] = mNum1;
+        }
+        else if(10<=mNum1 && mNum1<=99) {
+            int a = mNum1/10;
+            int b = mNum1%10;
+            count(a, b, head1[0]);
+            count(b, head1[0], head1[1]);
+            head1[0] = a;
+            head1[1] = b;
+        }
+        else if(100<=mNum1 && mNum1<=999) {
+            int a = mNum1/100;
+            mNum1 %= 100;
+            int b = mNum1/10;
+            int c = mNum1%10;
+            count(a,b,c);
+            count(b,c,head1[0]);
+            count(c,head1[0], head1[1]);
+            head1[0] = a;
+            head1[1] = b;
+        }
+        else {
+            int a = mNum1/1000;
+            mNum1 %= 1000;
+            int b = mNum1/100;
+            mNum1 %= 100;
+            int c = mNum1/10;
+            int d = mNum1%10;
+            count(a,b,c);
+            count(b,c,d);
+            count(c,d,head1[0]);
+            count(d,head1[0],head1[1]);
+            head1[0] = a;
+            head1[1] = b;
+        }
+        //num2
+        if(mNum2 < 10) {
+            count(mNum2, head2[0], head2[1]);
+            head2[1] = head2[0];
+            head2[0] = mNum2;
+        }
+        else if(10<=mNum2 && mNum2<=99) {
+            int a = mNum2/10;
+            int b = mNum2%10;
+            count(a, b, head2[0]);
+            count(b, head2[0], head2[1]);
+            head2[0] = a;
+            head2[1] = b;
+        }
+        else if(100<=mNum2 && mNum2<=999) {
+            int a = mNum2/100;
+            mNum2 %= 100;
+            int b = mNum2/10;
+            int c = mNum2%10;
+            count(a,b,c);
+            count(b,c,head2[0]);
+            count(c,head2[0], head2[1]);
+            head2[0] = a;
+            head2[1] = b;
+        }
+        else {
+            int a = mNum2/1000;
+            mNum2 %= 1000;
+            int b = mNum2/100;
+            mNum2 %= 100;
+            int c = mNum2/10;
+            int d = mNum2%10;
+            count(a,b,c);
+            count(b,c,d);
+            count(c,d,head2[0]);
+            count(d,head2[0],head2[1]);
+            head2[0] = a;
+            head2[1] = b;
+        }
+        connect();
+    }
+    else {
+        //num1
+        if(mNum1 < 10) {
+            count(end1[0], end1[1], mNum1);
+            end1[0] = end1[1];
+            end1[1] = mNum1;
+        }
+        else if(10<=mNum1 && mNum1<=99) {
+            int a = mNum1/10;
+            int b = mNum1%10;
+            count(end1[0], end1[1], a);
+            count(end1[1], a, b);
+            end1[0] = a;
+            end1[1] = b;
+        }
+        else if(100<=mNum1 && mNum1<=999) {
+            int a = mNum1/100;
+            mNum1 %= 100;
+            int b = mNum1/10;
+            int c = mNum1%10;
+            count(a,b,c);
+            count(end1[1],a,b);
+            count(end1[0], end1[1], a);
+            end1[0] = b;
+            end1[1] = c;
+        }
+        else {
+            int a = mNum1/1000;
+            mNum1 %= 1000;
+            int b = mNum1/100;
+            mNum1 %= 100;
+            int c = mNum1/10;
+            int d = mNum1%10;
+            count(a,b,c);
+            count(b,c,d);
+            count(end1[1],a,b);
+            count(end1[0],end1[1],a);
+            end1[0] = c;
+            end1[1] = d;
+        }
+ 
+        //num2
+        if(mNum2 < 10) {
+            count(end2[0], end2[1], mNum2);
+            end2[0] = end2[1];
+            end2[1] = mNum2;
+        }
+        else if(10<=mNum2 && mNum2<=99) {
+            int a = mNum2/10;
+            int b = mNum2%10;
+            count(end2[0], end2[1], a);
+            count(end2[1], a, b);
+            end2[0] = a;
+            end2[1] = b;
+        }
+        else if(100<=mNum2 && mNum2<=999) {
+            int a = mNum2/100;
+            mNum2 %= 100;
+            int b = mNum2/10;
+            int c = mNum2%10;
+            count(a,b,c);
+            count(end2[1],a,b);
+            count(end2[0], end2[1], a);
+            end2[0] = b;
+            end2[1] = c;
+        }
+        else {
+            int a = mNum2/1000;
+            mNum2 %= 1000;
+            int b = mNum2/100;
+            mNum2 %= 100;
+            int c = mNum2/10;
+            int d = mNum2%10;
+            count(a,b,c);
+            count(b,c,d);
+            count(end2[1],a,b);
+            count(end2[0],end2[1],a);
+            end2[0] = c;
+            end2[1] = d;
+        }
+        connect();
+    }
+}
+ 
+int countNum(int mNum) {
+    return Result[mNum];
+}
