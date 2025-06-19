@@ -1,0 +1,354 @@
+[Problem Description]
+
+You want to draw rectangles on an N*N grid board.
+
+ 
+
+[Fig. 1] shows a grid board where N=10.
+
+
+
+[Fig. 1]
+
+ 
+
+The following values are given to draw a rectangle on the grid board.
+
+1. ID of the rectangle : ID of the rectangle to draw. All rectangles have different IDs.
+
+2. Location of the rectangle : Location of the top-left corner of the rectangle to draw on the grid board. It is given as (Row, Column).
+
+3. Size of the rectangle : The height and width are given based on the number of cells occupied by the rectangle.
+   ※ The maximum size of a rectangle is given as “L” in each test case.
+
+ 
+
+[Fig. 2](a) shows a rectangle whose location is (3, 1), height is 3, and width is 6.
+
+[Fig. 2](b) shows a rectangle whose location is (0, 2), height is 8, and width is 2.
+
+
+
+[Fig. 2]
+
+ 
+
+A “rectangle group” is a group of one or more rectangles. Rectangle groups are formed and combined according to the following conditions.
+
+1. When you draw a rectangle, the rectangle itself becomes a rectangle group.
+
+2. When a rectangle in a rectangle group overlaps with a rectangle in another rectangle group, the two groups combine to become one.
+
+ 
+
+When you draw a rectangle, the rectangle itself becomes a rectangle group, or it combines with other rectangle groups according to the conditions above.
+
+ 
+
+Whether two rectangles overlap with each other is decided based on whether they share one or more cells within the area where you drew them.
+
+[Fig. 3](a) shows red, blue, and yellow rectangles drawn in order.
+
+As the red rectangle and blue rectangle share a cell, they overlap with each other.
+
+As the blue rectangle and yellow rectangle share four cells, they overlap with each other.
+
+In [Fig. 3](b), the three rectangles do not overlap with each other as they share no cell.
+
+Therefore, [Fig. 3](a) has one rectangle group, and [Fig. 3](b) has three rectangle groups.
+
+ 
+
+
+
+[Fig. 3]
+
+ 
+
+[Fig. 4] shows an example where multiple rectangle groups combine to become one.
+
+If a rectangle is added to [Fig. 4](a) as in [Fig. 4](b), it overlaps with other rectangle groups,
+
+and the rectangle groups that overlap with each other combine to become one.
+
+[Fig. 4](a) has two rectangle groups, and each rectangle group has three rectangles.
+
+[Fig. 4](b) has one rectangle group that has seven rectangles.
+
+ 
+
+
+
+[Fig. 4]
+
+ 
+
+ 
+
+You are required to write a program that draws rectangles on a given grid board, divides them into rectangle groups,
+
+and finds the number of rectangles in the rectangle groups.
+
+ 
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+ 
+
+The following is the description of API to be written in the User Code.
+
+ 
+
+void init(int L, int N)
+
+
+
+This function is called at the beginning of each test case.
+The maximum height and width of the rectangle to draw are given as L.
+
+The size of the grid board to draw the rectangle on is given as N*N.
+
+N, which is the size of the grid board, is smaller than or equal to L * 50.
+
+ 
+
+The grid board is empty.
+
+ 
+
+__Parameters
+
+_____L : Maximum size of the rectangle (5 ≤ L ≤ 100)
+
+_____N : Size of the grid board (10 ≤ N ≤ L * 50)
+
+
+
+int draw(int mID, int mRow, int mCol, int mHeight, int mWidth)
+
+
+
+Information on the rectangle to draw on the grid board is given.
+
+After drawing the rectangle, this function returns the number of rectangles in the rectangle group where the rectangle belongs.
+
+ 
+
+As for the rectangle to draw, the ID is mID, the location is (mRow, mCol),
+
+the height is mHeight, and the width is mWidth.
+
+ 
+
+You can draw only one rectangle at one location. In other words, there is no case in which the top-left corners of two or more rectangles are placed in the same location.
+
+ 
+
+The ID of an existing rectangle is not given as the ID of the rectangle to draw.
+
+It is guaranteed that the rectangle to draw stays within the grid board.
+
+ 
+
+__Parameters
+
+____ mID : ID of the rectangle to draw (1 ≤ mID ≤ 1,000,000,000)
+
+____ mRow : Row number of the rectangle to draw (0 ≤ mRow ≤ N-1)
+
+____ mCol : Column number of the rectangle to draw (0 ≤ mCol ≤ N-1)
+
+____ mHeight : Height of the rectangle to draw (2 ≤ mHeight ≤ L)
+
+____ mWidth : Width of the rectangle to draw (2 ≤ mWidth ≤ L)
+
+ 
+
+__Returns
+
+_____Number of rectangles in the rectangle group where the given rectangle belongs
+
+
+
+int getRectCount(int mID)
+
+
+
+This function returns the number of rectangles in the rectangle group where Rectangle mID belongs.
+
+If Rectangle mID does not exist, 0 is returned.
+
+ 
+
+__Parameters
+
+____ mID : ID of the rectangle (1 ≤ mID ≤ 1,000,000,000)
+
+ 
+
+__Returns
+
+_____Number of rectangles in the rectangle group where Rectangle mID belongs
+_____If Rectangle mID does not exist, 0 is returned.
+
+
+
+int countGroup()
+
+
+
+This function returns the number of rectangle groups that exist on the grid board.
+
+ 
+
+__Returns
+
+_____Number of rectangle groups that exist on the grid board
+
+[Constraints]
+
+1. init() is called at the beginning of each test case.
+
+2. For each test case, draw() is called up to 15,000 times.
+
+3. For each test case, getRectCount() is called up to 5,000 times.
+
+4. For each test case, countGroup() is called up to 2,000 times.
+
+5. It is guaranteed that the locations of rectangles are determined randomly.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+#include<vector>
+#include<unordered_map>
+#include<algorithm>
+using namespace std;
+ 
+struct inf
+{
+    int id;
+    int r1;
+    int c1;
+    int r2;
+    int c2;
+}rectangle[15001];
+ 
+int l;
+int n;
+int rectCnt;
+int groupCnt;
+int parent[15001];
+int total[15001];
+vector<int> grid[50][50];
+unordered_map<int, int> rectId;
+ 
+void init(int L, int N) {
+    l = L;
+    n = N;
+    rectCnt = 0;
+    groupCnt = 0;
+    rectId.clear();
+    for (int i = 0; i < 50; i++)
+    {
+        for (int j = 0; j < 50; j++)
+        {
+            grid[i][j].clear();
+        }
+    }
+    for (int i = 0; i < 15001; i++)
+    {
+        parent[i] = -1;
+        total[i] = 0;
+    }
+}
+ 
+int findParent(int x)
+{
+    if (parent[x] == x)
+    {
+        return x;
+    }
+    return parent[x] = findParent(parent[x]);
+}
+ 
+bool ifUnion(int a, int b)
+{
+    if ((rectangle[a].r1 > rectangle[b].r2 ) ||
+        (rectangle[a].r2 < rectangle[b].r1 ) ||
+        (rectangle[a].c1 > rectangle[b].c2 ) ||
+        (rectangle[a].c2 < rectangle[b].c1))
+    {
+        return false;
+    }
+    return true;
+}
+ 
+void makeUnion(int a, int b)
+{
+    int Ida = findParent(a);
+    int Idb = findParent(b);
+    if (Ida == Idb)
+    {
+        return;
+    }
+    if (total[Ida] > total[Idb])
+    {
+        total[Ida] += total[Idb];
+        parent[Idb] = Ida;
+    }
+    else
+    {
+        total[Idb] += total[Ida];
+        parent[Ida] = Idb;
+    }
+    groupCnt--;
+    return;
+}
+ 
+int draw(int mID, int mRow, int mCol, int mHeight, int mWidth) {
+    rectangle[rectCnt].id = mID;
+    rectangle[rectCnt].r1 = mRow;
+    rectangle[rectCnt].c1 = mCol;
+    rectangle[rectCnt].r2 = mRow + mHeight - 1;
+    rectangle[rectCnt].c2 = mCol + mWidth -1 ;
+    rectId[mID] = rectCnt;
+ 
+    int r = mRow / l;
+    int c = mCol / l;
+ 
+    parent[rectCnt] = rectCnt;
+    total[rectCnt] = 1;
+    groupCnt++;
+ 
+    for (int i = max(r - 1, 0); i <= min(r + 1, 49); i++)
+    {
+        for (int j = max(c - 1, 0); j <= min(c + 1, 49); j++)
+        {
+            for (auto it : grid[i][j])
+            {
+                if (ifUnion(rectCnt, it))
+                {
+                    makeUnion(rectCnt, it);
+                }
+            }
+        }
+    }
+    int idx = findParent(rectCnt);
+    grid[r][c].push_back(rectCnt++);
+    return total[idx];
+}
+ 
+int getRectCount(int mID) {
+    if (rectId.count(mID) < 1)
+    {
+        return 0;
+    }
+    int idx = findParent(rectId[mID]);
+    return total[idx];
+}
+ 
+int countGroup() {
+    return groupCnt;
+}
