@@ -1,0 +1,391 @@
+[Problem Description]
+
+
+
+A shopping mall plans to create a program which provides product ranking.
+
+Implement the following features by utilizing product data.
+Product data consists of the ID, category, and rank of a product.
+
+
+
+1. Add a product
+2. Delete a product
+3. Change the rank of a product
+4. Switch the ranks of products within a category
+5. Find three products with the highest priority among all products
+
+
+
+The higher the rank, the higher the priority. (Note: The smaller the rank value, the higher the rank.)
+For products that have the same rank, the greater the ID value, the higher the priority.
+
+ 
+
+Refer to the following API description for details.
+
+ 
+
+Implement each required function by referring to the following API description.
+
+
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+
+
+The following is the description of API to be written in the User Code.
+
+ 
+
+void init()
+
+This function is an initialization function for test cases. It is called once at the beginning of each test case.
+
+ 
+
+No product is added.
+
+int add(int mGoodsID, int mCategory, int mRank)
+
+This function adds a product whose ID is mGoodsID, category is mCategory, and rank is mRank.
+
+ 
+
+A product with the same ID does not exist. An ID is not input repeatedly.
+
+However, it can be added again after being deleted by remove().
+
+ 
+
+After adding the product, the number of products in the same category as the added product is returned.
+
+ 
+
+Parameters
+
+ mGoodsID : Product ID (1 ≤ mGoodsID ≤ 1,000,000,000)
+
+ mCategory : Category (1 ≤ mCategory ≤ 5)
+
+ mRank : Rank (1 ≤ mRank ≤ 5)
+
+ 
+
+Returns
+
+ After adding the product, the number of products in the same category as the added product is returned.
+
+int remove(int mGoodsID)
+
+This function deletes Product mGoodsID.
+
+ 
+
+When remove() is called, Product mGoodsID always exists.
+
+ 
+
+After deleting the product, the number of products in the same category as the deleted product is returned.
+
+ 
+
+Parameters
+
+ mGoodsID : Product ID (1 ≤ mGoodsID ≤ 1,000,000,000)
+
+ 
+
+Returns
+
+ After deleting the product, the number of products in the same category as the deleted product is returned.
+
+int changeRank(int mGoodsID, int mRank)
+
+This function changes the rank of Product mGoodsID to mRank.
+
+ 
+
+When changeRank() is called, Product mGoodsID always exists.
+
+ 
+
+If the rank changes, the ID of the product with the highest rank (the smallest rank value) in the same category as Product mGoodsID is returned after the rank changes.
+
+If multiple products have the highest rank, the greatest ID value is returned.
+
+ 
+
+Parameters
+
+ mGoodsID : Product ID (1 ≤ mGoodsID ≤ 1,000,000,000)
+
+ mRank : Rank to change to (1 ≤ mRank ≤ 5)
+
+ 
+
+Returns
+
+ If the rank changes, the ID of the product with the highest rank (the smallest rank value) in the same category as Product mGoodsID is returned after the rank changes.
+
+If multiple products have the highest rank, the greatest ID value is returned.
+
+int swapRank(int mCategory, int mRank1, int mRank2)
+
+This function switches the rank of products whose rank is mRank1 and the rank of products whose rank is mRank2 within mCategory.
+In other words, the rank of all products whose rank is mRank1 changes to mRank2, and the rank of all products whose rank is mRank2 changes to mRank1.
+
+ 
+
+The same value can be given as input to mRank1 and mRank2.
+
+ 
+
+The result of subtracting the number of products whose rank is mRank2 from the number of products whose rank is mRank1 before switching is returned.
+
+ 
+
+Parameters
+
+ mCategory : Category (1 ≤ mCategory ≤ 5)
+
+ mRank1 : Rank to switch 1 (1 ≤ mRank1 ≤ 5)
+
+ mRank2 : Rank to switch 2 (1 ≤ mRank2 ≤ 5)
+
+ 
+
+Returns
+
+ The result of subtracting the number of products whose rank is mRank2 from the number of products whose rank is mRank1 before switching is returned.
+
+Result getTopRanks()
+
+This function finds three products with the highest priority among all products, stores them in Result struct, and return it.
+
+ 
+
+The higher the rank, the higher the priority. (Note: The smaller the rank value, the higher the rank.) For products that have the same rank, the greater the ID value, the higher the priority.
+
+ 
+
+The IDs of products with high priority are stored in Result.ids[0 ~ 2].
+
+The ID of the product with the highest priority among them are stored in Result.ids[0]. The ID of the product with the lowest priority among them is stored in Result.ids[2].
+
+ 
+
+If less than three products are found, Result struct is returned with the products found stored in order from Result.ids[0] and -1 stored in the rest of its indices.
+
+If no product is found, Result struct is returned with -1 stored in all its indices.
+
+ 
+
+Returns
+
+ Three products with the highest priority among all products are found, stored in Result struct, and returned.
+
+[Constraints]
+
+
+
+1. init() is called at the beginning of each test case.
+
+2. For each test case, add() is called up to 50,000 times.
+
+3. For each test case, remove() is called up to 5,000 times.
+
+4. For each test case, changeRank() is called up to 50,000 times.
+
+6. For each test case, swapRank() is called up to 50,000 times.
+
+7. For each test case, getTopRanks() is called up to 150 times.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#include<bits/stdc++.h>
+using namespace std;
+  
+  
+  
+  
+#define MAX_RESULT 3
+  
+  
+struct Result {
+    int ids[MAX_RESULT];
+};
+struct product
+{
+    int id;
+    int category;
+    int rank;
+    bool remove;
+}products[50005];
+  
+  
+struct comp
+{
+    bool operator()(int a, int b)const
+    {
+          
+        return a>b;
+    }
+};
+struct comp2
+{
+    bool operator()(pair<int,int> a, pair<int,int> b)const
+    {
+  
+  
+        if (a.first == b.first)
+        {
+            return a.second > b.second;
+        }
+        return a.first < b.first;
+    }
+};
+set<int, comp>st[6][6];
+unordered_map<int, int>mp;
+set<pair<int, int>, comp2>final;
+int idx;
+void init() {
+  
+  
+    idx = 0;
+    for (int i = 0; i < 6; i++)
+    {
+        for (int j = 0; j < 6; j++)
+        {
+            st[i][j].clear();
+        }
+    }
+    for (int i = 0; i < 50005; i++)
+    {
+        products[i] = { 0 };
+    }
+  
+  
+    mp.clear();
+}
+  
+  
+int add(int mGoodsID, int mCategory, int mRank) {
+    products[idx].id = mGoodsID;
+    products[idx].category = mCategory;
+    products[idx].rank = mRank;
+    products[idx].remove = false;
+    mp[mGoodsID] = idx;
+  
+  
+    st[mCategory][mRank].insert({mGoodsID});
+  
+  
+    idx++;
+    int ans = 0;
+    for (int i = 1; i <= 5; i++)
+    {
+        ans += st[mCategory][i].size();
+    }
+    return ans;
+}
+  
+  
+int remove(int mGoodsID) {
+    int current_idx = mp[mGoodsID];
+    int current_category = products[current_idx].category;
+    int current_rank = 0;
+    for (int i = 1; i <= 5; i++)
+    {
+        if (st[current_category][i].find(mGoodsID) != st[current_category][i].end())
+        {
+            current_rank = i;
+            break;
+        }
+    }
+    st[current_category][current_rank].erase(mGoodsID);
+    mp.erase(mGoodsID);
+    int ans = 0;
+    for (int i = 1; i <= 5; i++)
+    {
+        ans += st[current_category][i].size();
+    }
+    return ans;
+}
+  
+  
+int changeRank(int mGoodsID, int mRank) {
+    int current_idx = mp[mGoodsID];
+    int current_category = products[current_idx].category;
+    products[current_idx].rank = mRank;
+    int current_rank = 0;
+    for (int i = 1; i <= 5; i++)
+    {
+        if (st[current_category][i].find(mGoodsID) != st[current_category][i].end())
+        {
+            current_rank = i;
+            break;
+        }
+    }
+    st[current_category][current_rank].erase(mGoodsID);
+    st[current_category][mRank].insert(mGoodsID);
+    for (int i = 1; i <= 5; i++)
+    {
+        auto it = st[current_category][i].begin();
+        if (it != st[current_category][i].end())
+        {
+            return *it;
+              
+            break;
+        }
+    }
+    return -1;
+}
+  
+  
+int swapRank(int mCategory, int mRank1, int mRank2) {
+    if (mRank1 == mRank2)
+    {
+        return 0;
+    }
+    int temp1 = st[mCategory][mRank1].size();
+    int temp2 = st[mCategory][mRank2].size();
+    st[mCategory][mRank1].swap(st[mCategory][mRank2]);
+    return temp1 - temp2;
+}
+  
+  
+Result getTopRanks() {
+    Result res = { {-1, -1, -1} };
+    int cnt = 0;
+    for (int i = 1; i <= 5; i++)
+    {
+          
+        for (int j = 1; j <= 5; j++)
+        {
+            int temp = 0;
+            auto it = st[j][i].begin();
+             
+            while (temp<3 && it != st[j][i].end())
+            {
+                final.insert({ i,*it });
+                temp++;
+                it++;
+            }
+              
+        }
+        if (final.size() >= 3)
+        {
+            break;
+        }
+    }
+    auto it1 = final.begin();
+    while (cnt < 3 && it1 != final.end())
+    {
+        res.ids[cnt] = it1->second;
+        cnt++;
+        it1++;
+    }
+    final.clear();
+    return res;
+}
