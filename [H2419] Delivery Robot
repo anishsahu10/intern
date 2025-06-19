@@ -1,0 +1,277 @@
+[Problem Description]
+
+A delivery robot and N cities are given. Each city has an ID value that ranges from 0 to N-1.
+
+One-way roads that connect the cities and their travel time are given.
+
+Given the location of the delivery robot and M pieces of delivery information, you want to calculate the minimum time required to complete all deliveries.
+
+(The delivery robot can deliver only one item at a time. In other words, it cannot carry two or more items at once.
+The time required to load and unload an item is deemed 0.)
+
+[Fig. 1] is an example of five cities.
+
+
+                         [Fig. 1]
+
+Let’s look into the case in which the location of the robot is given as City 0, and three pieces of delivery information are given as in [Fig. 2].
+
+
+                  [Fig. 2]
+
+According to [Fig. 3], the time required to complete all deliveries is 59.
+
+(a) It takes 18 hours to travel from City 0 to City 1 and 9 hours to load an item in City 1 and transport it to City 3. (Time required for (a) : 27)
+
+(b) It takes 3 hours to travel to City 4 and 7 hours to load an item in City 4 and transport it to City 2. (Time required for (b) : 10)
+
+(c) It takes 10 hours to travel to City 1 and 12 hours to load an item in City 1 and transport it to City 4. (Time required for (c) : 22)
+
+(Time required for (a) : 27) + (Time required for (b) : 10) + (Time required for (c) : 22) = 59
+
+
+
+[Fig. 3]
+
+According to [Fig. 4], the time required to complete all deliveries is 56. 56 is the minimum time required to complete all deliveries.
+
+(Time required for (a) : 30) + (Time required for (b) : 7) + (Time required for (c) : 19) = 56
+
+
+
+[Fig. 4]
+
+ 
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+ 
+
+
+The following is the description of API to be written in the User Code.
+
+void init(int N, int E, int sCity[], int eCity[], int mTime[])
+
+This function is called at the beginning of each test case.
+
+N cities are given. Each city has an ID value that ranges from 0 to N-1.
+
+E pieces of road information – the departure city, arrival city, and travel time of each road – are given.
+
+Since the roads are one-way roads, you can only travel from the departure city to the arrival city.
+
+There is no case in which two or more roads have the same pair of departure city and arrival city.
+
+There is no case in which the departure city and the arrival city of a road are the same.
+
+ 
+
+Parameters
+
+  N: Number of cities ( 5 ≤ N ≤ 50 )
+
+  E: Number of roads ( 8 ≤ E ≤ 500 )
+
+ 
+
+  For every i (0 ≤ i ＜ E),
+
+  sCity[i]: Departure city of Road i ( 0 ≤ sCity[i] < N )
+
+  eCity[i]: Arrival city of Road i ( 0 ≤ eCity[i] < N )
+
+  mTime[i]: Travel time of Road i ( 1 ≤ mTime[i] ≤ 100 )
+
+void add(int sCity, int eCity, int mTime)
+
+This function adds a road, of which the departure city is sCity, the arrival city is eCity, and the travel time is mTime.
+
+Since the roads are one-way roads, you can only travel from the departure city to the arrival city.
+
+A new city that was not given in init() is not given.
+
+There is no case in which a road that connects sCity to eCity already exists.
+
+There is no case in which sCity and eCity are the same.
+
+ 
+
+Parameters
+
+  sCity: Departure city of the road ( 0 ≤ sCity < N )
+
+  eCity: Arrival city of the road ( 0 ≤ eCity < N )
+
+  mTime: Travel time of the road ( 1 ≤ mTime ≤ 100 )
+
+int deliver(int mPos, int M, int mSender[], int mReceiver[])
+
+City mPos is given as the location of the delivery robot.
+
+M pieces of delivery information – the sender city and the receiver city of each item – are given.
+
+This function returns the minimum time required to complete all deliveries.
+
+There is no case in which two or more items have the same pair of sender city and receiver city.
+
+There is no case in which the sender city and the receiver city of an item are the same.
+
+There is no case in which delivery is impossible.
+
+ 
+
+Parameters
+
+  mPos: City where the robot is ( 0 ≤ mPos < N )
+
+  M: Number of deliveries ( 3 ≤ M ≤ 8 )
+
+ 
+
+  For every i (0 ≤ i ＜ M),
+
+  mSender[i]: Sender city of the (i + 1)th delivery ( 0 ≤ mSender[i] < N )
+
+  mReceiver[i]: Receiver city of the (i + 1)th delivery ( 0 ≤ mReceiver[i] < N )
+
+ 
+
+Returns
+
+  The minimum time required to complete all M deliveries is returned.
+
+[Constraints]
+
+1. init() is called at the beginning of each test case.
+
+2. For each test case, add() is called up to 700 times.
+
+3. For each test case, deliver() is called up to 300 times.
+
+------------------------------------------------------------------------------------------------------------------------------
+
+using namespace std;
+#define MAXCITY 51
+ 
+#define INT_MAX 999999
+ 
+#define min(a,b) (a<b? a:b)
+ 
+int NumCity;
+int NumRoads;
+int dis[MAXCITY][MAXCITY];
+int sender[8];
+int reciever[8];
+int visited[8];
+int res;
+int mVal;
+ 
+ 
+void init(int N, int E, int sCity[], int eCity[], int mTime[]) {
+    NumCity = N;
+    NumRoads = E;
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            if (i == j)
+                dis[i][j] = 0;
+            else
+                dis[i][j] = INT_MAX;
+        }
+    }
+    for (int i = 0; i < E; i++)
+    {   
+        dis[sCity[i]][eCity[i]] = mTime[i];
+    }
+    for (int k = 0; k < N; k++)
+    {
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < N; j++)
+            {
+                if (dis[i][j] > (dis[i][k] + dis[k][j]))
+                {
+                    dis[i][j] = dis[i][k] + dis[k][j];
+                }
+            }
+        }
+     
+    }
+    return;
+}
+ 
+void add(int sCity, int eCity, int mTime) {
+ 
+ 
+    bool flag = true;
+ 
+ 
+ 
+    if (dis[sCity][eCity] < mTime)
+    {
+        flag = false;
+    }
+    else
+    {
+ 
+        dis[sCity][eCity] = mTime;
+    }
+    if (flag == false) return;
+    for (int i = 0; i < NumCity; i++)
+    {
+        for (int j = 0; j < NumCity; j++)
+        {
+            if (dis[i][j] > (dis[i][sCity] + dis[sCity][eCity] + dis[eCity][j]))
+            {
+                dis[i][j] = dis[i][sCity] + dis[sCity][eCity] + dis[eCity][j];
+            }
+        }
+    }
+ 
+    return;
+}
+void dfs(int pos ,  int visited[8],  int cnt,int sum)
+{
+    if (sum >= res) return;
+    if (cnt == mVal)
+    {
+        res = min(res, sum);
+        return;
+    }
+    for (int i = 0; i < mVal; i++)
+    {
+        if (!visited[i])
+        {
+            visited[i]
+                = 1;
+            dfs(reciever[i], visited, cnt + 1, sum + dis[pos][sender[i]]);
+            visited[i]
+                = 0;
+        }
+    }
+ 
+}
+ 
+int deliver(int mPos, int M, int mSender[], int mReceiver[]) {
+ 
+    int time = 0;
+    mVal = M;
+    res = INT_MAX;
+    for (int i = 0; i < mVal; i++)
+    {
+        time += dis[mSender[i]][mReceiver[i]];
+        sender[i] = mSender[i];
+        reciever[i] = mReceiver[i];
+        visited[i]=0;
+    }
+ 
+    dfs(mPos, visited, 0, 0);
+ 
+        time += res;
+    return time;
+ 
+ 
+}
