@@ -1,0 +1,140 @@
+[Problem Description]
+
+You want to create an editor program that manipulates two large numbers.
+
+The editor must be able to perform the following functions.
+
+1. The editor provides two lines, and a number is written in each line.
+
+2. You can attach a number to the left or right side of the number written in the editor.
+
+3. When a number is created by connecting the two numbers written in the editor in order,
+  the editor must be able to count how many times a specific number appears in the number.
+
+The editor provides two lines, and large numbers, each of which is to be written in each line, are given.
+
+Each of the given numbers are composed of an array of digits ranging from 1 to 9
+
+You can complete a number by connecting the digits given in the array.
+
+The following two lines show numbers created by using the digits given in arrays.
+
+[5, 4, 3, 1, 9, 5, 5, 1, 1, 1] à 5431955111
+
+[1, 1, 1, 2, 1, 2, 1, 2, 1, 2, 4, 4, 3, 1, 1] à 111212121244311
+
+Initially, each of the given numbers are written in each line of the editor.
+
+
+You can attach a number to the left or right side of the number written in the editor.
+
+If you attach 215 to the left side of 5431955111, it becomes 2155431955111.
+
+If you attach 215 to the right side of 5431955111, it becomes 5431955111215.
+
+ 
+When a number is created by connecting the two numbers written in the editor in order,
+the editor must be able to count how many times a specific number appears in the number.
+
+The specific number is a 3-digit number.
+
+If 5431955111 and 111212121244311 are written in order in the editor,
+the number created by connecting them is 5431955111111212121244311.
+
+
+In the created number, 431 appears 2 times in the locations marked with black lines in [Fig.1] (a).
+
+In the created number, 121 appears 3 times in the locations marked with black lines in [Fig.1] (b).
+
+In the created number, 111 appears 4 times in the locations marked with black lines in [Fig.1] (c).
+
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+ 
+The following is the description of API to be written in the User Code.
+
+void init(int mCnt1, int mDigitList1[30000],
+                                   int mCnt2, int mDigitList2[30000])
+
+This function is called at the beginning of each test case.
+Information on the numbers, each of which is to be written in each line, is given.
+
+The number to be written in the first line is given as mDigitList1 composed of mCnt1 digits.
+
+The i+1th digit from the left is mDigitList1[i]. (0 ≤ i ≤ mCnt1-1)
+
+The number to be written in the second line is given as mDigitList2 composed of mCnt2 digits.
+
+The i+1th digit from the left is mDigitList2[i]. (0 ≤ i ≤ mCnt2-1)
+
+It is guaranteed that each digit ranges from 1 to 9.
+
+__Parameters
+
+_    mCnt1 : Number of digits of the number to be written in the first line (10 ≤ mCnt1 ≤ 30,000)
+_    mDigitList1[i] : The (i+1)th digit of the number to be written in the first line (1 ≤ mDigitList1[i] ≤ 9)
+_    mCnt2 : Number of digits of the number to be written in the second line (10 ≤ mCnt2 ≤ 30,000)
+_    mDigitList2[i] : The (i+1)th digit of the number to be written in the second line (1 ≤ mDigitList2[i] ≤ 9)
+
+void append(int mDir, int mNum1, int mNum2)
+
+This function attaches a number to the left or right side of the number written in the editor.
+
+If mDir = 0, the given number is written on the left.
+If mDir = 1, the given number is written on the right.
+
+mNum1 is attached to the number in the first line.
+
+mNum2 is attached to the number in the second line.
+
+mNum1 and mNum2 are composed of maximum 4 digits.
+
+It is guaranteed that mNum1 and mNum2 do not contain 0.
+
+For example, 102 or 40 is not given.
+
+For each test case, it is guaranteed that the function is called up to 20,000 times when mDir=0.
+
+For each test case, it is guaranteed that the function is called up to 20,000 times when mDir=1.
+
+__Parameters
+
+____ mDir : Direction where the number is to be attached (0 ≤ mDir ≤ 1)
+____ mNum1 : Number to be attached to the first line (1 ≤ mNum1 ≤ 9999)
+____ mNum2 : Number to be attached to the second line (1 ≤ mNum2 ≤ 9999)
+
+int countNum(int mNum)
+
+This function returns the number of times mNum appears in the number created by connecting the two numbers written in the editor in order.
+
+If mNum does not appear, 0 is returned.
+
+mNum is always a 3-digit number.
+
+It is guaranteed that mNum does not contain 0.
+
+For example, 102 or 340 is not given.
+
+
+__Parameters
+
+____ mNum : Number whose appearance is to be counted (111 ≤ mNum ≤ 999)
+
+ 
+__Returns
+
+ Number of times the given number appears
+
+[Constraints]
+
+1. init() is called at the beginning of each test case.
+
+2. For each test case, append() is called up to 30,000 times.
+
+3. For each test case, countNum() is called up to 30,000 times.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
