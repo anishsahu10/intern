@@ -131,65 +131,105 @@ Returns
 
 5. For each test case, getCnt() is called up to 30,000 times.
 
---------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------
 
-#include <unordered_map>
+#include<iostream>
+#include<unordered_map>
+#include<cstring>
+ 
 using namespace std;
-
-class MusicScheduler {
-private:
-    int musicDuration;
-    unordered_map<int, pair<int, int>> employees; // mID -> (mStart, mEnd)
-    
-public:
-    void init(int musicTime) {
-        musicDuration = musicTime;
-        employees.clear();
+ 
+#define Bsize 2000001
+ 
+int BITree[Bsize];
+ 
+struct Node {
+    int id;
+    int start;
+    int end;
+}pool[5001];
+ 
+ 
+unordered_map<int, int> mp;
+ 
+ 
+void update(int index,int val) {
+    index++;
+ 
+    while (index < Bsize) {
+        BITree[index] += val;
+        index += index & (-index);
     }
-    
-    void add(int mID, int mStart, int mEnd) {
-        employees[mID] = {mStart, mEnd};
-    }
-    
-    void remove(int mID) {
-        employees.erase(mID);
-    }
-    
-    int getCnt(int mBSTime) {
-        int musicEndTime = mBSTime + musicDuration;
-        int count = 0;
-        
-        for (const auto& emp : employees) {
-            int shiftStart = emp.second.first;
-            int shiftEnd = emp.second.second;
-            
-            // Employee can listen to entire music if:
-            // 1. Shift starts at or before music starts
-            // 2. Shift ends at or after music ends
-            if (shiftStart <= mBSTime && shiftEnd >= musicEndTime) {
-                count++;
-            }
-        }
-        
-        return count;
-    }
-};
-
-// Global instance
-MusicScheduler scheduler;
-
-void init(int musicTime) {
-    scheduler.init(musicTime);
 }
-
-void add(int mID, int mStart, int mEnd) {
-    scheduler.add(mID, mStart, mEnd);
+ 
+int query(int index) {
+    index++;
+    int sum = 0;
+ 
+    while (index > 0) {
+        sum += BITree[index];
+        index -= index & (-index);
+    }
+ 
+    return sum;
 }
-
-void remove(int mID) {
-    scheduler.remove(mID);
+ 
+ 
+ 
+ 
+ 
+ 
+int idx;
+int musicDuration;
+void init(int musicTime)
+{
+    mp.clear();
+    idx = 0;
+    musicDuration = musicTime;
+ 
+    memset(BITree, 0, sizeof(BITree));
+ 
 }
-
-int getCnt(int mBSTime) {
-    return scheduler.getCnt(mBSTime);
+ 
+void add(int mID, int mStart, int mEnd)
+{
+     
+    if (mp.find(mID) != mp.end()) {
+        int id = mp[mID];
+        mp.erase(mID);
+        update(pool[id].start, -1);
+        update(pool[id].end + 1 - musicDuration, 1);
+    }
+    mp[mID] = idx;
+    pool[idx].id = mID;
+    pool[idx].start = mStart;
+    pool[idx].end = mEnd;
+ 
+    idx++;
+ 
+    // update in fenvick
+ 
+    update(mStart, 1);
+    update(mEnd + 1 - musicDuration, -1);
+ 
+}
+ 
+void remove(int mID)
+{
+    if (mp.find(mID) == mp.end()) {
+        return;
+    }
+ 
+    int id = mp[mID];
+ 
+    mp.erase(mID);
+ 
+    update(pool[id].start, -1);
+    update(pool[id].end + 1 - musicDuration, 1);
+}
+ 
+int getCnt(int mBSTime)
+{
+    int ans = query(mBSTime);
+    return ans;
 }
