@@ -1,0 +1,238 @@
+[Problem Description]
+
+A drawing board has a square shape and consists of N * N cells. N is an integer represented as 2K. (2 ≤ K ≤ 9)
+
+[Fig. 1] shows the drawing board when N = 8 and K = 3.
+
+(r, c) written on a cell means that the cell is on the rth row and the cth column.
+
+Row number and column number start from 0. (0 ≤ r, c ≤ N – 1)
+
+A cell has either 0 or 1 as the value that represents its color.
+
+The drawing board can be encoded or decoded.
+
+Through encoding, values of cells are converted into a string. Through decoding, the string is converted back into the values of cells.
+
+Here are encoding rules. (‘x’ represents the character x.)
+
+① - If the values of all cells are 0, the result is ‘0’. If the values of all cells are 1, the result is ‘1’, and encoding ends.
+
+② - In cases other than ①, divide the width and length of the area in half to make four quadrants.
+
+③ - Repeat ① for each of the four quadrants in the order of top-left, top-right, bottom-left, and bottom-right. Then, piece the results together sequentially. (Refer to [Fig. 2].)
+
+④ - Enclose the result of ③ between ‘(’ and ‘)’.
+
+[Fig. 3-1] – [Fig. 3-3] shows what happens when the drawing board is encoded. “” represents a string.
+
+Bold borders enclose areas divided during encoding. Cells in an area enclosed by bold borders have the same value.
+
+Decoding is encoding done backwards.
+
+You can put a dot on the drawing board. A dot has color and size.
+
+If you put an mSize-sized dot at (r, c), the values of cells that are less than mSize away from (r, c) turn into the color value of the dot.
+
+The distance between (rA, cA) and (rB, cB) is |rA – rB| + |cA – cB|.
+
+[Fig. 4-1] – [Fig. 4-4] shows what happens when a dot is put on the drawing board.
+
+[Fig. 4-1] is the state before a dot is put at (2, 2). [Fig. 4-2] – [Fig. 4-4] are the states after a dot is put at (2, 2). The color value of the dot is 1, and its size is 1 in [Fig. 4-2], 2 in [Fig. 4-3], and 3 in [Fig. 4-4].
+
+The orange cell is where a dot is put. The yellow cells are the ones that experience value changes after the dot is put on the orange cell.
+
+You can paint cells on the drawing board in a particular color.
+
+If a cell is painted, cells that are adjacent to the painted cell in four directions (up, down, left, and right) and have the same color value are also painted.
+
+The values of all painted cells turn into the color value of the paint
+
+[Fig. 5-1] – [Fig. 5-3] shows what happens when a cell is painted.
+
+[Fig. 5-1] is the state before (2, 2) is painted. [Fig. 5-2] and [Fig. 5-3] are the states after (2, 2) is painted. The color value of the paint is 1 in [Fig. 5-2] and 0 in [Fig. 5-3].
+
+The orange cell is the one that is painted. The yellow cells are the ones that experience value changes after the orange cell is painted.
+
+Write a program that edits the drawing board as explained above.
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+The following is the description of API to be written in the User Code. 
+
+void init(int N, int L, char mCode[])
+
+This function initializes test cases.
+
+The drawing board consists of N * N cells. mCode, which is an L-long string, is decoded to restore the values of cells.
+
+Refer to [Problem Description] for encoding and decoding procedures.
+
+N is an integer represented as 2K. (2 ≤ K ≤ 9)
+
+Parameters
+  N : Length of an edge of the drawing board (4 ≤ N ≤ 512)
+  L : Length of mCode (1 ≤ L ≤ 200,000)
+  mCode : Encoded string
+
+int encode(char mCode[])
+
+This function encodes the values of cells on the drawing board, stores the encoded string in mCode, and returns its length.
+
+It is guaranteed that the maximum length of the encoded string is 200,000.
+
+For example, if the encoded result is “(0010)”, mCode[0] = ‘(’, mCode[1] = ‘0’, mCode[2] = ‘0’, mCode[3] = ‘1’, mCode[4] = ‘0’, mCode[5] = ‘)’ are stored and 6 is returned.
+
+Parameters
+  mCode : Array that stores the encoded string
+
+Returns
+  Length of the encoded string
+
+void makeDot(int mR, int mC, int mSize, int mColor)
+
+This function puts an mSize-sized, mColor-colored dot at (mR, mC).
+
+Refer to [Problem Description] for the procedure of putting a dot.
+
+Parameters
+  mR : Row of the cell where the dot is to be put (0 ≤ mR ≤ N - 1)
+  mC : Column of the cell where the dot is to be put (0 ≤ mC ≤ N - 1)
+  mSize : Size of the dot (1 ≤ mSize ≤ 5)
+  mColor : Color value of the dot (0 ≤ mColor ≤ 1)
+
+void paint(int mR, int mC, int mColor)
+
+This function paints (mR, mC) in mColor.
+
+Refer to [Problem Description] for the procedure of painting.
+
+Parameters
+  mR : Row of the cell to be painted (0 ≤ mR ≤ N - 1)
+  mC : Column of the cell to be painted (0 ≤ mC ≤ N - 1)
+  mColor : Color value of the paint (0 ≤ mColor ≤ 1)
+
+int getColor(int mR, int mC)
+
+This function returns the color value of (mR, mC).
+
+Parameters
+  mR : Row of the cell, the color value of which you want to find out (0 ≤ mR ≤ N - 1)
+  mC : Column of the cell, the color value of which you want to find out (0 ≤ mC ≤ N - 1)
+
+Returns
+  Color value of (mR, mC)
+
+[Constraints]
+
+1. init() is called once at the beginning of each test case.
+
+2. For each test case, encode() is called up to 30 times.
+
+3. For each test case, makeDot() is called up to 10,000 times.
+
+4. For each test case, paint() is called up to 10 times.
+
+5. For each test case, getColor() is called up to 10,000 times.
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+#include<iostream>
+using namespace std;
+#define MAXN 512
+pair<int,int> q[MAXN * MAXN];
+int head, tail;
+int N;
+int board[MAXN][MAXN];
+int drArr[5] = {0,1,0,-1, 0};
+  
+  
+int decode(int rStart, int cStart, int rEnd, int cEnd, char mCode[], int ind){
+    if (mCode[ind] == '0' || mCode[ind] == '1'){
+        for (int r = rStart; r < rEnd; ++r)
+            for (int c = cStart; c < cEnd; ++c)
+                board[r][c] = mCode[ind] - '0';
+    }
+    else{
+        ++ind;
+        int midR = (rStart + rEnd) / 2;
+        int midC = (cStart + cEnd) / 2;
+        ind = decode(rStart, cStart, midR, midC, mCode, ind);
+        ind = decode(rStart, midC, midR, cEnd, mCode, ind);
+        ind = decode(midR, cStart, rEnd, midC, mCode, ind);
+        ind = decode(midR, midC, rEnd, cEnd, mCode, ind);
+    }
+    return ind + 1;
+}
+void dotFunc(int r, int c, int v)   {
+    if (r >= 0 && r < N && c >= 0 && c < N)
+        board[r][c] = v;
+}
+int checkColor(int rStart, int cStart, int rEnd, int cEnd){
+    for (int r = rStart; r < rEnd; ++r)
+        for (int c = cStart; c < cEnd; ++c)
+            if (board[r][c] != board[rStart][cStart])
+                return -1;
+    return board[rStart][cStart];
+}
+int encodeHelper(int rStart, int cStart, int rEnd, int cEnd, char code[], int ind){
+    int color = checkColor(rStart, cStart, rEnd, cEnd);
+    if (color != -1)code[ind] = '0' + color;
+    else{
+        code[ind++] = '(';
+        int midR = (rStart + rEnd) / 2;
+        int midC = (cStart + cEnd) / 2;
+        ind = encodeHelper(rStart, cStart, midR, midC, code, ind);
+        ind = encodeHelper(rStart, midC, midR, cEnd, code, ind);
+        ind = encodeHelper(midR, cStart, rEnd, midC, code, ind);
+        ind = encodeHelper(midR, midC, rEnd, cEnd, code, ind);
+        code[ind] = ')';
+    }
+    return ind + 1;
+}
+void init(int N, int L, char mCode[]){
+    ::N = N;
+    for (int i = 0; i < N; ++i)
+        for (int j = 0; j < N; ++j)
+            board[i][j] = 0;
+    decode(0, 0, N, N, mCode, 0);
+}
+int encode(char mCode[]){
+    return encodeHelper(0, 0, N, N, mCode, 0);
+}
+void makeDot(int mR, int mC, int mSize, int mColor){
+    dotFunc(mR, mC, mColor);
+    for (int i = 1; i < mSize; ++i){
+        for (int j = 0; j < i; ++j){
+            dotFunc(mR - (i - j), mC + j, mColor);
+            dotFunc(mR + (i - j), mC - j, mColor);
+            dotFunc(mR + j, mC + (i - j), mColor);
+            dotFunc(mR - j, mC - (i - j), mColor);
+        }
+    }
+}
+int getColor(int mR, int mC){
+    return board[mR][mC];
+}
+void paint(int mR, int mC, int mColor){
+    if (board[mR][mC] == mColor)return;
+    head = tail = 0;
+    q[tail++] = { mR,mC };
+    board[mR][mC] = mColor;
+    
+    while (head <tail){
+        auto curr = q[head++];
+        int r = curr.first;
+        int c = curr.second;
+    
+        for (int i = 0; i < 4; i++){
+            int R = r + drArr[i], C = c + drArr[i + 1];
+            if ((R >= 0 && R < N && C >= 0 && C < N) && board[R][C] != mColor){
+                q[tail++] = { R,C };
+                board[R][C] = mColor;
+            }
+        }
+    }
+}
