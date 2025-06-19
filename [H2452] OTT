@@ -2,10 +2,6 @@
 
 There is an OTT system that has N users.
 
- 
-
- 
-
 The system provides the following features.
 
   ① Registering a film
@@ -16,45 +12,21 @@ The system provides the following features.
 
   ④ Recommending up to five films based on the films that a user watched recently
 
- 
-
- 
-
 Each user has an ID ranging from 1 to N. Users are distinguished based on IDs.
-
- 
-
- 
 
 Each film has an ID and a genre.
 
 Films are distinguished based on IDs. All films have different IDs. A genre is represented as a number ranging from 1 to 5.
 
- 
-
- 
-
 Also, each film has a total score.
 
 If a user rates the score of a film after watching it, the total score of the film increases as much as the score rated by the user.
-
- 
-
- 
 
 Each user has a watch history list. If a user watches a film, the film is added to the watch history list.
 
 Also, the user does not watch the same film again after watching it.
 
- 
-
- 
-
 A film can be deleted. After being deleted, the film cannot be watched or recommended, and it is deleted from the watch history lists of users.
-
- 
-
- 
 
 The OTT service recommends films to a user based on the following rules.
 
@@ -70,33 +42,19 @@ The OTT service recommends films to a user based on the following rules.
 
        If multiple films have the same total score, the more recently the film has been registered, the higher the priority.
 
- 
-
- 
-
 Implement each required function by referring to the following API description.
 
 ※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
 
 The following is the description of API to be written in the User Code.
 
- 
-
- 
-
 void init(int N)
 
 This function is an initialization function for test cases. It is called once at the beginning of each test case.
 
- 
-
 The OTT has N users. Users are distinguished based on IDs ranging from 1 to N.
 
- 
-
 Initially, no film has been registered to the system, and no user has watched a film.
-
- 
 
 Parameter
 
@@ -106,21 +64,13 @@ int add(int mID, int mGenre, int mTotal)
 
 This function registers a film whose ID is mID, genre is mGenre, and total score is mTotal.
 
- 
-
 If the registration is successful, 1 is returned. If it fails, 0 is returned.
 
 The registration fails if a film with the same ID has already been registered.
 
- 
-
 There is no case in which a film with a deleted ID is registered again.
 
- 
-
 The later this function is called, the more recently the film has been registered.
-
- 
 
 Parameters
 
@@ -130,61 +80,39 @@ Parameters
 
   mTotal : Total score of the film to register (0 ≤ mTotal ≤ 1,000)
 
- 
-
 Return
 
   Whether the registration of the film has been successful or not. (Success: 1, Failure: 0)
-
- 
 
 int erase(int mID)
 
 This function deletes Film mID.
 
- 
-
 If the deletion is successful, 1 is returned. If it fails, 0 is returned.
 
 The deletion fails if Film mID has not been registered or has already been deleted.
-
- 
 
 Parameter
 
   mID : ID of the film to delete (1 ≤ mID ≤ 1,000,000,000)
 
- 
-
 Return
 
   Whether the deletion of the film has been successful or not. (Success: 1, Failure: 0)
-
- 
 
 int watch(int uID, int mID, int mRating)
 
 User uID watches Film mID and rates it mRating points.
 
- 
-
 The total score of the film increases by mRating points.
-
- 
 
 If the user successfully watches the film, 1 is returned. If the user fails to watch the film, 0 is returned.
 
 The user fails to watch the film if Film mID has not been registered, has been deleted, or has already been watched by the user.
 
- 
-
 If the user fails to watch the film, the total score of the film does not change.
 
- 
-
 The later this function is called, the more recently the film has been watched.
-
- 
 
 Parameter
 
@@ -194,37 +122,23 @@ Parameter
 
   mRating : Score rated after watching the film (1 ≤ mRating ≤ 10)
 
- 
-
 Return
 
   Whether the user has successfully watched the film or not. (Success: 1, Failure: 0)
-
- 
 
 RESULT suggest(int uID)
 
 This function recommends up to five films to User uID.
 
- 
-
 Refer to [Problem Description] for the process of recommending films.
-
- 
 
 The number of recommended films is stored in RESULT.cnt. The ID of the i-th film in order of recommendation priority is stored in RESULT.IDs[i – 1] and returned. (1 ≤ i ≤ RESULT.cnt)
 
- 
-
 If there is no film to recommend, 0 is stored in RESULT.cnt.
-
- 
 
 Parameter
 
   uID : ID of the user to whom films are recommended (1 ≤ uID ≤ N)
-
- 
 
 Return
 
