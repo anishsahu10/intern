@@ -1,0 +1,297 @@
+[Problem Description]
+
+You want to write a program that stores bacteria and finds out how their lifespans change.
+
+ 
+
+A bacterium kept in the storage has a lifespan and half-life, which is the amount of time it takes for the bacterium’s lifespan to halve.
+
+ 
+
+The lifespan of a bacterium halves every time its half-life passes since the time when it entered the storage.
+
+If the lifespan is a decimal number, remove the digits after the decimal point. For example, if the lifespan is 1267.5, round it down to 1267.
+
+A bacterium with a lifespan of 99 or less is discarded.
+
+ 
+
+The following is repeated at every hour in the storage.
+
+  1. The lifespans of bacteria kept in the storage halve every time their half-life passes since the time when they entered the storage.
+
+  2. Bacteria with a lifespan of 99 or less are discarded.
+
+  3. New bacteria enter the storage.
+
+ 
+
+Write a program that manages the storage.
+
+ 
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for Java, refer to the provided Solution.java and UserSolution.java.
+
+The following is the description of API to be written in the User Code. 
+
+void init()
+
+This function is called at the beginning of each test case.
+
+ 
+
+ 
+
+Initially, the storage is empty, and the time is set to Time 0.
+
+ 
+
+void addBacteria(int tStamp, int mID, int mLifeSpan, int mHalfTime)
+
+This function stores a bacterium of which the ID is mID, the lifespan is mLifeSpan, and the half-life is mHalfTime at Time tStamp.
+
+ 
+
+ 
+
+The lifespan of Bacterium mID halves every time mHalfTime passes since Time tStamp.
+
+For example, if mLifeSpan = 1715 and mHalfTime = 100,
+the lifespan of the bacterium halves every 100 hours since Time tStamp (1715 → 857 → 428 → 214 → 107 → 53). When the lifespan becomes 53, which is within the range of 99 or less, the bacterium is discarded.
+
+Initially, the value of mID is 1. It increases by 1 afterwards.
+
+ 
+
+ 
+
+Parameters
+
+  tStamp      : Time when the bacterium enters the storage (1 ≤ tStamp ≤ 1,000,000 )
+
+  mID         : ID of the bacterium ( 1 ≤ mID ≤ 30,000 )
+
+  mLifeSpan : Lifespan of the bacterium ( 100 ≤ mLifeSpan ≤ 1,000,000 )
+
+  mHalfTime : Half-life of the bacterium ( 10 ≤ mHalfTime ≤ 150,000 )
+
+int getMinLifeSpan(int tStamp)
+
+This function returns the ID of the bacterium in the storage with the shortest lifespan at Time tStamp.
+
+ 
+
+ 
+
+Bacteria with a lifespan of 99 or less are discarded at Time tStamp and thus are not included.
+
+If two or more bacteria have the shortest lifespan, the ID of the bacterium with the smallest ID among them is returned.
+
+If there is no bacterium in the storage, -1 is returned.
+
+ 
+
+ 
+
+Parameters
+
+  tStamp  : Time when the lifespans of bacteria are checked (1 ≤ tStamp ≤ 1,000,000 )
+
+ 
+
+Returns
+
+  ID of the bacterium in the storage with the shortest lifespan. If there is no bacterium in the storage, -1 is returned.
+
+int getCount(int tStamp, int mMinSpan, int mMaxSpan)
+
+This function returns the number of bacteria in the storage with a lifespan of mMinSpan to mMaxSpan.
+
+ 
+
+ 
+
+The storage may not contain bacteria with a lifespan of mMinSpan to mMaxSpan.
+
+mMaxSpan is greater than mMinSpan.
+
+ 
+
+ 
+
+Parameters
+
+  tStamp      : Time when the number of bacteria in the storage is counted (1 ≤ tStamp ≤ 1,000,000 )
+
+  mMinSpan  : Shortest possible lifespan of the bacteria counted ( 100 ≤ mMinSpan ≤ 1,000,000 )
+
+  mMaxSpan  : Longest possible lifespan of the bacteria counted ( 100 ≤ mMaxSpan ≤ 1,000,000 )
+
+ 
+
+Returns
+
+  Number of bacteria in the storage with a lifespan of mMinSpan to mMaxSpan
+
+[Constraints]
+
+1. init() is called at the beginning of each test case.
+
+2. For each test case, the value of tStamp always increases.
+
+3. For each test case, addBacteria() is called up to 30,000 times.
+
+4. For each test case, getMinLifeSpan() is called up to 1,000 times.
+
+5. For each test case, getCount() is called up to 15,000 times.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+#include<set>
+#include<cstring>
+using namespace std;
+#define MAXTIMESTAMP 1000000
+struct bacteria {
+    int mId;
+    int entryTime;
+    int mLifeSpan;
+    int mHalfTime;
+    int mNextHalfLife;
+    bacteria (){}
+    bacteria(int id, int tStamp, int lifespan, int halflife,int nexthalflife):mId(id), entryTime(tStamp), mLifeSpan(lifespan), mHalfTime(halflife), mNextHalfLife(halflife+ tStamp){}
+};
+ 
+struct compNextHalfLife {
+    bool operator()(const bacteria a, const bacteria b) const{
+        if (a.mNextHalfLife<b.mNextHalfLife)
+            return true;
+        else if (a.mNextHalfLife > b.mNextHalfLife)
+            return false;
+        else if (a.mNextHalfLife == b.mNextHalfLife)
+        {
+            if (a.mLifeSpan < b.mLifeSpan)
+                return true;
+            if (a.mLifeSpan > b.mLifeSpan)
+                return false;
+            return(a.mId < b.mId);
+        }
+        else
+            return(a.mId < b.mId);
+    }
+};
+ 
+struct compLifeSpan {
+    bool operator()(const bacteria a, const bacteria b) const {
+        if (a.mLifeSpan < b.mLifeSpan)
+            return true;
+        if (a.mLifeSpan > b.mLifeSpan)
+            return false;
+        return(a.mId < b.mId);
+    }
+};
+set<bacteria, compLifeSpan> s1Life;
+set<bacteria, compNextHalfLife> s2HalfLife;
+int segTreeArray[1000000 * 4];
+ 
+void nodeUpdate(int start, int end, int index, int nodeIndex, int updatedValue)
+{
+    if (start > end)
+        return;
+    if (nodeIndex<start || nodeIndex>end)
+        return;
+    if (start == end)
+    {
+        segTreeArray[index] += updatedValue;
+        return;
+    }
+    int mid = (start + end) >> 1;
+    nodeUpdate(start, mid, 2 * index + 1, nodeIndex, updatedValue);
+    nodeUpdate(mid + 1, end, 2 * index + 2, nodeIndex, updatedValue);
+    segTreeArray[index] = segTreeArray[2 * index + 1] + segTreeArray[2 * index + 2];
+}
+ 
+int getNodeValue(int start, int end, int index, int nodeIndex)
+{
+ 
+    if (start == end)
+    {
+        return segTreeArray[index];
+    }
+    int mid = (start + end) >> 1;
+    if (nodeIndex <= mid)
+        int left = getNodeValue(start, mid, 2 * index + 1, nodeIndex);
+    else
+        int right = getNodeValue(mid + 1, end, 2 * index + 2, nodeIndex);
+}
+int rangeQuery(int start, int end, int queryStartIndex, int queryEndIndex, int index)
+{
+    if (end < queryStartIndex || start>queryEndIndex)
+    {
+        return 0;
+    }
+    if (start >= queryStartIndex && end <= queryEndIndex)
+        return segTreeArray[index];
+    int mid = (start + end) >> 1;
+    int leftSum = rangeQuery(start, mid, queryStartIndex, queryEndIndex, 2 * index + 1);
+    int rightSum = rangeQuery(mid + 1, end, queryStartIndex, queryEndIndex, 2 * index + 2);
+    return leftSum + rightSum;
+}
+ 
+void init()
+{
+    s1Life.clear();
+    s2HalfLife.clear();
+    memset(segTreeArray, 0, sizeof(segTreeArray));
+}
+ 
+void addBacteria(int tStamp, int mID, int mLifeSpan, int mHalfTime)
+{
+    bacteria b(mID, tStamp, mLifeSpan, mHalfTime, mHalfTime + tStamp);
+    s1Life.insert(b);
+    s2HalfLife.insert(b);
+    nodeUpdate(100, MAXTIMESTAMP, 0, mLifeSpan, 1);
+}
+void updateSetsAtGivenTime(int tStamp)
+{
+    auto it = s2HalfLife.begin();
+    if (it->mNextHalfLife <= tStamp)
+    {
+        while (it != s2HalfLife.end() && it->mNextHalfLife <= tStamp)
+        {
+            int lifereductioncount = tStamp - it->mNextHalfLife;
+            bacteria b1 = *it;
+            bacteria temp = b1;
+            s1Life.erase(b1);
+            nodeUpdate(100, MAXTIMESTAMP, 0, b1.mLifeSpan, -1);
+            ++it;
+            do
+            {
+                temp.mLifeSpan /= 2;
+                temp.mNextHalfLife += temp.mHalfTime;
+                lifereductioncount -= temp.mHalfTime;
+            } while (lifereductioncount > 0);
+            s2HalfLife.erase(b1);
+            if (temp.mLifeSpan > 99)
+            {
+                s1Life.insert(temp);
+                s2HalfLife.insert(temp);
+                nodeUpdate(100, MAXTIMESTAMP, 0, temp.mLifeSpan, 1);
+            }
+        }
+    }
+}
+int getMinLifeSpan(int tStamp)
+{
+    updateSetsAtGivenTime(tStamp);
+    return s1Life.begin()->mId;
+}
+ 
+int getCount(int tStamp, int mMinSpan, int mMaxSpan)
+{
+    updateSetsAtGivenTime(tStamp);
+    int count = 0;
+    count = rangeQuery(100, MAXTIMESTAMP, mMinSpan, mMaxSpan, 0);
+    return (count);
+}
