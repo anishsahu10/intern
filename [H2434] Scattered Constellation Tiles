@@ -1,0 +1,324 @@
+[Problem Description]
+
+As in [Fig. 1], 5 * 5 constellation tiles are scattered on an N * N plane.
+
+
+
+(r, c) is the location of the cell in the rth row and cth column.
+
+Row number and column number start from 0.
+
+ 
+
+Tiles scattered on the plane meet the following two conditions.
+
+1. For all tiles, their front sides are facing up. It’s impossible to tell if they are rotated by 90, 180, or 270 degrees.
+
+2. They do not overlap with each other.
+
+ 
+
+A tile has a size of 5 * 5. It has the following two characteristics.
+
+1. 7 stars exist on it.
+
+2. At least 1 star exists in each of the four areas in [Fig. 2].
+
+
+
+ 
+
+In [Fig. 1], 3 types of tiles are scattered on the plane. [Fig. 3] shows each of them.
+
+
+
+ 
+
+When you search for tiles, it is guaranteed that a 5 * 5 area is a tile if 7 stars exist on it.
+
+The tile in the area meets the two aforementioned characteristics, and it doesn’t overlap with other tiles.
+
+ 
+
+Given information on the plane, write a program that finds the number of scattered tiles.
+
+ 
+
+ 
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+ 
+
+The following is the description of API to be written in the User Code.
+
+void init(int N, int mPlane[][])
+
+This function is called at the beginning of each test case.
+
+
+mPlane[][] is the information on an N * N plane.
+
+mPlane[][] consists of 1 and 0. A star is represented as 1.
+
+
+
+Parameters
+
+   N        : Length of a side of the plane ( 10 ≤ N ≤ 1,000 )
+
+   mPlane[][] : Information on the plane where tiles are scattered ( 0 ≤ mPlane[][] ≤ 1 )
+
+int getCount(int mPiece[][])
+
+This function finds mPiece[][] tiles, which have a size of 5 * 5, on the plane and returns their number.
+
+
+
+mPiece[][] consists of 1 and 0. A star is represented as 1.
+
+mPiece[][] has the two characteristics mentioned in [Problem Description].
+
+mPiece[][] tiles may be rotated by 90, 180, or 270 degrees on the plane.
+
+If no mPiece[][] tile exists on the plane, 0 is returned.
+
+
+
+Parameters
+
+   mPiece[][] : Tile to be counted ( 0 ≤ mPiece[][] ≤ 1 )
+
+Returns
+
+   Number of mPiece[][] tiles on the plane. If no mPiece[][] tile exists, 0 is returned.
+
+int getPosition(int mRow, int mCol)
+
+This function finds all tiles of the same type as the tile which is covering (mRow, mCol) cell on the plane and returns the central value of the uppermost tile among them.
+
+If two or more uppermost tiles are found, the central value of the leftmost tile among them is returned.
+
+
+If the location of the red central cell is (row, col), the central value of the tile is (row * 10000 + col).
+
+
+
+
+(mRow, mCol) cell on the plane is always covered by a tile.
+
+
+
+Parameters
+
+   mRow : Vertical location on the plane ( 0 ≤ mRow ≤ N - 1 )
+
+   mCol : Horizontal location on the plane ( 0 ≤ mCol ≤ N - 1 )
+
+Returns
+
+   Central value of the uppermost tile among tiles of the same type as the tile which is covering (mRow, mCol) cell.
+
+   If two or more uppermost tiles are found, the central value of the leftmost tile among them is returned.
+
+[Constraints]
+
+1. init() is called at the beginning of each test case.
+
+2. For each test case, if 7 stars exist in a 5 * 5 area on the plane, a tile exists in the area.
+
+3. For each test case, there is only one way in which tiles searched for on the plane are arranged.
+
+4. For each test case, getCount() is called up to 10,000 times.
+
+5. For each test case, getPosition() is called up to 3,000 times.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#include <unordered_map>
+#include <vector>
+using namespace std;
+ 
+#define MAX_SIZE    1000
+ 
+int visited[MAX_SIZE][MAX_SIZE];
+int Map[MAX_SIZE][MAX_SIZE];
+ 
+unordered_map<int,int> Cnt;
+unordered_map<int,int> bestPos;
+struct Tile{
+    int group;
+    int cx,cy;
+    Tile(){};
+    Tile(int group,int cx, int cy) :group(group), cx(cx), cy(cy){};
+};
+Tile tiles[10000];
+int nextId;
+int maxId = 0;
+ 
+bool isTile(int x, int y){
+    int edge = 0;
+    int sum = 0;
+    for(int i = x - 2; i <= x+2; i++){
+        for(int j = y - 2; j <= y + 2; j++){
+            if(Map[i][j] == 1){
+                sum ++;
+                if(i == x - 2 || i == x + 2 ){
+                    edge++;
+                }
+                if(j == y - 2 || j == y + 2){
+                    edge++;
+                }
+            }
+        }
+    }
+ 
+    int id = 0;int index = 1;
+    if(sum == 7 && edge >= 4){
+        nextId++;
+        maxId = max(nextId,maxId);
+        for(int i = x - 2; i <= x+2; i++){
+            for(int j = y - 2; j <= y + 2; j++){
+                visited[i][j] = nextId;
+            }
+        }
+        return true;
+    }
+    else
+        return false;
+}
+ 
+int updateHash(int x, int y){
+    // 0 degree
+    int id = 0;
+    int temp;
+    for(int i = x - 2; i <= x + 2; i++){
+        for(int j = y - 2; j <= y + 2; j++){
+            id = (id << 1) | Map[i][j];
+        }
+    }
+    temp = id;
+    if(Cnt.count(id) != 0 ){
+        return id;
+    }
+ 
+    //90 degree;
+    id = 0;
+    for(int j = y + 2; j >= y - 2; j--){
+        for(int i = x - 2; i <= x + 2; i++){
+            id = (id << 1) | Map[i][j];
+        }
+    }
+    if(Cnt.count(id) != 0 ){
+        return id;
+    }
+ 
+    //180 degree;
+    id = 0;
+    for(int i = x + 2; i >= x - 2; i--){
+        for(int j = y + 2 ; j >= y - 2; j--){
+            id = (id << 1) | Map[i][j];
+        }
+    }
+    if(Cnt.count(id) != 0 ){
+        return id;
+    }
+ 
+    //270 degree;
+    id = 0;
+    for(int j = y - 2; j <= y + 2; j++){
+        for(int i = x + 2; i >= x - 2; i--){
+            id = (id << 1) | Map[i][j];
+        }
+    }
+    if(Cnt.count(id) != 0 ){
+        return id;
+    }
+    return temp;
+}
+ 
+void init(int N, int mPlane[MAX_SIZE][MAX_SIZE])
+{
+    Cnt.clear();
+    bestPos.clear();
+    nextId = 0;
+    for(register int i = 0 ; i < N; i++){
+        for(register int j = 0 ; j < N; j++){
+            Map[i][j] = mPlane[i][j];
+            visited[i][j] = 0;
+        }
+    }
+ 
+    for(register int i = 2 ; i < N-2; i++){
+        for(register int j = 2 ; j < N-2; j++){
+            if(visited[i][j] == 0 && isTile(i,j)){
+                int temp = updateHash(i,j);
+                Cnt[temp]++;
+                if(bestPos.count(temp) == 0) bestPos[temp] = nextId;
+                tiles[nextId] = Tile(temp,i,j);
+            }
+        }
+    }
+}
+ 
+int getCount(int mPiece[5][5])
+{
+    // 0 degree
+    int id = 0;
+    for(int i = 0; i <= 4; i++){
+        for(int j = 0; j <= 4; j++){
+            id = (id << 1) | mPiece[i][j];
+        }
+    }
+    if(Cnt.count(id) != 0 ){
+        return Cnt[id];
+    }
+ 
+    //90 degree;
+    id = 0;
+    for(int j = 4; j >= 0; j--){
+        for(int i = 0; i <= 4; i++){
+            id = (id << 1) | mPiece[i][j];
+        }
+    }
+    if(Cnt.count(id) != 0 ){
+        return Cnt[id];
+    }
+ 
+    //180 degree;
+    id = 0;
+    for(int i = 4; i >= 0; i--){
+        for(int j = 4; j >=0; j--){
+            id = (id << 1) | mPiece[i][j];
+        }
+    }
+    if(Cnt.count(id) != 0 ){
+        return Cnt[id];
+    }
+ 
+    //270 degree;
+    id = 0;
+    for(int j = 0; j <= 4; j++){
+        for(int i = 4; i >= 0; i--){
+            id = (id << 1) | mPiece[i][j];
+        }
+    }
+    if(Cnt.count(id) != 0 ){
+        return Cnt[id];
+    }
+    return 0;
+}
+ 
+int getPosition(int mRow, int mCol)
+{
+    int id =  visited[mRow][mCol];
+    int grp = tiles[id].group;
+    int cx = tiles[bestPos[grp]].cx;
+    int cy = tiles[bestPos[grp]].cy;
+ 
+    return cx*10000 + cy;
+ 
+    return 0;
+}
