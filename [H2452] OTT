@@ -1,0 +1,396 @@
+[Problem Description]
+
+There is an OTT system that has N users.
+
+ 
+
+ 
+
+The system provides the following features.
+
+  ① Registering a film
+
+  ② Deleting a registered film
+
+  ③ Enabling a user to rate the score of a film after watching it
+
+  ④ Recommending up to five films based on the films that a user watched recently
+
+ 
+
+ 
+
+Each user has an ID ranging from 1 to N. Users are distinguished based on IDs.
+
+ 
+
+ 
+
+Each film has an ID and a genre.
+
+Films are distinguished based on IDs. All films have different IDs. A genre is represented as a number ranging from 1 to 5.
+
+ 
+
+ 
+
+Also, each film has a total score.
+
+If a user rates the score of a film after watching it, the total score of the film increases as much as the score rated by the user.
+
+ 
+
+ 
+
+Each user has a watch history list. If a user watches a film, the film is added to the watch history list.
+
+Also, the user does not watch the same film again after watching it.
+
+ 
+
+ 
+
+A film can be deleted. After being deleted, the film cannot be watched or recommended, and it is deleted from the watch history lists of users.
+
+ 
+
+ 
+
+The OTT service recommends films to a user based on the following rules.
+
+  ⓐ Films that have already been watched by the user or deleted are excluded.
+
+  ⓑ Only the films of the same genre as the film rated the highest score by the user among up to five films in the watch history list that were most recently watched by the user are recommended.
+
+       If multiple films were rated the highest score by the user, only the films of the same genre as the film that the user watched most recently are recommended.
+
+  ⓒ If no film exists in the user’s watch history list, films of all genres are recommended.
+
+  ⓓ Among the films that meet the conditions above, up to five films are recommended in order from the film with the highest total score.
+
+       If multiple films have the same total score, the more recently the film has been registered, the higher the priority.
+
+ 
+
+ 
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+The following is the description of API to be written in the User Code.
+
+ 
+
+ 
+
+void init(int N)
+
+This function is an initialization function for test cases. It is called once at the beginning of each test case.
+
+ 
+
+The OTT has N users. Users are distinguished based on IDs ranging from 1 to N.
+
+ 
+
+Initially, no film has been registered to the system, and no user has watched a film.
+
+ 
+
+Parameter
+
+  N : Number of service users (3 ≤ N ≤ 1,000)
+
+int add(int mID, int mGenre, int mTotal)
+
+This function registers a film whose ID is mID, genre is mGenre, and total score is mTotal.
+
+ 
+
+If the registration is successful, 1 is returned. If it fails, 0 is returned.
+
+The registration fails if a film with the same ID has already been registered.
+
+ 
+
+There is no case in which a film with a deleted ID is registered again.
+
+ 
+
+The later this function is called, the more recently the film has been registered.
+
+ 
+
+Parameters
+
+  mID : ID of the film to register (1 ≤ mID ≤ 1,000,000,000)
+
+  mGenre : Genre of the film to register (1 ≤ mGenre ≤ 5)
+
+  mTotal : Total score of the film to register (0 ≤ mTotal ≤ 1,000)
+
+ 
+
+Return
+
+  Whether the registration of the film has been successful or not. (Success: 1, Failure: 0)
+
+ 
+
+int erase(int mID)
+
+This function deletes Film mID.
+
+ 
+
+If the deletion is successful, 1 is returned. If it fails, 0 is returned.
+
+The deletion fails if Film mID has not been registered or has already been deleted.
+
+ 
+
+Parameter
+
+  mID : ID of the film to delete (1 ≤ mID ≤ 1,000,000,000)
+
+ 
+
+Return
+
+  Whether the deletion of the film has been successful or not. (Success: 1, Failure: 0)
+
+ 
+
+int watch(int uID, int mID, int mRating)
+
+User uID watches Film mID and rates it mRating points.
+
+ 
+
+The total score of the film increases by mRating points.
+
+ 
+
+If the user successfully watches the film, 1 is returned. If the user fails to watch the film, 0 is returned.
+
+The user fails to watch the film if Film mID has not been registered, has been deleted, or has already been watched by the user.
+
+ 
+
+If the user fails to watch the film, the total score of the film does not change.
+
+ 
+
+The later this function is called, the more recently the film has been watched.
+
+ 
+
+Parameter
+
+  uID : ID of the user who watches the film (1 ≤ uID ≤ N)
+
+  mID : ID of the film to watch (1 ≤ mID ≤ 1,000,000,000)
+
+  mRating : Score rated after watching the film (1 ≤ mRating ≤ 10)
+
+ 
+
+Return
+
+  Whether the user has successfully watched the film or not. (Success: 1, Failure: 0)
+
+ 
+
+RESULT suggest(int uID)
+
+This function recommends up to five films to User uID.
+
+ 
+
+Refer to [Problem Description] for the process of recommending films.
+
+ 
+
+The number of recommended films is stored in RESULT.cnt. The ID of the i-th film in order of recommendation priority is stored in RESULT.IDs[i – 1] and returned. (1 ≤ i ≤ RESULT.cnt)
+
+ 
+
+If there is no film to recommend, 0 is stored in RESULT.cnt.
+
+ 
+
+Parameter
+
+  uID : ID of the user to whom films are recommended (1 ≤ uID ≤ N)
+
+ 
+
+Return
+
+  Recommended films. Their number is stored in RESULT.cnt. Their IDs are stored in RESULT.IDs in order of priority.
+
+ [Constraints]
+
+1. init() is called once at the beginning of each test case.
+
+2. For each test case, add() is called up to 10,000 times.
+
+3. For each test case, erase() is called up to 1,000 times.
+
+4. For each test case, watch() is called up to 30,000 times.
+
+5. For each test case, suggest() is called up to 5,000 times.
+
+6. A user watches up to 1,000 films.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+#include<iostream>
+#include<vector>
+#include<set>
+#include<unordered_map>
+  
+using namespace std;
+  
+#define MAX_USERS (1010)
+#define MAX_OTT (10050)
+  
+  
+struct RESULT
+{
+    int cnt;
+    int IDs[5];
+};
+  
+struct OTT {
+    int idx;  //custom id
+    int id;   //given movie id
+    int genre;
+    int rating; //total rating
+    int deleted;
+};
+OTT ott[MAX_OTT];
+  
+struct cmp {
+    bool operator()(const OTT* a, const OTT* b)const {
+        if (a->rating == b->rating)
+            return a->idx > b->idx;  //recent movie means highest custom index
+        return a->rating > b->rating; //highest rating
+    }
+};
+  
+  
+set<OTT*, cmp>s[6];  //[0] all genre info, others 1-5 respective genre info
+  
+struct userinfo {
+    int idx; //custom index of movie
+    int mID;
+    int rate;  //user rating for that mID
+};
+vector<userinfo>user_wl[MAX_USERS];
+  
+int watched[MAX_USERS][MAX_OTT];
+  
+unordered_map<int, OTT*>map;
+  
+int idx;
+int vis;
+  
+  
+void init(int N)
+{
+    idx = 0;
+    vis++;
+    map.clear();
+    for (int i = 0; i<6; i++)
+    {
+        s[i].clear();
+    }
+    for (int i = 0; i<MAX_USERS; i++)
+    {
+        user_wl[i].clear();
+    }
+    return;
+}
+  
+int add(int mID, int mGenre, int mTotal)
+{
+    OTT* temp = map[mID];
+    if (!temp)
+    {
+        map[mID] = &ott[++idx];
+        ott[idx] = { idx,mID,mGenre,mTotal,0 };
+        s[0].insert(&ott[idx]);
+        s[mGenre].insert(&ott[idx]);
+        return 1;
+    }
+  
+    return 0;
+}
+  
+int erase(int mID)
+{
+    OTT *temp = map[mID];
+    if (temp)
+    {
+        temp->deleted = 1;
+        s[0].erase(temp);
+        s[temp->genre].erase(temp);
+        map[mID] = 0;
+        return 1;
+    }
+    return 0;
+}
+  
+int watch(int uID, int mID, int mRating)
+{
+    OTT* temp = map[mID];
+    if (!temp || temp->deleted == 1 || watched[uID][temp->idx] == vis)
+        return 0;
+  
+    s[0].erase(temp);
+    s[temp->genre].erase(temp);
+    temp->rating += mRating;  //adding the rating to movie
+    s[0].insert(temp);
+    s[temp->genre].insert(temp);
+  
+    user_wl[uID].push_back({ temp->idx,mID,mRating });
+    watched[uID][temp->idx] = vis;
+    return 1;
+  
+  
+}
+  
+RESULT suggest(int uID)
+{
+    RESULT res = {};
+  
+  
+    int count = 0;
+    int max_rating = -1;
+    int genre = 0;
+    for (auto it = user_wl[uID].rbegin(); it != user_wl[uID].rend(); it++)  //iterating through user info, weher user have given highest rating and we need recent movie hence iterating through back of vector
+    {
+        if (ott[it->idx].deleted == 1) //checking if that movie is deleted from ott
+            continue;
+        if (max_rating< it->rate)  //checking max rating given by user condition
+        {
+            max_rating = it->rate;
+            genre = ott[it->idx].genre; //getting that max rating genre
+        }
+        if (++count >= 5) //no need to check after 5, checking only latest 5
+            break;
+    }
+    for (auto x : s[genre])  //max rating genre
+    {
+        if (watched[uID][x->idx] == vis) //if that movie of that genre is already watcahed by that user
+            continue;
+        res.IDs[res.cnt] = x->id; // if not adding that movie
+        if (++res.cnt >= 5) //max 5
+            break;
+    }
+  
+  
+    return res;
+}
