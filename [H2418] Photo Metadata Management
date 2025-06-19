@@ -1,0 +1,322 @@
+[Problem Description]
+
+Photos are stored in a storage medium. Each photo has metadata.
+
+Metadata contains various kinds of data.
+
+Each value is in the form of “Type:[Value]”. Here is a list of types.
+
+Type - Note
+
+ID - Range : 1 – 1,000,000 ex) ID:[9999]
+
+Time & Date - Format : yyyy/MM/dd,HH:mm:ss
+
+Year Range: 2000 – 2100
+
+Month Range: 1 – 12 (Leap year X)
+
+Hour Range: 0 – 23
+
+ex) TIME:[2024/5/3,9:15:7]
+
+Location - A string no longer than 10 English alphabet characters
+
+ex) LOC:[house]
+
+People - A string no longer than 10 English alphabet characters per person.
+
+1 – 5 people per photo, who are separated by commas.
+
+ex) PEOPLE:[I,brother,sister,mom]
+
+Metadata of each photo is passed in the form of a single string which contains no whitespace character. In metadata, values are arranged by type in the order of ID, time & date, location, and people and are separated by commas.
+
+For each test case, photos have different IDs and are taken at different time & date. There are up to 9 kinds of locations and people.
+
+Here is an example of metadata.
+
+ID:[384748],TIME:[2015/2/2,0:21:50],LOC:[school],PEOPLE:[I,dad,mom]
+
+The ID of the photo is 384748. It is a photo of three people – I, dad, and mom – taken at school at 0:21:50 on Feb. 2, 2015.
+
+You should implement the following three features:
+
+1. A feature that stores newly passed metadata in the system.
+
+Newly passed metadata is more recent than existing metadata.
+
+2. A feature that finds, based on time & date, the Kth-latest photo among photos filtered by a particular keyword.
+
+A keyword can either be a location or a person. All the photos taken at a particular location or all the photos that have a particular person in them are filtered.
+
+A keyword is given in the form of “Type:[Value]”.
+
+Its type is either LOC or PEOPLE, and only one value is given.
+
+Here are two examples.
+
+a. LOC:[street] : All the photos taken at “street” are included.
+
+b. PEOPLE:[mom] : All the photos that have “mom” in them are included.
+
+3. A feature that deletes the oldest photo.
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+The following is the description of API to be written in the User Code.
+
+void init(int N, char mPictureList[][200])
+
+This function initializes test cases. It is called once at the beginning of each test case.
+
+N pieces of metadata are passed.
+
+All the photos are taken at different time & and date.
+
+Parameters
+
+  N : Number of pieces of metadata passed (1 ≤ N ≤ 10,000)
+
+  mPictureList : Metadata
+
+void savePictures(int M, char mPictureList[][200])
+
+M pieces of metadata are passed.
+
+Time & date of newly passed metadata is more recent than that of existing metadata.
+
+All the photos are taken at different time & date.
+
+Parameters
+
+  M : Number of pieces of metadata passed (1 ≤ M ≤ 100)
+
+  mPictureList : Metadata
+
+int filterPictures(char mFilter[], int K)
+
+This function returns the ID of the Kth-latest photo among the photos filtered by mFilter.
+
+Only one location or person is filtered.
+
+K = 1 for the latest photo.
+
+K or more photos are filtered by mFilter.
+
+Parameters
+
+  mFilter : Filter information
+
+  K : The Kth photo (1 ≤ K ≤ 1,000,000)
+
+Returns
+
+  ID of the photo that meets the condition.
+
+int deleteOldest(void)
+
+This function deletes the oldest photo and returns its ID.
+
+Returns
+
+  ID of the deleted photo.
+
+[Constraints]
+
+1. init() is called once at the beginning of each test case.
+
+2. For each test case, savePictures() is called up to 1,000 times.
+
+3. For each test case, filterPictures() is called up to 100,000 times.
+
+4. For each test case, deleteOldest() is called up to 1,000 times.
+
+5. For each test case, there are up to 9 kinds of locations and people.
+
+6. Metadata is always given in the right format and includes ID, time & date, location, and people.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+#include<bits/stdc++.h>
+using namespace std;
+  
+struct photo {
+    int id;
+    int date;
+    int month;
+    int year;
+    int hours;
+    int mins;
+    int secs;
+    string location;
+    vector<string> people;
+};
+  
+photo pool[1000005];
+  
+struct comp {
+    bool operator()(const int &a, const int &b) const{
+        if (pool[a].year == pool[b].year) {
+            if (pool[a].month == pool[b].month) {
+                if (pool[a].date == pool[b].date) {
+                    if (pool[a].hours == pool[b].hours) {
+                        if (pool[a].mins == pool[b].mins) {
+                            return pool[a].secs < pool[b].secs;
+                        }
+                        return pool[a].mins < pool[b].mins;
+                    }
+                    return pool[a].hours < pool[b].hours;
+                }
+                return pool[a].date < pool[b].date;
+            }
+            return pool[a].month < pool[b].month;
+        }
+        return pool[a].year < pool[b].year;
+    }
+};
+  
+unordered_map<string, vector<int>> locationId;
+unordered_map<string, vector<int>> peopleId;
+vector<int> images;
+  
+int ind = 0;
+  
+void savePictures(int M, char pictureList[][200])
+{
+    set <int, comp> st;
+    int ID;
+    for (int j = 0; j < M; j++) {
+        int i = 4;
+        string val = "";
+        while (pictureList[j][i] != ']') {
+            val += pictureList[j][i];
+            i++;
+        }
+        ID = stoi(val);
+        pool[ID].id = stoi(val);
+        while (pictureList[j][i] != '[') i++;
+        i++;
+        val = "";
+        while (pictureList[j][i] != '/') {
+            val += pictureList[j][i];
+            i++;
+        }
+        pool[ID].year = stoi(val);
+        val = "";
+        i++;
+        while (pictureList[j][i] != '/') {
+            val += pictureList[j][i];
+            i++;
+        }
+        pool[ID].month = stoi(val);
+        val = "";
+        i++;
+        while (pictureList[j][i] != ',') {
+            val += pictureList[j][i];
+            i++;
+        }
+        pool[ID].date = stoi(val);
+        val = "";
+        i++;
+        while (pictureList[j][i] != ':') {
+            val += pictureList[j][i];
+            i++;
+        }
+        pool[ID].hours = stoi(val);
+        i++;
+        val = "";
+        while (pictureList[j][i] != ':') {
+            val += pictureList[j][i];
+            i++;
+        }
+        pool[ID].mins = stoi(val);
+        i++;
+        val = "";
+        while (pictureList[j][i] != ']') {
+            val += pictureList[j][i];
+            i++;
+        }
+        pool[ID].secs = stoi(val);
+        val = "";
+          
+        while (pictureList[j][i] != '[') i++;
+        i++;
+  
+        while (pictureList[j][i] != ']') {
+            val += pictureList[j][i];
+            i++;
+        }
+        pool[ID].location = val;
+        val = "";
+          
+        while (pictureList[j][i] != '[') i++;
+        i++;
+        pool[ID].people.clear();
+        while (pictureList[j][i] != ']') {
+            val = "";
+            while (pictureList[j][i] != ',' && pictureList[j][i] != ']') {
+                val += pictureList[j][i];
+                i++;
+            }
+            pool[ID].people.push_back(val);
+            if (pictureList[j][i] == ']') break;
+            i++;
+        }
+  
+        st.insert(ID);
+    }
+  
+    for (auto it = st.begin(); it != st.end();it++) {
+        int ID = *it;
+        string loc = pool[ID].location;
+        locationId[loc].push_back(ID);
+        for (int i = 0; i < pool[ID].people.size(); i++) {
+            string person = pool[ID].people[i];
+            peopleId[person].push_back(ID);
+        }
+        images.push_back(ID);
+    } 
+}
+  
+void init(int N, char pictureList[][200])
+{
+    ind = 0;
+    images.clear();
+    locationId.clear();
+    peopleId.clear();
+    savePictures(N, pictureList);
+}
+  
+int filterPictures(char mFilter[], int K)
+{
+    int i = 0;
+    if (mFilter[i] == 'L') {
+        i = 5;
+    }
+    else if (mFilter[i] == 'P') {
+        i = 8;
+    }
+    string val = "";
+    while (mFilter[i] != ']') {
+        val += mFilter[i];
+        i++;
+    }
+    if (mFilter[0] == 'L') {
+        int n = locationId[val].size();
+        return locationId[val][n-K];
+    }
+    else {
+        int n = peopleId[val].size();
+        return peopleId[val][n-K];
+    }
+}
+  
+int deleteOldest(void)
+{
+    int id = images[ind];
+    ind++;
+    return id;
+}
