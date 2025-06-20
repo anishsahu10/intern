@@ -1,0 +1,380 @@
+[Problem Description]
+
+A contact consists of a name and a phone number.
+
+If you register a contact, it is added to the contact DB. There is no case in which two or more registered contacts have the same name or phone number.
+
+ 
+
+You can make a call on your phone.
+
+The phone number that you are calling may or may not belong to one of the registered contacts.
+
+ 
+
+If you register or call a contact, its name and phone number are recorded in the log.
+
+If you call a phone number that doesn’t belong to one of the registered contacts, only the phone number is recorded in the log.
+
+ 
+
+You can search for contacts whose names start with a given string.
+
+Among the contacts whose names start with the given string, up to five contacts that were most recently recorded in the log are displayed from latest to oldest. Duplicates are excluded.
+
+ 
+
+You can search for phone numbers that start with a given number.
+
+Among the phone numbers that start with the given number, up to five phone numbers that were most recently recorded in the log are displayed from latest to oldest. Duplicates are excluded.
+
+If the phone number belongs to one of the registered contacts, it is displayed with the name. Unless, only the phone number is displayed.
+
+ 
+
+[Fig. 1] is an example of the contact DB and log. In the log, the latest record is displayed at the top.
+
+
+
+Since phone number 15555555 doesn’t belong to one of the registered contacts, only the phone number is recorded in the log.
+
+If you search for contacts whose names start with “a”, aaaa-33333333 and aa-12222222 are displayed.
+
+If you search for phone numbers that start with “1”, bbb-11111111, 15555555, and aa-12222222 are displayed.
+
+ 
+
+You can delete contacts using names or phone numbers. Deleted contacts are no longer displayed during search.
+
+You can delete phone numbers that don’t belong to registered contacts. Deleted phone numbers are no longer displayed during search.
+
+ 
+
+Implement each required function by referring to the following API description.
+
+※ The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+The following is the description of API to be written in the User Code.
+
+void init()
+
+This function is an initialization function for test cases.
+
+ 
+
+Initially, there is no registered contact and no record in the log.
+
+void add(char mName[], char mTelephone[])
+
+This function adds a contact whose name is mName and phone number is mTelephone to the contact DB.
+
+ 
+
+When the contact is added to the contact DB, it is recorded in the log.
+
+ 
+
+mName is a string that consists of lowercase English alphabets. The range of its length is 1 to 8.
+
+mTelephone is a string that only consists of numbers. Its length is 8.
+
+ 
+
+For C/C++, every string is terminated with '\0', which is not included in the length of the string.
+
+For Java, every string is passed as a String object.
+
+ 
+
+mName, which is passed when add() is called, is not a string that was passed before.
+
+mTelephone, which is passed when add() is called, is not a string that was passed before. Also, it is not a string that was already passed when call() was called.
+
+ 
+
+Parameters
+  mName : Name of the contact to be registered (1 ≤ |mName| ≤ 8, |a| represents the length of string “a”.)
+  mTelephone : Phone number of the contact to be registered (|mTelephone| = 8)
+
+void remove(char mStr[])
+
+This function deletes a contact or phone number given as mStr.
+
+ 
+
+ⅰ- If mStr is a string that consists of lowercase English alphabets,
+
+  ① delete the contact whose name is mStr from the contact DB, and delete its name and phone number from the log.
+
+ 
+
+ⅱ - If mStr is a string that consists of numbers,
+
+  ① if there is a contact whose phone number is mStr, delete the contact from the contact DB, and delete its name and phone number from the log.
+
+  ② if there is no contact whose phone number is mStr, delete the phone number from the log.
+
+ 
+
+Deleted contacts and phone numbers are no longer displayed during search.
+
+ 
+
+If mStr is a string that consists of lowercase English alphabets, it is guaranteed that mStr is the name of a registered contact and is not deleted.
+
+If mStr is a string that consists of numbers, it is guaranteed that mStr is recorded in the log and is not deleted.
+
+ 
+
+Parameters
+  mStr : Name or phone number to be deleted (1 ≤ |mStr| ≤ 8)
+
+void call(char mTelephone[])
+
+This function calls phone number mTelephone.
+
+ 
+
+If you call the phone number, it is recorded in the log.
+
+ 
+
+mTelephone is a string that only consists of numbers. Its length is 8.
+
+ 
+
+Parameters
+  mTelephone : Phone number to call (|mTelephone| = 8)
+
+Result search(char mStr[])
+
+This function finds up to five names or phone numbers that were most recently recorded in the log among the names and phone numbers that start with a given string, mStr, and displays them from latest to oldest. Duplicates are excluded.
+
+ 
+
+ⅰ- If mStr is a string that consists of lowercase English alphabets,
+
+  ① this function finds the contacts whose names start with the given string, mStr, among the contacts added to the contact DB. Up to five contacts that were most recently recorded in the log are stored in the Result structure from latest to oldest and returned.
+
+ 
+
+ⅱ – If mStr is a string that consists of numbers,
+
+  ① this function finds the phone numbers that start with the given string, mStr, in the log. Up to five phone numbers that were most recently recorded in the log are stored in the Result structure from latest to oldest and returned.
+
+  ② if the phone numbers belong to registered contacts, their names are also stored in the Result structure.
+
+ 
+
+The number of contacts or phone numbers returned is stored in Result.size. If no contact or phone number is found, 0 is stored and returned.
+
+ 
+
+The ith name and phone number found are stored in Result.mNameList[i – 1] and Result.mTelephoneList[i – 1], respectively.
+
+ 
+
+If the phone number found does not belong to one of the registered contacts, it is stored in Result.mTelephoneList[i – 1]. In this case, the value stored in Result.mNameList[i – 1] has nothing to do with whether the answer is correct or not.
+
+ 
+
+For C/C++, when a string is stored, '\0' should be stored at the end of the string.
+
+For Java, a string should be passed as a String object.
+
+ 
+
+Parameters
+  mStr : String that comes at the start of the contacts or phone numbers you want to find (1 ≤ |mStr| ≤ 8)
+
+Return
+  Result structure that stores contacts or phone numbers found
+
+[Constraints]
+
+1. init() is called once at the beginning of each test case.
+
+2. For each test case, add() is called up to 3,000 times.
+
+3. For each test case, remove() is called up to 100 times.
+
+4. For each test case, call() is called up to 10,000 times.
+
+5. For each test case, search() is called up to 40,000 times.
+
+6. For each test case, the number of distinct phone numbers that are passed by add() and call() is smaller than or equal to 5,000.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#include <cstring>
+#include <vector>
+#include <string>
+#include <unordered_map>
+   
+#define MAX_DATA        (13005)
+#define MAX_L           (8)
+#define MAX_N           (5)
+   
+using namespace std;
+  
+struct Result
+{
+    int size;
+    char mNameList[MAX_N][MAX_L + 1];
+    char mTelephoneList[MAX_N][MAX_L + 1];
+};
+  
+   
+struct Contact {
+    char mName[MAX_L + 1];
+    char mTelephone[MAX_L + 1];
+    bool isDelete;
+};
+   
+struct Contact contact[MAX_DATA];
+int dataIndex;
+unordered_map<string, int> nameMap, numMap;
+int visit[MAX_DATA];
+int visitNum;
+   
+struct TrieNode {
+    TrieNode* ch[26];
+    vector<int> numList;
+   
+    TrieNode() {
+        memset(ch, 0, sizeof(ch));
+        numList.clear();
+    }
+};
+   
+struct Trie {
+    TrieNode *root;
+   
+    Trie() {
+        root = new TrieNode();
+    }
+   
+    void insert(const string str, int loc, int isName) {
+        TrieNode* node = root;
+        int idx;
+        for (auto & ch : str) {
+            if (isName) {
+                idx = ch - 'a';
+            }
+            else {
+                idx = ch - '0';
+            }
+            if (node->ch[idx] == nullptr) node->ch[idx] = new TrieNode();
+            node->numList.push_back(loc);
+            node = node->ch[idx];
+        }
+        node->numList.push_back(loc);
+        return;
+    }
+   
+    vector<int>* search(const string str, int isName) {
+        TrieNode* node = root;
+        int idx;
+        for (auto & ch : str) {
+            if (isName) {
+                idx = ch - 'a';
+            }
+            else {
+                idx = ch - '0';
+            }
+            if (node->ch[idx] == 0) return {};
+            node = node->ch[idx];
+        }
+        return &(node->numList);
+    }
+};
+   
+Trie *nameTrie, *numTrie;
+   
+void init() {
+    dataIndex = 0;
+    nameMap.clear();
+    numMap.clear();
+    nameTrie = new Trie();
+    numTrie = new Trie();
+    return;
+}
+   
+void add(char mName[], char mTelephone[]) {
+    ++dataIndex;
+    strcpy(contact[dataIndex].mName, mName);
+    strcpy(contact[dataIndex].mTelephone, mTelephone);
+    contact[dataIndex].isDelete = 0;
+   
+    nameMap[mName] = dataIndex;
+    numMap[mTelephone] = dataIndex;
+   
+    nameTrie->insert(mName, dataIndex, 1);
+    numTrie->insert(mTelephone, dataIndex, 0);
+    return;
+}
+   
+void remove(char mStr[]) {
+    int idx;
+    if ('a' <= mStr[0] && mStr[0] <= 'z') {
+        idx = nameMap[mStr];
+        contact[idx].isDelete = 1;
+    }
+    else {
+        idx = numMap[mStr];
+        contact[idx].isDelete = 1;
+    }
+    return;
+}
+   
+void call(char mTelephone[]) {
+    //numMap[mTelephone]如果不存在，会自动插入
+    int idx = numMap[mTelephone];
+    if (idx == 0) {
+        ++dataIndex;
+        strcpy(contact[dataIndex].mName, "");
+        strcpy(contact[dataIndex].mTelephone, mTelephone);
+        contact[dataIndex].isDelete = 0;
+   
+        numMap[mTelephone] = dataIndex;
+        numTrie->insert(mTelephone, dataIndex, 0);
+    }
+    else {
+        numTrie->insert(mTelephone, idx, 0);
+        nameTrie->insert(contact[idx].mName, idx, 1);
+    }
+    return;
+}
+   
+Result search(char mStr[])
+{
+    Result ret;
+    ret.size = 0;
+    visitNum++;
+   
+    vector<int>* vec;
+    if ('a' <= mStr[0] && mStr[0] <= 'z') {
+        vec = nameTrie->search(mStr, 1);
+    }
+    else {
+        vec = numTrie->search(mStr, 0);
+    }
+   
+    if (vec == nullptr) {
+        return ret;
+    }
+    int num = vec->size();
+    int id;
+    for (int i = num - 1, j = 0; i >= 0 && j < 5; i--) {
+        id = (*vec)[i];
+        if (contact[id].isDelete) continue;
+        if (visit[id] < visitNum) {
+            strcpy(ret.mNameList[j], contact[id].mName);
+            strcpy(ret.mTelephoneList[j], contact[id].mTelephone);
+            visit[id] = visitNum;
+            ret.size++;
+            j++;
+        }
+    }
+    return ret;
+}
