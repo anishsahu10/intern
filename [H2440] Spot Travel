@@ -1,0 +1,260 @@
+[Problem Description]
+
+A city has N spots as in [Fig. 1]. Two spots are connected by a road. Roads are bidirectional. The length of a road is represented as Km.
+
+Some of the spots have a rental shop where you can rent and return a bicycle.
+
+ 
+
+
+
+ 
+
+Here are three ways to travel from one spot to another.
+
+  1) On foot
+      - Time : Distance (Km) * 17 minutes
+      - Cost : $0
+
+  2) By bicycle
+      - You can rent a bicycle at spots with a rental shop. A rented bicycle must be returned at a rental shop.
+      - Time : Distance (Km) * 4 minutes
+      - Cost : Distance (Km) * $4
+
+  3) By taxi
+      - You can call a taxi at any spot. A taxi arrives 7 minutes after being called.
+      - While traveling by bicycle, you must return the bicycle at a rental shop to call a taxi.
+      - You can get on and off a taxi only at spots.
+      - Time : Distance (Km) * 1 minute + 7 minutes
+      - Cost : Distance (Km) * $19
+
+ 
+
+You want to find out the minimum cost required to travel from one spot to another within the given time.
+
+(You can find the answer faster if you know the minimum cost for both the means of transportation and the required time to get to each spot.)
+
+ 
+
+Given information on roads that connect spots, write a program that finds the minimum cost required to travel between spots within the given time.
+
+ 
+
+Implement each required function by referring to the following API description.
+
+¡Ø The function signature below is based on C/C++. As for other languages, refer to the provided Main and User Code.
+
+ 
+
+The following is the description of API to be written in the User Code.
+
+void init(int N)
+
+This function is called at the beginning of each test case.
+
+ 
+
+A city has N spots ranging from 1 to N.
+
+Initially, there is no road which connects between spots or a rental shop.
+
+ 
+
+ 
+
+Parameters
+
+   N : Number of spots in the city ( 10 ≤ N ≤ 100 )
+
+void addRoad(int K, int mSpotA[], int mSpotB[], int mDis[])
+
+K roads that connect mSpotA[i] and mSpotB[i] are added. The length of each road is mDis[i].
+
+ 
+
+mSpotA[i] and mSpotB[i] are different from each other.
+
+It is guaranteed that there is no road connecting mSpotA[i] and mSpotB[i]. ( 0 ≤ i ≤ K - 1 )
+
+ 
+
+ 
+
+Parameters
+
+   K        : Number of roads ( 1 ≤ K ≤ 30 )
+
+   mSpotA[] : A spot in the city ( 1 ≤ mSpotA[]≤ N )
+
+   mSpotB[] : Another spot in the city ( 1 ≤ mSpotB[]≤ N )
+
+   mDis[]   : Length of a road (Km) ( 1 ≤ mDis[]≤ 50 )
+
+void addBikeRent(int mSpot)
+
+This function adds a rental shop where you can rent and return a bicycle at mSpot.
+
+ 
+
+Since rental shops always have bicycles, you can rent a bicycle anytime.
+
+It is guaranteed that no rental shop exists at mSpot.
+
+ 
+
+ 
+
+Parameters
+
+   mSpot : Spot where a rental shop is added ( 1 ≤ mSpot ≤ N )
+
+int getMinMoney(int mStartSpot, int mEndSpot, int mMaxTime)
+
+This function finds and returns the minimum cost required to travel from mStartSpot to mEndSpot.
+
+The travel time must not exceed mMaxTime.
+
+ 
+
+mStartSpot and mEndSpot are different from each other.
+
+ 
+
+When traveling from mStartSpot to mEndSpot,
+
+if it is impossible to travel because there is no road, or if it is impossible to travel within mMaxTime, -1 is returned.
+
+ 
+
+If you make it to mEndSpot by bicycle and mEndSpot does not have a rental shop, you can pass through mEndSpot on the bicycle, but you cannot end your travel there.
+
+In this case, you must first return the bicycle at a rental shop at another spot and then travel back to mEndSpot. (Refer to Order 12 of [Example].)
+
+ 
+
+ 
+
+Parameters
+
+   mStartSpot : Starting spot ( 1 ≤ mStartSpot ≤ N )
+
+   mEndSpot : Ending spot ( 1 ≤ mEndSpot ≤ N )
+
+   mMaxTime : Maximum time required to travel from mStartSpot to mEndSpot
+                   ( 5 ≤ mMaxTime ≤ 500 )
+
+ 
+
+Returns
+
+  Minimum cost required to travel from mStartSpot to mEndSpot. The travel time must not exceed mMaxTime.   If it is impossible to travel, or if the travel time exceeds mMaxTime, -1 is returned.
+
+[Constraints]
+
+1. init() is called at the beginning of each test case.
+
+2. For each test case, up to 10 roads are connected to a spot.
+
+3. For each test case, addRoad() is called up to 10 times.
+
+4. For each test case, addBikeRent() is called up to 10 times.
+
+5. For each test case, getMinMoney() is called up to 10 times.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<climits>
+using namespace std;
+ 
+int n = 0;
+vector<pair<int, int>>adj[101];
+vector<bool>isBikeStop(101, false);
+ 
+struct travel {
+    int spotNumber;
+    int spotTime;
+    int spotCost;
+    int mode;
+};
+class comp {
+public:
+    bool operator()(travel a, travel b) {
+        if (a.spotCost == b.spotCost)return a.spotTime > b.spotTime;
+        return a.spotCost > b.spotCost;
+    }
+};
+void init(int N) {
+    n = N;
+    for (int i = 0; i <= n; i++) {
+        adj[i].clear();
+        isBikeStop[i] = false;
+    }
+    return;
+}
+ 
+void addRoad(int K, int mSpotA[], int mSpotB[], int mDis[]) {
+    for (int i = 0; i < K; i++) {
+        int u = mSpotA[i];
+        int v = mSpotB[i];
+        int w = mDis[i];
+        adj[u].push_back({ v, w });
+        adj[v].push_back({ u, w });
+    }
+    return;
+}
+ 
+void addBikeRent(int mSpot) {
+    isBikeStop[mSpot] = true;
+    return;
+}
+ 
+int getMinMoney(int mStartSpot, int mEndSpot, int mMaxTime) {
+    vector<vector<int>>time(n + 1, vector<int>(4, INT_MAX));
+    vector<vector<int>>cost(n + 1, vector<int>(4, INT_MAX));
+    for (int i = 0; i < 4; i++) {
+        time[mStartSpot][i] = 0;
+        cost[mStartSpot][i] = 0;
+    }
+    priority_queue < travel, vector<travel>, comp > pq;
+    pq.push({ mStartSpot, 0, 0, 1 });
+    while (!pq.empty()) {
+        int curNode = pq.top().spotNumber;
+        int curTime = pq.top().spotTime;
+        int curCost = pq.top().spotCost;
+        int curMode = pq.top().mode;
+        pq.pop();
+        if (curTime > mMaxTime)continue;
+        if (curNode == mEndSpot && curMode != 2)return curCost;
+        else if (curNode == mEndSpot && curMode == 2 && isBikeStop[mEndSpot] == true)return curCost;
+        if (cost[curNode][curMode] < curCost && time[curNode][curMode] < curTime)continue;
+        time[curNode][curMode] = min(time[curNode][curMode], curTime);
+        cost[curNode][curMode] = min(cost[curNode][curMode], curCost);
+ 
+        for (auto neighbour : adj[curNode]) {
+            int nextNode = neighbour.first;
+            int distance = neighbour.second;
+            if (curMode == 1) {
+                pq.push({ nextNode, curTime + distance * 17, curCost, 1 });
+                pq.push({ nextNode, curTime + distance + 7, curCost + distance * 19, 3 });
+                if (isBikeStop[curNode] == true)pq.push({ nextNode, curTime + distance * 4, curCost + distance * 4, 2 });
+            }
+            else if (curMode == 2) {
+                if (isBikeStop[curNode] == true) {
+                    pq.push({ nextNode, curTime + distance * 17, curCost, 1 });
+                    pq.push({ nextNode, curTime + distance + 7, curCost + distance * 19, 3 });
+                }
+                pq.push({ nextNode, curTime + distance * 4, curCost + distance * 4, 2 });
+            }
+            else {
+                pq.push({ nextNode, curTime + distance * 17, curCost, 1 });
+                pq.push({ nextNode, curTime + distance , curCost + distance * 19, 3 });
+                if (isBikeStop[curNode] == true)pq.push({ nextNode, curTime + distance * 4, curCost + distance * 4, 2 });
+            }
+        }
+ 
+    }
+    return -1;
+}
