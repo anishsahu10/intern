@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "type": "YEAR_MONTH_DAY_ALL_NUM",
+    "patternString": "(<num>)\\s*[\\/\\.\\-,]?\\s*(<num>)\\s*[\\/\\.\\-,]?\\s*(<num>)\\s*(<day_of_week>)?",
+    "comment": "2014/01/29 or 2009/8/21"
+  },
+  {
+    "id": 2,
+    "type": "YEAR_MONTH_DAY_JP_NUM",
+    "patternString": "(<num_suffix>|<num><year_word>)\\s*(<month>)\\s*(<num_suffix>|<num><day_word>)",
+    "comment": "2013年10月6日"
+  },
+  {
+    "id": 3,
+    "type": "MONTH_DAY_JP_NUM",
+    "patternString": "(<month>)\\s*(<num_suffix>|<num><day_word>)",
+    "comment": "10月6日"
+  },
+  {
+    "id": 4,
+    "type": "ERA_YEAR_MONTH_DAY",
+    "patternString": "(<era>)\\s*(<num>|<num_word>)\\s*(<year_word>)\\s*(<month>)\\s*(<num_suffix>|<num><day_word>)\\s*\\(?(<day_of_week>)\\)?",
+    "comment": "平成２５年１２月１７日（火）"
+  },
+  {
+    "id": 5,
+    "type": "CALENDAR_TYPE_DATE",
+    "patternString": "(<calendar_type>)\\s*の\\s*(<month>)\\s*(<num_suffix>|<num><day_word>)",
+    "comment": "旧暦の８月１５日 or 陰暦の五月五日"
+  },
+  {
+    "id": 6,
+    "type": "YEAR_CALENDAR_TYPE_DATE",
+    "patternString": "(<num_suffix>|<num><year_word>)\\s*(<calendar_type>)\\s*の\\s*(<month>)\\s*(<num_suffix>|<num><day_word>)",
+    "comment": "2013年旧暦の８月１５日"
+  },
+  {
+    "id": 7,
+    "type": "LAST_YEAR_CALENDAR_TYPE_DATE",
+    "patternString": "(<last_reference>)\\s*(<year_word>)\\s*(<calendar_type>)\\s*の\\s*(<month>)\\s*(<num_suffix>|<num><day_word>)",
+    "comment": "去年旧暦の8月15日"
+  },
+  {
+    "id": 8,
+    "type": "DAY_OF_WEEK_ONLY",
+    "patternString": "(<day_of_week>)",
+    "comment": "日曜日, 月曜日, etc."
+  },
+  {
+    "id": 9,
+    "type": "MONTH_DAY_DAY_OF_WEEK",
+    "patternString": "(<month>)\\s*(<num_suffix>|<num><day_word>)\\s*(<day_of_week>)",
+    "comment": "6月13日金曜日"
+  },
+  {
+    "id": 10,
+    "type": "RELATIVE_DAY_OF_WEEK",
+    "patternString": "(<last_reference>|<after_reference>)\\s*(<week_word>)\\s*の\\s*(<day_of_week>)",
+    "comment": "先週の水曜日 or 来週の水曜日"
+  },
+  {
+    "id": 11,
+    "type": "RELATIVE_YEAR_DATE",
+    "patternString": "(<last_reference>|<after_reference>)\\s*(<year_word>)\\s*(<month>)\\s*(<num_suffix>|<num><day_word>)",
+    "comment": "昨年３月４日 or 来年の2月18日"
+  },
+  {
+    "id": 12,
+    "type": "RELATIVE_YEAR_DATE_WITH_NO",
+    "patternString": "(<last_reference>|<after_reference>)\\s*(<year_word>)\\s*の\\s*(<month>)\\s*(<num_suffix>|<num><day_word>)",
+    "comment": "来年の2月18日 or 来年の4月27日"
+  },
+  {
+    "id": 13,
+    "type": "RELATIVE_MONTH_DATE",
+    "patternString": "(<last_reference>|<current_reference>|<after_reference>)\\s*(<month_word>)\\s*(<num_suffix>|<num><day_word>|<num_word><day_word>)",
+    "comment": "先月一日, 今月20日, 来月23日"
+  },
+  {
+    "id": 14,
+    "type": "RELATIVE_DAY",
+    "patternString": "(<relative_day>)",
+    "comment": "前日, 当日, 明日, 明後日, あさって"
+  },
+  {
+    "id": 15,
+    "type": "DURATION_AFTER",
+    "patternString": "(<after_reference>)\\s*(<num>|<num_word>)\\s*(<time_period>)\\s*(<duration_word>)?",
+    "comment": "あと15日, あと一週間, あと半年, 五年後"
+  },
+  {
+    "id": 16,
+    "type": "SPECIAL_DAYS",
+    "patternString": "(<special_days>)",
+    "comment": "元日, 元旦, 建国記念日, 桃の節句, ひな祭り"
+  }
+]
