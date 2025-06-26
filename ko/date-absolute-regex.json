@@ -2,8 +2,8 @@
   {
     "id": 1,
     "type": "YEAR_MONTH_DAY_ALL_NUM",
-    "patternString": "(<num>)\\s*[\\/\\.\\-,]?\\s*(<num>)\\s*[\\/\\.\\-,]?\\s*(<num>)",
-    "comment": "2024/06/10 or 2024-06-10 or 2024-06-10"
+    "patternString": "(<num>)\\s*[\\/\\.\\-,]?\\s*(<num>)\\s*[\\/\\.\\-,]?\\s*(<num>)\\s*(<day_of_week>)?",
+    "comment": "2024/06/10 or 2024-06-10 or 2024-06-10 or 2021.03.20 SAT"
   },
   {
     "id": 2,
