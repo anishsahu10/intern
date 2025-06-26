@@ -10,7 +10,21 @@
         "수요일",
         "목요일",
         "금요일",
-        "토요일"
+        "토요일",
+        "sunday",
+        "sun",
+        "monday",
+        "mon",
+        "tuesday",
+        "tue",
+        "wednesday",
+        "wed",
+        "thursday",
+        "thu",
+        "friday",
+        "fri",
+        "saturday",
+        "sat"
       ]
     },
     {
@@ -167,7 +181,9 @@
       "keywords": [
         "다음",
         "부터",
-        "내"
+        "내",
+        "후",
+        "뒤"
       ]
     },
     {
