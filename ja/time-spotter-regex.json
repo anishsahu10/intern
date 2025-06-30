@@ -1,0 +1,104 @@
+[
+  {
+    "id": 1,
+    "type": "HOUR_MIN_SEC_COLON",
+    "patternType": "<num>:<num>:<num>",
+    "comment": ["9:00:00", "10:00:21", "7:23:15"],
+    "patternString": "(?<=\\s|^|\\(|\\[|\\{|:|,)(<num>)\\s*:\\s*(<num>)\\s*:\\s*(<num>)(?=\\s|$|\\)|\\]|\\}|,|~|-)",
+    "mapping": [
+      { "hours": 1, "minutes": 2, "seconds": 3 }
+    ]
+  },
+  {
+    "id": 2,
+    "type": "HOUR_MIN_COLON",
+    "patternType": "<num>:<num>",
+    "comment": ["13:00", "23:45", "05:00"],
+    "patternString": "(?<=\\s|^|\\(|\\[|\\{|:|,)(<num>)\\s*:\\s*(<num>)(?=\\s|$|\\)|\\]|\\}|,|~|-)",
+    "mapping": [
+      { "hours": 1, "minutes": 2 }
+    ]
+  },
+  {
+    "id": 3,
+    "type": "HOUR_ONLY_COLON",
+    "patternType": "<num>:00",
+    "comment": ["1:00", "5:00"],
+    "patternString": "(?<=\\s|^|\\(|\\[|\\{|:|,)(<num>)\\s*:\\s*00(?=\\s|$|\\)|\\]|\\}|,|~|-)",
+    "mapping": [
+      { "hours": 1, "minutes": 0 }
+    ]
+  },
+  {
+    "id": 4,
+    "type": "HOUR_MIN_SEC_RANGE",
+    "patternType": "<num>:<num>:<num>~<num>:<num>:<num>",
+    "comment": ["9:00:00~11:00:00", "7:23:15 ~ 2:00:12"],
+    "patternString": "(<num>)\\s*:\\s*(<num>)\\s*:\\s*(<num>)\\s*[~-]\\s*(<num>)\\s*:\\s*(<num>)\\s*:\\s*(<num>)",
+    "isRange": true,
+    "mapping": [
+      { "hours": 1, "minutes": 2, "seconds": 3, "endHours": 4, "endMinutes": 5, "endSeconds": 6 }
+    ]
+  },
+  {
+    "id": 5,
+    "type": "HOUR_MIN_RANGE",
+    "patternType": "<num>:<num>~<num>:<num>",
+    "comment": ["5:00~13:00", "13:00~5:00"],
+    "patternString": "(<num>)\\s*:\\s*(<num>)\\s*[~-]\\s*(<num>)\\s*:\\s*(<num>)",
+    "isRange": true,
+    "mapping": [
+      { "hours": 1, "minutes": 2, "endHours": 3, "endMinutes": 4 }
+    ]
+  },
+  {
+    "id": 6,
+    "type": "HOUR_MIN_JP_WORD",
+    "patternType": "<num>時<num>分",
+    "comment": ["10時32分", "8時26分", "11時25分"],
+    "patternString": "(<num>|<num_word>)\\s*<time_h>\\s*(<num>|<num_word>)\\s*<time_m>",
+    "mapping": [
+      { "hours": 1, "minutes": 2 }
+    ]
+  },
+  {
+    "id": 7,
+    "type": "HOUR_ONLY_JP_WORD",
+    "patternType": "<num>時",
+    "comment": ["5時", "10時", "17時"],
+    "patternString": "(<num>|<num_word>)\\s*<time_h>",
+    "mapping": [
+      { "hours": 1 }
+    ]
+  },
+  {
+    "id": 8,
+    "type": "HOUR_MIN_JP_KANJI",
+    "patternType": "<num_word>時<num_word>分",
+    "comment": ["十一時二十五分", "十七時二十五分"],
+    "patternString": "(<num_word>)\\s*<time_h>\\s*(<num_word>)\\s*<time_m>",
+    "mapping": [
+      { "hours": 1, "minutes": 2 }
+    ]
+  },
+  {
+    "id": 9,
+    "type": "HOUR_ONLY_JP_KANJI",
+    "patternType": "<num_word>時",
+    "comment": ["十一時", "十七時"],
+    "patternString": "(<num_word>)\\s*<time_h>",
+    "mapping": [
+      { "hours": 1 }
+    ]
+  },
+  {
+    "id": 10,
+    "type": "HOUR_MIN_PM",
+    "patternType": "<num>:<num> pm",
+    "comment": ["5:00 pm", "05:00 pm", "1:00 pm", "01:00 pm"],
+    "patternString": "(<num>)\\s*:\\s*(<num>)\\s+(pm|PM|p\\.m\\.|P\\.M\\.)",
+    "mapping": [
+      { "hours": 1, "minutes": 2, "timeFormat": "PM" }
+    ]
+  }
+]
