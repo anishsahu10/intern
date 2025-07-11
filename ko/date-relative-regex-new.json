@@ -1,0 +1,43 @@
+[
+  {
+    "id": 1,
+    "type": "NUM_TIME_AFTER_REFERENCE",
+    "comment": "3일 후 (3 days later), 2주 뒤 (2 weeks later), 5개월 전 (5 months ago), 1년 전 (1 year ago)",
+    "patternString": "(<num>)\\s*(<time_period>)\\s*(<after_reference>|<before_reference>)",
+    "isRelative": true,
+    "isPrefix": true,
+    "isOnlyDelta": true
+  },
+  {
+    "id": 2,
+    "type": "AFTER_REFERENCE_NUM_TIME",
+    "comment": "후 5일 (after 5 days), 전 2주 (before 2 weeks)",
+    "patternString": "(<after_reference>|<before_reference>)\\s*(<num>)\\s*(<time_period>)",
+    "isRelative": true,
+    "isPrefix": true,
+    "isOnlyDelta": true
+  },
+  {
+    "id": 3,
+    "type": "AFTER_REFERENCE_NUM_TIME_ONLY_FOR_PREFIX",
+    "comment": "다음 월 (next month), 지난 년 (last year), 이번 주 (this week)",
+    "patternString": "(<after_range>|<before_range>|<last_reference>|<current_reference>)\\s*(<time_period>)",
+    "isOnlyPrefix": true,
+    "isPrefix": true,
+    "isRelative": false
+  },
+  {
+    "id": 4,
+    "type": "RELATIVE_DAY_OF_WEEK",
+    "comment": "지난 토요일 (last Saturday), 다음 월요일 (next Monday), 이번 일요일 (this Sunday)",
+    "patternString": "(<after_range>|<before_range>|<current_reference>|<last_reference>)\\s*(<day_of_week>)",
+    "isRelative": true
+  },
+  {
+    "id": 5,
+    "type": "RELATIVE_TIME_REFERENCE",
+    "comment": "내일 (tomorrow), 어제 (yesterday), 오늘 (today)",
+    "patternString": "(<relative_day>)",
+    "isRelative": true
+  }
+]
