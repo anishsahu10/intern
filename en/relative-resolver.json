@@ -1,56 +1,56 @@
 [
+    {
+      "id": 1,
+      "type": "RELATIVE_TIME_PERIOD",
+      "patternString": "(?:\\s|^|\\.|,)(<after_reference>|<before_reference>|<last_reference>|<current_reference>|<after_range>|<before_range>)\\s*(<num>|<num_suffix>)?\\s*(<time_period>)\\s*(<num>|<num_suffix>|a)?\\s*(<time_period>)?\\s*(<num>|<num_suffix>|a)?\\s*(<time_period>)?\\s*(?:\\s|$|\\.|,)",
+      "mapping" : [
+          {
+            "periodAndDurationGroupings" : [
+              {
+                "timeDurationGroup": 2,
+                "timePeriodGroup": 3
+              },
+              {
+                "timeDurationGroup": 4,
+                "timePeriodGroup": 5
+              },
+              {
+                "timeDurationGroup": 6,
+                "timePeriodGroup": 7
+              }
+            ]
+        }
+      ],
+      "comment" : "after 2 days"
+    },
+    {
+      "id" : 2,
+      "type" : "NUM_TIME_AFTER_REFERENCE",
+      "comment": "2 days after. 2 days from",
+      "patternString" : "(?:\\s|^|\\.|,)\\s*(<num>|<num_suffix>)?\\s*(?:a)?\\s*(<time_period>)\\s*(<num>|<num_suffix>)?\\s*(?:a)?\\s*(<time_period>)?\\s*(<num>|<num_suffix>)?\\s*(?:a)?\\s*(<time_period>)?\\s*(<after_reference>|<before_reference>|<starts_from>)(?:\\s|$|\\.|,)",
+      "mapping" : [
+        {
+          "periodAndDurationGroupings" : [
+            {
+              "timeDurationGroup": 1,
+              "timePeriodGroup": 2
+            },
+            {
+              "timeDurationGroup": 3,
+              "timePeriodGroup": 4
+            },
+            {
+              "timeDurationGroup": 5,
+              "timePeriodGroup": 6
+            }
+          ]
+        }
+      ]
+    },
   {
-    "id": 1,
-    "type": "RELATIVE_TIME_PERIOD",
-    "patternString": "(?:\\s|^|\\.|,)\\s*(<after_reference>|<before_reference>|<last_reference>|<current_reference>)\\s*(?:a|an)?\\s*((<num>)?\\s*(<time_period>))\\s*(?:and)?\\s*(?:a|an)?\\s*((<num>)?\\s*(<time_period>))?\\s*(?:and)?\\s*(?:a|an)?\\s*((<num>)?\\s*(<time_period>))?\\s*(?:of|in)?(?:\\s|$|\\.|,)",
-    "mapping": [
-      {
-        "periodAndDurationGroupings": [
-          {
-            "timeDurationGroup": 3,
-            "timePeriodGroup": 4
-          },
-          {
-            "timeDurationGroup": 6,
-            "timePeriodGroup": 7
-          },
-          {
-            "timeDurationGroup": 9,
-            "timePeriodGroup": 10
-          }
-        ]
-      }
-    ],
-    "comment": "after 2 days"
-  },
-  {
-    "id": 4,
-    "type": "NUM_TIME_AFTER_REFERENCE",
-    "comment": "2 days after. 2 days from",
-    "patternString": "(?:\\s|^|\\.|,)(?:of|in)?\\s*(?:a)?\\s*((<num>)?\\s*(<time_period>))\\s*(?:and)?\\s*(?:a)?\\s*((<num>)?\\s*(<time_period>))?\\s*(?:and)?\\s*(?:a)?\\s*((<num>)?\\s*(<time_period>))?\\s*(<after_reference>|<before_reference>)\\s*(?:of|in)?(?:\\s|$|\\.|,)",
-    "mapping": [
-      {
-        "periodAndDurationGroupings": [
-          {
-            "timeDurationGroup": 2,
-            "timePeriodGroup": 3
-          },
-          {
-            "timeDurationGroup": 5,
-            "timePeriodGroup": 6
-          },
-          {
-            "timeDurationGroup": 8,
-            "timePeriodGroup": 9
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 2,
-    "type": "RELATIVE_DAY_OF_MONTH_OR_MONTH",
-    "comment": "next Monday, last Tuesday, this Wednesday, next January, last February, this March, etc.",
-    "patternString": "(?:\\s|^|\\.|,)(<after_reference>|<before_reference>|<last_reference>|<current_reference>)\\s*(<month>|<day_of_week>)(?:\\s|$|\\.|,)"
+    "id" : 3,
+    "type" : "RELATIVE_REFERENCE_DAY_OF_WEEK",
+    "comment" : "next monday, previous friday",
+    "patternString" : "(?:\\s|^|\\.|,)\\s*(<last_reference>|<current_reference>|<after_range>|<before_range>)\\s*(<day_of_week>)"
   }
 ]
