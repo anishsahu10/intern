@@ -1,0 +1,53 @@
+[
+  {
+    "id": 1,
+    "type": "2_DATE_RANGE",
+    "patternString": "(?<startDate><date>)\\s*(?:([-~])|(<range_relative_connector>\\s*(the)?))\\s*(?<endDay>(<num>|<num_suffix>))\\s*[,]?\\s*(?<endYear><num>)?",
+    "comment": "2021년 3월 15일 ~ 17일 (March 15, 2021 ~ 17th), 2021년 3월 15일 - 17일 (March 15, 2021 - 17th)",
+    "boundRange": true
+  },
+  {
+    "id": 2,
+    "type": "2_DATE_RANGE",
+    "patternString": "(?<startDay>(<num>|<num_suffix>))\\s*(?:([-~])|(<range_relative_connector>\\s*(the)?))\\s*(?<endDate><date>)",
+    "comment": "15일 ~ 2021년 3월 17일 (15th ~ March 17, 2021)",
+    "boundRange": true
+  },
+  {
+    "id": 3,
+    "type": "DATE_FROM_TO_RANGE",
+    "comment": "21년 3월 15일부터 3월말까지 (from March 15, 2021 to end of March), 2021년 3월 15일부터 17일까지 (from March 15, 2021 to 17th)",
+    "boundRange": true,
+    "patternString": "(?<startDate><date>)\\s*(<starts_from>)\\s*(?<endDate><date>)\\s*(<ends_on>)"
+  },
+  {
+    "id": 4,
+    "type": "TIME_RANGE",
+    "comment": "9시부터 12시까지 (from 9 o'clock to 12 o'clock), 오전 10시-오후 1시 (10 AM - 1 PM)",
+    "patternString": "(?<startTime><time>)\\s*(?:(<starts_from>)|[-~])\\s*(?<endTime><time>)\\s*(<ends_on>)?",
+    "boundRange": true
+  },
+  {
+    "id": 5,
+    "type": "RELATIVE_RANGE",
+    "comment": "다음주 (next week), 내년까지 (until next year), 다음달까지 (until next month)",
+    "patternString": "(<after_range>|<before_range>|<current_reference>|<last_reference>)\\s*(<time_period>)\\s*(<ends_on>)?",
+    "relativeRange": true
+  },
+  {
+    "id": 6,
+    "type": "UNBOUND_RANGE_FROM",
+    "comment": "내일부터 (from tomorrow), 다음달부터 (from next month)",
+    "patternString": "(<after_range>|<before_range>|<current_reference>|<last_reference>)\\s*(<time_period>)?\\s*(<starts_from>)",
+    "unBoundRange": true,
+    "relativeRange": true
+  },
+  {
+    "id": 7,
+    "type": "UNBOUND_RANGE_UNTIL",
+    "comment": "내년까지 (until next year), 토요일까지 (until Saturday)",
+    "patternString": "(<after_range>|<before_range>|<current_reference>|<last_reference>)\\s*(<time_period>)?\\s*(<ends_on>)",
+    "unBoundRange": true,
+    "relativeRange": true
+  }
+]
