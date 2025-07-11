@@ -206,20 +206,11 @@
         "week",
         "month",
         "year",
-        "fortnight",
-        "decade",
-        "century",
-        "weekday",
-        "weekend",
         "days",
         "weeks",
         "months",
         "years",
-        "fortnights",
-        "decades",
-        "centuries",
-        "weekdays",
-        "weekends"
+        "weekend"
       ]
     },
     {
@@ -229,7 +220,8 @@
         "today",
         "tomorrow",
         "yesterday",
-        "tmrw"
+        "tmrw",
+        "now"
       ]
     },
     {
@@ -266,22 +258,11 @@
       ]
     },
     {
-      "id": 18,
-      "mask": "<range_relative_connector>",
-      "keywords": [
-        "to"
-      ]
-    },
-    {
       "mask": "<before_reference>",
       "keywords": [
         "before",
-        "earlier by",
         "earlier",
-        "ago",
-        "prior to",
-        "previous",
-        "since"
+        "ago"
       ]
     },
     {
@@ -294,27 +275,19 @@
       "id" : 15,
       "mask" : "<last_reference>",
       "keywords" : [
-        "last",
-        "end",
-        "ending"
+        "last"
       ]
     },
     {
       "id": 14,
       "mask": "<after_reference>",
       "keywords": [
-        "past",
         "after",
-        "by",
-        "within",
         "later",
-        "next",
-        "following",
-        "coming",
-        "soon",
-        "upcoming",
         "hence",
-        "from"
+        "since",
+        "past",
+        "from now"
       ]
     },
     {
@@ -351,6 +324,51 @@
         "thursdays",
         "fridays",
         "saturdays"
+      ]
+    },
+    {
+      "id" : 18,
+      "mask" : "<after_range>",
+      "keywords": [
+        "within",
+        "next"
+      ]
+    },
+    {
+      "id" : 19,
+      "mask" : "<before_range>",
+      "keywords": [
+        "previous"
+      ]
+    },
+    {
+      "id" : 20,
+      "mask" : "<starts_from>",
+      "keywords" : [
+        "from"
+      ]
+    },
+    {
+      "id" : 21,
+      "mask" : "<ends_on>",
+      "keywords" : [
+        "until",
+        "till",
+        "by"
+      ]
+    },
+    {
+      "id": 22,
+      "mask": "<range_relative_connector>",
+      "keywords": [
+        "to"
+      ]
+    },
+    {
+      "id" : 23,
+      "mask" : "<start_of_duration>",
+      "keywords": [
+        "for"
       ]
     }
   ]
