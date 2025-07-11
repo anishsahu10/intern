@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "type": "NUM_TIME_DURATION",
+    "comment": "5일간 (for 5 days), 2주 동안 (for 2 weeks), 한달동안 (for a month)",
+    "patternString": "(?:a)?\\s*((?<timeDuration1><num>)?\\s*(?<timePeriod1><time_period>))\\s*(?<durationMarker1><start_of_duration>)\\s*(?:and)?\\s*(?:a)?\\s*((?<timeDuration2><num>)?\\s*(?<timePeriod2><time_period>))?\\s*(?<durationMarker2><start_of_duration>)?",
+    "isDuration": true
+  },
+  {
+    "id": 2,
+    "type": "FROM_DURATION",
+    "comment": "부터 5일간 (from [date] for 5 days), 부터 일주일동안 (from [date] for a week)",
+    "patternString": "(<starts_from>)\\s*((?<timeDuration><num>)?\\s*(?<timePeriod><time_period>))\\s*(?<durationMarker><start_of_duration>)",
+    "isDuration": true
+  },
+  {
+    "id": 3,
+    "type": "RELATIVE_DURATION",
+    "comment": "이틀동안 (for two days), 한달간 (for a month)",
+    "patternString": "((?<timeDuration><num>)?\\s*(?<timePeriod><time_period>))\\s*(?<durationMarker><start_of_duration>)",
+    "isDuration": true
+  }
+]
