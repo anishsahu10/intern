@@ -337,67 +337,67 @@
     "일", "주", "달", "월", "년", "주말", "시간", "분",
     "오전", "오후", "아침", "저녁", "밤"
   ]
-},
-{
-  "mask": "<after_reference>",
-  "keywords": [
-    "후", "뒤", "이후", "부터"
-  ]
-},
-{
-  "mask": "<before_reference>",
-  "keywords": [
-    "전", "이전", "앞", "전에"
-  ]
-},
-{
-  "mask": "<current_reference>",
-  "keywords": [
-    "이번", "금주", "금월", "올해", "오늘"
-  ]
-},
-{
-  "mask": "<last_reference>",
-  "keywords": [
-    "지난", "작년", "전주", "전달", "어제"
-  ]
-},
-{
-  "mask": "<after_range>",
-  "keywords": [
-    "다음", "내년", "내달", "다음주", "내일"
-  ]
-},
-{
-  "mask": "<before_range>",
-  "keywords": [
-    "이전"
-  ]
-},
-{
-  "mask": "<starts_from>",
-  "keywords": [
-    "부터", "에서부터"
-  ]
-},
-{
-  "mask": "<ends_on>",
-  "keywords": [
-    "까지", "까지는", "말까지"
-  ]
-},
-{
-  "mask": "<range_relative_connector>",
-  "keywords": [
-    "~", "에서", "부터"
-  ]
-},
-{
-  "mask": "<start_of_duration>",
-  "keywords": [
-    "간", "동안", "동안은"
-  ]
-}
+  },
+  {
+    "mask": "<after_reference>",
+    "keywords": [
+      "후", "뒤", "이후", "부터"
+    ]
+  },
+  {
+    "mask": "<before_reference>",
+    "keywords": [
+      "전", "이전", "앞", "전에"
+    ]
+  },
+  {
+    "mask": "<current_reference>",
+    "keywords": [
+      "이번", "금주", "금월", "올해", "오늘"
+    ]
+  },
+  {
+    "mask": "<last_reference>",
+    "keywords": [
+      "지난", "작년", "전주", "전달", "어제"
+    ]
+  },
+  {
+    "mask": "<after_range>",
+    "keywords": [
+      "다음", "내년", "내달", "다음주", "내일"
+    ]
+  },
+  {
+    "mask": "<before_range>",
+    "keywords": [
+      "이전"
+    ]
+  },
+  {
+    "mask": "<starts_from>",
+    "keywords": [
+      "부터", "에서부터"
+    ]
+  },
+  {
+    "mask": "<ends_on>",
+    "keywords": [
+      "까지", "까지는", "말까지"
+    ]
+  },
+  {
+    "mask": "<range_relative_connector>",
+    "keywords": [
+      "~", "에서", "부터"
+    ]
+  },
+  {
+    "mask": "<start_of_duration>",
+    "keywords": [
+      "간", "동안", "동안은"
+    ]
+  }
 
-  ]
+]
 }
